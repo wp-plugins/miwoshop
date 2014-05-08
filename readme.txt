@@ -1,5 +1,5 @@
 === MiwoShop Lite - eCommerce & Shopping Cart ===
-Contributors: miwisoft
+Contributors: miwisoft, gilbertlici
 Tags: plugin, ecommerce, shopping cart, cart, checkout, commerce, shop, shopping, wordpress ecommerce, admin, reports, sales, digital, download, store, stock
 Donate link: http://miwisoft.com
 Requires at least: 3.5
@@ -80,6 +80,10 @@ MiwoShop is well supported, frequently updated and one of the leading e-Commerce
 
 Full Feature List:
 [http://miwisoft.com/wordpress-plugins/miwoshop/full-feature-list](http://miwisoft.com/wordpress-plugins/miwoshop/full-feature-list)
+
+= 25+ Payment Gateways =
+
+The Pro version of MiwoShop offers 25+ payment gateways including PayPal Pro, Payflow, Amazon, 2Checkout, Authorize.Net, Payza and a lot more you can find  in [this page](http://miwisoft.com/wordpress-plugins/miwoshop/payment-gateways). The Lite version includes only Free Checkout and PayPal Standart gateways.
 
 = Translated in 35+ languages =
 
