@@ -14,7 +14,6 @@ MiwoShop is a powerful shopping cart that is designed user friendly and extremel
 
 [Pro Version](http://miwisoft.com/wordpress-plugins/miwoshop-wordpress-shopping-cart#pricing) |
 [Demo Shop](http://demo.miwisoft.com/wordpress/miwoshop) |
-[Android App](http://miwisoft.com/wordpress-plugins/miwoshop/android-app) |
 [Documentation](http://miwisoft.com/support/docs/wordpress/miwoshop) |
 [Tickets Support](http://miwisoft.com/support/tickets) 
 
@@ -28,11 +27,12 @@ MiwoShop is well supported, frequently updated and one of the leading e-Commerce
 
 = Features =
 
-* Android app to manage the store **(Pro Version)**
-* Front-end Management **(Pro Version)**
 * Unlimited Categories
 * Unlimited Products
+* Unlimited Images
 * Unlimited Manufacturers
+* Front-end Management **(Pro Version)**
+* Android app to manage the store **(Pro Version)**
 * Product Reviews
 * Product Ratings
 * Downloadable (Digital) Products
@@ -45,7 +45,6 @@ MiwoShop is well supported, frequently updated and one of the leading e-Commerce
 * Templatable
 * Custom Reports (50+ reports)
 * Translated in 35+ Languages
-* Theme Editor **(Pro Version)**
 * Reward Point System
 * RMA System
 * Affiliate System
@@ -71,7 +70,7 @@ MiwoShop is well supported, frequently updated and one of the leading e-Commerce
 * B2B
 * Internal ACL system
 * SEO Optimized
-* Built-in HTML & CSS (template) editor
+* Built-in HTML & CSS (template) editor **(Pro Version)**
 * Backup-Restore Tools
 * Geolocation
 * RSS support (also Google Base)

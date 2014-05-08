@@ -1,7 +1,7 @@
 <?php
 /*
 * @package		Miwi Framework
-* @copyright	Copyright (C) 2009-2014 Miwisoft, LLC. All rights reserved.
+* @copyright	Copyright (C) 2009-2014 Miwisoft, LLC. All rights reserved
 * @license		GNU General Public License version 2 or later
 */
 
@@ -224,8 +224,7 @@ class MWordpress {
 	public function display($args = null) {
 		MRequest::setVar('option', 'com_'.$this->context);
 
-		if (!empty($args)) {
-
+		if (!empty($args) and isset($args['id'])) {
 			MPluginHelper::importPlugin('content');
 			$article       = new stdClass();
 			$article->text = '{'.$this->context.' id='.$args['id'].'}';
