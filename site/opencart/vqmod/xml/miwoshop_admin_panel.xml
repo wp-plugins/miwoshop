@@ -148,7 +148,7 @@
                                         </td>
                                         <td align="center" style="vertical-align: middle;" rowspan="5">
                                             <a href="http://miwisoft.com/wordpress-plugins/miwoshop-wordpress-shopping-cart">
-                                            <img src="<?php echo MURL_MIWOSHOP; ?>/site/assets/images/logo.png" width="140" height="140" style="display: block; margin: auto;" alt="MiwoShop" title="MiwoShop" align="middle" border="0">
+                                            <img src="<?php echo MURL_MIWOSHOP; ?>/admin/assets/images/logo.png" width="140" height="140" style="display: block; margin: auto;" alt="MiwoShop" title="MiwoShop" align="middle" border="0">
                                             </a>
                                         </td>
                                     </tr>

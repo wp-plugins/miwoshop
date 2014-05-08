@@ -779,11 +779,11 @@
     <file name="admin/controller/setting/setting.php">
         <operation error="skip">
             <search position="replace"><![CDATA[$server = HTTPS_CATALOG;]]></search>
-            <add><![CDATA[$server = HTTPS_CATALOG.MID_PATH.'/miwoshop/site/opencart/;]]></add>
+            <add><![CDATA[$server = HTTPS_CATALOG.MID_PATH.'/miwoshop/site/opencart/';]]></add>
         </operation>
         <operation error="skip">
             <search position="replace"><![CDATA[$server = HTTP_CATALOG;]]></search>
-            <add><![CDATA[$server = HTTP_CATALOG.MID_PATH.'/miwoshop/site/opencart/;]]></add>
+            <add><![CDATA[$server = HTTP_CATALOG.MID_PATH.'/miwoshop/site/opencart/';]]></add>
         </operation>
 		<operation error="skip">
             <search position="before"><![CDATA[$this->template = 'setting/setting.tpl';]]></search>
@@ -2159,12 +2159,12 @@ $('#languagessef a').tabs();
 			<add><![CDATA[		  <li><a class="parent">Migration Tools</a>
 			<ul>
              
-             <li><a href="<?php echo MiwoShop::get('router')->route('index.php?option=com_miwoshop&route=tool/woocart'); ?>">WooCart</a></li>
              <li><a href="<?php echo MiwoShop::get('router')->route('index.php?option=com_miwoshop&route=tool/woocommerce'); ?>">WooCommerce</a></li>
              <li><a href="<?php echo MiwoShop::get('router')->route('index.php?option=com_miwoshop&route=tool/wpecommerce'); ?>">WP e-Commerce</a></li>
              <li><a href="<?php echo MiwoShop::get('router')->route('index.php?option=com_miwoshop&route=tool/ready_ecommerce'); ?>">Ready! Ecommerce</a></li>
              <li><a href="<?php echo MiwoShop::get('router')->route('index.php?option=com_miwoshop&route=tool/jigoshop'); ?>">Jigoshop</a></li>
              <li><a href="<?php echo MiwoShop::get('router')->route('index.php?option=com_miwoshop&route=tool/ecommerceprodcat'); ?>">eCommerce Product Catalog</a></li>
+			 <li><a href="<?php echo MiwoShop::get('router')->route('index.php?option=com_miwoshop&route=tool/woocart'); ?>">WooCart</a></li>
             
 
 
