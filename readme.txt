@@ -3,10 +3,10 @@ Contributors: miwisoft, gilbertlici
 Tags: plugin, ecommerce, shopping cart, cart, checkout, commerce, shop, shopping, wordpress ecommerce, admin, reports, sales, digital, download, store, stock, product, shippping, tax
 Donate link: http://miwisoft.com
 Requires at least: 3.5
-Tested up to: 3.9
+Tested up to: 5
 Stable tag: trunk
-License: GPLv2
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+License: GPLv3
+License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
 MiwoShop is a powerful shopping cart that is designed user friendly and extremely powerful out of the box with tons of built-in features.
 
@@ -81,9 +81,13 @@ MiwoShop is well supported, frequently updated and one of the leading e-Commerce
 Full Feature List:
 [http://miwisoft.com/wordpress-plugins/miwoshop/full-feature-list](http://miwisoft.com/wordpress-plugins/miwoshop/full-feature-list)
 
-= 25+ Payment Gateways =
+= Tons of Payment Gateways =
 
-The Pro version of MiwoShop includes 25+ payment gateways such as PayPal Pro, Payflow, Amazon, 2Checkout, Authorize.Net, Payza and a lot more you can find in [this page](http://miwisoft.com/wordpress-plugins/miwoshop/payment-gateways). The Lite version includes only Free Checkout and PayPal Standart gateways.
+The most powerful part of MiwoShop is the huge number of payment gateways available, 500+ already. The Lite version includes Free Checkout, Cach On Delivery and PayPal Standart gateways. The Pro version includes 25+ payment gateways such as PayPal Pro, Payflow, Amazon, 2Checkout, Authorize.Net, Payza and a lot more you can find in [this page](http://miwisoft.com/wordpress-plugins/miwoshop/payment-gateways).
+
+= Lots of Shipping Methods =
+
+200+ shipping methods are available for MiwoShop. The Lite version includes Free Shipping and Flat Rate methods. The Pro version includes 10+ shipping methods such as UPS, USPS, Fedex, Auspost, Royal Mail, Weight Based and a lot more you can find in [this page](http://miwisoft.com/wordpress-plugins/miwoshop/shipping-methods).
 
 = Translated in 35+ languages =
 
