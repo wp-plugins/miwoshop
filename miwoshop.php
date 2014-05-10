@@ -4,7 +4,7 @@ Plugin Name: MiwoShop
 Plugin URI: http://miwisoft.com
 Description: MiwoShop is a powerful shopping cart that is designed user friendly and extremely powerful out of the box with tons of built-in features.
 Author: Miwisoft LLC
-Version: 1.0.1
+Version: 1.0.2
 Author URI: http://miwisoft.com
 Plugin URI: http://miwisoft.com/miwoshop
 */
@@ -67,5 +67,3 @@ $mshop = new MShop();
 
 register_activation_hook(__FILE__, array($mshop, 'activate'));
 register_deactivation_hook(__FILE__, array($mshop, 'deactivate'));
-
-
