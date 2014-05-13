@@ -1,4 +1,4 @@
-=== MiwoShop Lite - eCommerce & Shopping Cart ===
+=== MiwoShop - eCommerce & Shopping Cart ===
 Contributors: miwisoft, gilbertlici
 Tags: plugin, ecommerce, shopping cart, cart, checkout, commerce, shop, shopping, wordpress ecommerce, admin, reports, sales, digital, download, store, stock, product, shippping, tax
 Donate link: http://miwisoft.com
