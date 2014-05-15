@@ -8,7 +8,7 @@ Stable tag: trunk
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-MiwoShop is a powerful eCommerce plugin that is designed user friendly and extremely powerful out-of-box with tons of built-in features.
+Powerful shopping cart / eCommerce plugin. Designed user friendly. Turn-key ready. Tons of addons. Well supported.
 
 == Description ==
 
