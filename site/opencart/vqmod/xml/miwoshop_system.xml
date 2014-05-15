@@ -219,7 +219,7 @@
 		$lang = MFactory::getLanguage();
         $_directory =strtolower($lang->getTag());
         $_directory =str_replace('-', '_', $_directory);
-        $text = $this->loadSecond($_directory, $this->file_name, $key);
+        $text = $this->loadSecond($_directory, $this->filename, $key);
 
         if (!empty($text)) {
             return $text;

@@ -508,13 +508,10 @@ class MiwoShopBase {
 	}
 	
 	public function clearPath($path) {
-        $abspth = str_replace('/', '\\', ABSPATH);
-        if(MFactory::isW()){ #miwo
-            $clear_path = str_replace($abspth, '/', $path);
-        }
-        else {
-            $clear_path = str_replace($abspth, $this->getSubdomain(), $path);
-        }
+        $abspath = str_replace('\\', '/', ABSPATH);
+        $path = str_replace('\\', '/', $path);
+    
+        $clear_path = str_replace($abspath, '/', $path);
 
 		$clear_path = str_replace('/\\', '/', $clear_path);
 		$clear_path = str_replace('\\', '/', $clear_path);
@@ -1054,14 +1051,14 @@ class MiwoShopBase {
         }
     
         if ($source == 'admin' || $source == 'admin2') {
-            $replace_output['index.php?token='] 									= 'index.php?option=com_miwoshop&token=';
-            $replace_output['view/javascript/jquery/'] 								= MURL_WP_CNT.'/miwi/plugins/plg_miwoshop_js/js/';
-            $replace_output['view/javascript'] 	                                    = MURL_MIWOSHOP . '/site/opencart/admin/view/javascript';
-            $replace_output['admin/view'] 											= MURL_MIWOSHOP . '/site/opencart/admin/view';
-            $replace_output['view/image'] 											= MURL_MIWOSHOP . '/site/opencart/admin/view/image';
-            $replace_output["HTTP_SERVER . 'admin/"] 								= "HTTP_SERVER . '".MID_PATH."miwoshop/site/opencart/admin/";
-            $replace_output['index.php?option=com_miwoshop&route=checkout/manual'] 	= MURL_ADMIN.'/admin-ajax.php?action=miwoshop&option=com_miwoshop&format=raw&tmpl=component&route=checkout/manual';
-            $replace_output['src="index.php?option=com_miwoshop&format=raw'] 		= 'src="'.MURL_ADMIN.'/admin-ajax.php?action=miwoshop&option=com_miwoshop&format=raw';
+            $replace_output['index.php?token=']            							= 'index.php?option=com_miwoshop&token=';
+            $replace_output['view/javascript/jquery/']          					= MURL_WP_CNT.'/miwi/plugins/plg_miwoshop_js/js/';
+			$replace_output['admin/view']               							= MURL_MIWOSHOP . '/site/opencart/admin/view';
+			$replace_output['src="view/']               							= 'src="'.MURL_MIWOSHOP . '/site/opencart/admin/view/';
+            $replace_output["HTTP_SERVER . 'admin/"]          						= "HTTP_SERVER . '".MID_PATH."miwoshop/site/opencart/admin/";
+            $replace_output['index.php?option=com_miwoshop&route=checkout/manual']	= MURL_ADMIN.'/admin-ajax.php?action=miwoshop&option=com_miwoshop&format=raw&tmpl=component&route=checkout/manual';
+            $replace_output['src="index.php?option=com_miwoshop&format=raw']      	= 'src="'.MURL_ADMIN.'/admin-ajax.php?action=miwoshop&option=com_miwoshop&format=raw';
+            $replace_output["url = 'index.php?route"]      							= "url = '".MURL_ADMIN."/admin.php?action=miwoshop&option=com_miwoshop&route";
         }
     
         if ($source == 'admin' || $source == 'site' || $source == 'module') {

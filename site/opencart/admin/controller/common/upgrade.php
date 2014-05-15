@@ -35,14 +35,8 @@ class ControllerCommonUpgrade extends Controller {
             unset($this->session->data['msg']);
         }
 
-        $pid = Miwoshop::get('base')->getConfig()->get('pid');
-        if (!empty($pid)) {
-            $this->data['text_auto_btn'] = $this->language->get('text_auto_btn');
-        } else {
-            $this->data['error_personal_id'] = $this->language->get('error_personal_id');
-        }
-
-        $this->data['error_personal_id'] = $this->language->get('error_personal_id');
+		$this->data['text_auto_btn'] = $this->language->get('text_auto_btn');
+		$this->data['error_personal_id'] = $this->language->get('error_personal_id');
 
         $this->data['token'] = $this->session->data['token'];
 

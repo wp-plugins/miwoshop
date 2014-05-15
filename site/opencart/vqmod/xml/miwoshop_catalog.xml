@@ -313,19 +313,6 @@
                 $title = MText::sprintf('MPAGETITLE', $title, $mainframe->getCfg('sitename'));
             }
 
-            $route = MRequest::getString('route', '');
-            if(!empty($route) and ($route == 'product/popular' or $route == 'product/latest' or $route == 'product/special' or $route == 'product/bestseller' or $route == 'product/featured')) {
-                $active_menu  = $mainframe->getMenu()->getActive();
-                $page_title = $active_menu->params->get('page_title');
-
-                if(!empty($page_title)){
-                    $title = $page_title;
-                }
-                else {
-                    $title = $active_menu->title;
-                }
-            }
-
             $document->setTitle($title);
             $document->setMetaData('title', $title);
             $document->setMetaData('description', html_entity_decode($this->data['description']));

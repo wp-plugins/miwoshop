@@ -11,11 +11,28 @@ defined('MIWI') or die ('Restricted access');
 
 require_once(MPATH_WP_PLG.'/miwoshop/site/miwoshop/miwoshop.php');
 
-class MiwoShopRouter
+if (!class_exists('MiwisoftComponentRouterBase')) {
+    if (class_exists('JComponentRouterBase')) {
+        abstract class MiwisoftComponentRouterBase extends JComponentRouterBase {}
+    }
+    else {
+        class MiwisoftComponentRouterBase {}
+    }
+}
+
+class MiwoShopRouter extends MiwisoftComponentRouterBase
 {
 
     static $cats = array();
     static $path = array();
+
+    public function build(&$query) {
+    	return $this->buildRoute($query);
+    }
+
+    public function parse(&$segments) {
+    	return $this->parseRoute($segments);
+    }
 
     public function buildRoute(&$query)
     {
@@ -195,21 +212,14 @@ class MiwoShopRouter
             unset($query['route']);
         }
 
-        /*if (MiwoShop::get('base')->is30()
-            and MRequest::getString('option') != 'com_search'
-            and MRequest::getString('option') != 'com_users'
-            and  is_object($a_menu)
-            and (empty($_GET) or !isset($_GET['path']))
-        ) {
-            $url = str_replace('index.php?', '', $a_menu->link);
-            parse_str($url, $vars);
-            MRequest::set($vars, 'get');
-        }*/
+        foreach($segments as $key => $segment) {
+            $segments[$key] = str_replace(':', '-', $segment);
+        }
 
         return $segments;
     }
 
-    public function parseRoute($segments)
+    public function parseRoute(&$segments)
     {
         $vars = array();
 

@@ -43,24 +43,32 @@
             <br/><br/>
             <div id="tabs" class="htabs"><a href="#tab-automatic"><?php echo MText::_('COM_MIWOSHOP_UPGRADE_FROM_SERVER'); ?></a><a href="#tab-manual"><?php echo MText::_('COM_MIWOSHOP_UPGRADE_FROM_FILE'); ?></a></div>
             <div id="tab-automatic">
-                <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="upgradeFromServer">
+                <form action="update-core.php" method="post" enctype="multipart/form-data" id="upgradeFromServer">
                     <table class="form">
                         <tr>
-                            <td><?php if (!isset($text_auto_btn)) { ?>
-                                    <b><font color="red"><?php echo $error_personal_id; ?></font></b>
-                                <?php } else { ?>
-                                    <input class="button btn button-primary" type="button" value="<?php echo $text_auto_btn; ?>" onclick="form.submit()"/>
-                                <?php } ?>
+                            <td>
+                                <input class="button btn button-primary" type="button" value="<?php echo $text_auto_btn; ?>" onclick="form.submit()"/>
                             </td>
-                            <input type="hidden" name="option" value="com_miwoshop" />
-                            <!--<input type="hidden" name="route" value="upgrade/upgrade" />-->
-                            <input type="hidden" name="task" value="upgrade" />
-                            <input type="hidden" name="type" value="server" />
-                            <input type="hidden" name="<?php echo $token; ?>" value="1" />
-                            <?php //echo MHtml::_('form.token'); ?>
                         </tr>
                     </table>
                 </form>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             </div>
             <div id="tab-manual">
                 <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="upgradeFromUpload">

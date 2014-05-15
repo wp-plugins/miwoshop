@@ -152,21 +152,20 @@
                                             </a>
                                         </td>
                                     </tr>
-                                    <?php if (empty($pid)) { ?>
-									<tr height="40">
-										<td>
-											<?php echo '<b><font color="red">'.MText::_('COM_MIWOSHOP_CPANEL_PID').'</font></b>';?>
-										</td>
-										<td>
-											<form id="pid" method="post" action="<?php echo $this->url->link('common/edit/insertPID', 'token=' . $token, 'SSL'); ?>">
-												<input type="text" name="pid" id="pid" class="inputbox" size="18" style="width: 150px;" />
-												&nbsp;
-												<input type="submit" class="button btn-danger" style="margin-bottom: 10px;" value="<?php echo MText::_('Save'); ?>" />
-											</form>
+                                    
 
-										</td>
-									</tr>
-									<?php } ?>
+
+
+
+
+
+
+
+
+
+
+
+
                                     <tr height="40">
                                         <td>
                                             <?php

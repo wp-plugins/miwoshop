@@ -4,6 +4,7 @@ input[type='text'], input[type='password'] {
 }
 select {
 	padding: 1px !important;
+	width: inherit !important;
 }
 textarea {
 	padding: 2px !important;

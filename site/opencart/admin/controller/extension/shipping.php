@@ -98,6 +98,7 @@ class ControllerExtensionShipping extends Controller {
 										
 				$this->data['extensions'][] = array(
 					'name'       => $this->language->get('heading_title'),
+'extension'  => $extension,
 					'status'     => $this->config->get($extension . '_status') ? $this->language->get('text_enabled') : $this->language->get('text_disabled'),
 					'sort_order' => $this->config->get($extension . '_sort_order'),
 					'action'     => $action

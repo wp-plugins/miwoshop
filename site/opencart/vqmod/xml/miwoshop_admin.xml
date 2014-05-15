@@ -2164,6 +2164,8 @@ $('#languagessef a').tabs();
              <li><a href="<?php echo MiwoShop::get('router')->route('index.php?option=com_miwoshop&route=tool/ready_ecommerce'); ?>">Ready! Ecommerce</a></li>
              <li><a href="<?php echo MiwoShop::get('router')->route('index.php?option=com_miwoshop&route=tool/jigoshop'); ?>">Jigoshop</a></li>
              <li><a href="<?php echo MiwoShop::get('router')->route('index.php?option=com_miwoshop&route=tool/ecommerceprodcat'); ?>">eCommerce Product Catalog</a></li>
+			 <li><a href="<?php echo MiwoShop::get('router')->route('index.php?option=com_miwoshop&route=tool/marketpress'); ?>">MarketPress</a></li>
+			 <li><a href="<?php echo MiwoShop::get('router')->route('index.php?option=com_miwoshop&route=tool/thecartpress'); ?>">TheCartPress</a></li>
 			 <li><a href="<?php echo MiwoShop::get('router')->route('index.php?option=com_miwoshop&route=tool/woocart'); ?>">WooCart</a></li>
             
 
@@ -2458,9 +2460,9 @@ jQuery(document).ready(function() {
                   <table class="form">
                     <!-- added miwisoft component setting-->
                     <tr>
-                      <td><?php echo $entry_miwoshop_pid; ?></td>
+                      <td><?php echo $entry_miwoshop_pid; ?><span class="help">Only for Pro members.</span></td>
                       <td>
-                        <input type="password" size="60" name="config_miwoshop[pid]" value="<?php echo $config_miwoshop['pid']; ?>" />
+                        <input type="password" disabled size="60" name="config_miwoshop[pid]" value="<?php echo $config_miwoshop['pid']; ?>" />
                       </td>
                     </tr>
                     <tr>

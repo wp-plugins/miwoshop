@@ -18,12 +18,20 @@ class DB {
 		
   	public function query($sql) {
         $this->driver->setQuery($sql);
-        $data =  $this->driver->loadAssocList();
+		
+		$isSelect = $this->isSelect($sql);
+		
+		if ($isSelect) {
+			$data =  $this->driver->loadAssocList();
 
-        $query = new stdClass();
-        $query->row = isset($data[0]) ? $data[0] : array();
-        $query->rows = $data;
-        $query->num_rows = count($data);
+            $query = new stdClass();
+            $query->row = isset($data[0]) ? $data[0] : array();
+            $query->rows = $data;
+            $query->num_rows = count($data);
+		}
+		else {
+            $query =  $this->driver->execute();
+		}
 
         return $query;
   	}
@@ -45,6 +53,17 @@ class DB {
 
   	public function getLastId() {
 		return $this->driver->insertid();
-  	}	
+  	}
+
+	public function isSelect($query) {
+		$result = strpos($query, 'SELECT');
+		
+		if($result === false) {
+			return false;
+		}
+		else{
+			return true;
+		}
+	}
 }
 ?>

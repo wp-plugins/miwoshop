@@ -6,7 +6,7 @@
 		<?php } ?>
 	</div>
 	<div class="miwi_paid">
-		<strong><?php echo MText::sprintf('MLIB_X_PRO_MEMBERS', 'Frontend Management'); ?></strong>
+		<strong><?php echo MText::sprintf('MLIB_X_PRO_MEMBERS', 'Migrate'); ?></strong>
 		<br /><br />
 		<?php echo MText::sprintf('MLIB_PRO_MEMBERS_DESC', 'http://miwisoft.com/wordpress-plugins/miwoshop-wordpress-shopping-cart#pricing','MiwoShop'); ?>
 	</div>

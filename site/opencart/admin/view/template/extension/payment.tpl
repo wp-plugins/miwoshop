@@ -39,7 +39,7 @@
             <td class="left"><?php echo $extension['status'] ?></td>
             <td class="right"><?php echo $extension['sort_order']; ?></td>
             <td class="right"><?php
-			if($extension['extension'] == 'free_checkout' or $extension['extension'] == 'pp_standard' ){
+			if($extension['extension'] == 'free_checkout' or $extension['extension'] == 'pp_standard' or $extension['extension'] == 'cod' ){
 			  foreach ($extension['action'] as $action) { ?>
 			  [ <a href="<?php echo $action['href']; ?>"><?php echo $action['text']; ?></a> ]
 			  <?php }

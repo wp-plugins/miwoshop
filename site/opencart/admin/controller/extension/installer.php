@@ -256,16 +256,19 @@ class ControllerExtensionInstaller extends Controller {
 					if (is_dir($file)) {
 						$path[] = $file . '/*';
 					}
-
+					/*$edit_page_url = explode("upload", strtolower($file));
+					$edit_page_url = 'upload'.$edit_page_url[1];
+					$this->permission_control($edit_page_url);*/
+                    $this->editFile($file);
 					$files[] = $file;
 				}
 			}
 
-            $root = MPATH_WP_PLG.'/miwoshop/site/opencart/';
+            $root = ABSPATH.'wp-content/plugins/miwoshop/site/opencart/';
 
             foreach ($files as $file) {
                 // Upload everything in the upload directory
-                
+
                 $destination = substr($file, strlen($directory));
 
                 if (is_dir($file)) {
@@ -275,18 +278,227 @@ class ControllerExtensionInstaller extends Controller {
                             exit();
                         }
                     }
-                }	
+                }
 
                 if (is_file($file)) {
                     if (!copy($file, $root.$destination)) {
                         $json['error'] = sprintf($this->language->get('error_ftp_file'), $file);
                     }
                 }
-            }		
+            }
 		}
 
-		$this->response->setOutput(json_encode($json));		
+		$this->response->setOutput(json_encode($json));
 	}
+
+    public function editFile($path){
+
+        $page         = $path;
+      //  $edit_page    = html_entity_decode(file_get_contents($page));
+        $edit_page    = file_get_contents($page);
+
+        if ($edit_page!=""){
+            $source = '';
+            $edit_page_url = explode("upload", strtolower($page));
+            $edit_page_url = 'upload'.$edit_page_url[1];
+
+                if (strpos($edit_page_url, 'upload/admin')!== false){
+                    $source = 'admin';
+                }elseif(strpos($edit_page_url, 'upload/catalog')!== false){
+                    $source = 'site';
+                }elseif(strpos($edit_page_url, 'module') !== false){
+                    $source = 'module';
+                }elseif(strpos($edit_page_url, 'upload/vqmod') !== false){
+                    $source = 'vqmod';
+                }
+            
+            $image_control = explode('.',$edit_page_url);
+            if((($image_control[1]!='png') AND ($image_control[1]!='gif') AND ($image_control[1]!='jpg'))){
+				if(in_array("js",$image_control)){$source = 'js';}
+				$edit_page = $this->replace($source,$edit_page);
+				
+                file_put_contents($page, $edit_page);
+				// Controllers page check permission for Show Administrator automaticaly..
+                $this->permission_control($edit_page_url);
+            }
+        }
+    }
+
+    public function replace($source,$edit_page){
+
+        $replace_output['JPATH_MIJOSHOP'] 		                                                                = 'MPATH_MIWOSHOP';
+
+    if ($source == 'admin') {
+        $replace_output['"../components/com_mijoshop/opencart/admin']                                           = "MPATH_MIWOSHOP_OC.".'/admin';
+        $replace_output['\'../components/com_mijoshop/opencart/admin']                                          = "MPATH_MIWOSHOP_OC."."/admin";
+        $replace_output['"components/com_mijoshop/opencart/admin']                                              = "MPATH_MIWOSHOP_OC.".'/admin';
+        $replace_output['\'components/com_mijoshop/opencart/admin']                                             = "MPATH_MIWOSHOP_OC."."/admin";
+        $replace_output['((HTTPS_SERVER) ? HTTPS_SERVER : HTTP_SERVER) . \'index.php?token=\''] 				= '"admin.php?page=miwoshop&option=com_miwoshop&token="';
+        $replace_output['index.php?route='] 																	= 'index.php?option=com_miwoshop&route=';
+        $replace_output['index.php?token='] 																	= 'index.php?option=com_miwoshop&token=';
+       // $replace_output['((HTTPS_SERVER) ? HTTPS_SERVER : HTTP_SERVER) . \'index.php?token=\''] 				= 'admin.php?page=miwoshop&option=com_miwoshop&token=';
+        $replace_output['"<link rel="stylesheet" type="text/css" href="index.php?option=com_miwoshop&'] 		= '<link rel="stylesheet" type="text/css" href="<?php echo admin_url()?>/admin-ajax.php?action=miwoshop&option=com_miwoshop&format=raw&tmpl=component&';
+        $replace_output['\'<link rel="stylesheet" type="text/css" href="index.php?option=com_miwoshop&'] 		= '<link rel="stylesheet" type="text/css" href="<?php echo admin_url()?>/admin-ajax.php?action=miwoshop&option=com_miwoshop&format=raw&tmpl=component&';
+        $replace_output['$this->document->addStyle(\'view/'] 								        	        = "MiwoShop::get('base')->addHeader(MPATH_MIWOSHOP_OC . '/admin/view/";
+        $replace_output["HTTP_SERVER . 'admin/"] 							                                	= "HTTP_SERVER . MPATH_MIWOSHOP_OC."."'/admin/";
+    }
+
+    if ($source == 'site') {
+        $replace_output['"../components/com_mijoshop/opencart/']                                                = "MPATH_MIWOSHOP_OC. \"";
+        $replace_output['\'../components/com_mijoshop/opencart/']                                               = "MPATH_MIWOSHOP_OC. \'";
+        $replace_output['"components/com_mijoshop/opencart/']                                                   = "MPATH_MIWOSHOP_OC. \"";
+        $replace_output['\'components/com_mijoshop/opencart/']                                                  = "MPATH_MIWOSHOP_OC. \'";
+        $replace_output['"components/com_mijoshop/opencart/']                                                   = "MPATH_MIWOSHOP_OC. \"";
+        $replace_output['class="box"'] 												                            = 'class="box_oc"';
+        $replace_output['class="button_oc"'] 										                            = 'class="'.MiwoShop::getButton().'"';
+        $replace_output['class="button"'] 											                            = 'class="'.MiwoShop::getButton().'"';
+        $replace_output['id="button"'] 												                            = 'class="'.MiwoShop::getButton().'"';
+        $replace_output[' src="catalog/'] 											                            = ' src="'.MURL_MIWOSHOP.'/site/opencart/catalog/';
+        $replace_output[' src="image/'] 											                            = ' src="'.MURL_MIWOSHOP.'/site/opencart/image/';
+    }
+	
+	if ($source == 'vqmod'){
+		$replace_output["'../'. 'components/com_mijoshop/opencart"]												= "MPATH_MIWOSHOP_OC.'";
+		$replace_output["'../'.'components/com_mijoshop/opencart"]												= "MPATH_MIWOSHOP_OC.'";
+		$replace_output['HTTPS_CATALOG."components/com_mijoshop/opencart']										= "MPATH_MIWOSHOP_OC.\"";
+		$replace_output['HTTP_CATALOG."components/com_mijoshop/opencart']										= "MPATH_MIWOSHOP_OC.\"";
+	}
+
+    if ($source == 'js'){
+        $replace_output[": 'index.php?route="] 										                            = ":miwiajaxurl + \"?action=miwoshop&option=com_miwoshop&route=";
+        $replace_output[': "index.php?route='] 												                    = ":miwiajaxurl + \"?action=miwoshop&option=com_miwoshop&route=";
+        $replace_output[":'index.php?route="] 											                        = ":miwiajaxurl + \"?action=miwoshop&option=com_miwoshop&route=";
+        $replace_output[':"index.php?route='] 												                    = ":miwiajaxurl + \"?action=miwoshop&option=com_miwoshop&route=";
+		$replace_output[": 'index.php?option=com_mijoshop&route="] 										        = ":miwiajaxurl + \"?action=miwoshop&option=com_miwoshop&route=";
+        $replace_output[': "index.php?option=com_mijoshop&route='] 												= ":miwiajaxurl + \"?action=miwoshop&option=com_miwoshop&route=";
+        $replace_output[":'index.php?option=com_miwjshop&route="] 											    = ":miwiajaxurl + \"?action=miwoshop&option=com_miwoshop&route=";
+        $replace_output[':"index.php?option=com_mijoshop&route='] 											    = ":miwiajaxurl + \"?action=miwoshop&option=com_miwoshop&route=";
+    }
+
+    if ($source == 'admin' || $source == 'site') {
+        $replace_output["jQuery.post('index.php?route="] 									                    = "jQuery.post('miwiajaxurl + \"?action=miwoshop&option=com_miwoshop&format=raw&tmpl=component&route=";
+        $replace_output["jQuery.post('index.php?option=com_mijoshop&route="] 				                    = "jQuery.post('miwiajaxurl + \"?action=miwoshop&option=com_miwoshop&format=raw&tmpl=component&route=";
+        $replace_output[".load('index.php?option=com_mijoshop&route="] 			        	                    = ".load(miwiajaxurl + '?action=miwoshop&option=com_miwoshop&format=raw&tmpl=component&route=";
+        $replace_output[".load('index.php?route="] 									                            = ".load(miwiajaxurl + '?action=miwoshop&option=com_miwoshop&format=raw&tmpl=component&route=";
+        $replace_output[": 'index.php?option=com_mijoshop&route="] 					                            = ":miwiajaxurl + '?action=miwoshop&option=com_miwoshop&format=raw&tmpl=component&route=";
+        $replace_output[': "index.php?option=com_mijoshop&route='] 				                                = ':miwiajaxurl + "?action=miwoshop&option=com_miwoshop&format=raw&tmpl=component&route=';
+        $replace_output[": 'index.php?route="] 										                            = ":miwiajaxurl + '?action=miwoshop&option=com_miwoshop&format=raw&tmpl=component&route=";
+        $replace_output[': "index.php?route='] 										                            = ':miwiajaxurl + "?action=miwoshop&option=com_miwoshop&format=raw&tmpl=component&route=';
+        $replace_output[": 'index.php?option=com_mijoshop&format=raw"] 				                            = ":miwiajaxurl + '?action=miwoshop&option=com_miwoshop&format=raw";
+        $replace_output[': "index.php?option=com_mijoshop&format=raw'] 			        	                    = ':miwiajaxurl + "?action=miwoshop&option=com_miwoshop&format=raw';
+
+        $replace_output["ajaxurl = 'index.php?option=com_miwoshop&route"] 				                        = "ajaxurl = miwiajaxurl + '?action=miwoshop&option=com_miwoshop&format=raw&tmpl=component&route=";
+        $replace_output['ajaxurl = "index.php?option=com_miwoshop&route'] 				                        = "ajaxurl = miwiajaxurl + \"?action=miwoshop&option=com_miwoshop&format=raw&tmpl=component&route=";
+        $replace_output["ajaxurl = 'index.php?route="] 					                                        = "ajaxurl = miwiajaxurl + '?action=miwoshop&option=com_miwoshop&format=raw&tmpl=component&route=";
+        $replace_output['ajaxurl = "index.php?route='] 					                                        = "ajaxurl = miwiajaxurl + \"?action=miwoshop&option=com_miwoshop&format=raw&tmpl=component&route=";
+        $replace_output["ajaxurl = 'index.php?option=com_miwoshop&format=raw"] 				                    = "ajaxurl = miwiajaxurl + '?action=miwoshop&option=com_miwoshop&format=raw&tmpl=component";
+        $replace_output['ajaxurl = "index.php?option=com_miwoshop&format=raw'] 			                        = "ajaxurl = miwiajaxurl + \"?action=miwoshop&option=com_miwoshop&format=raw&tmpl=component";
+    }
+
+        $replace_output['JPATH_MIJOSHOP_OC'] 		                                                            = 'MPATH_MIWOSHOP_OC';
+        $replace_output['JPATH_MIJOSHOP_LIB'] 		                                                            = 'MPATH_MIWOSHOP_LIB';
+        $replace_output['JPATH_MIJOSHOP_SITE'] 		                                                            = 'MPATH_MIWOSHOP_SITE';
+        $replace_output['JPATH_MIJOSHOP_ADMIN'] 		                                                        = 'MPATH_MIWOSHOP_ADMIN';
+        $replace_output['JConfig'] 		                                                                        = 'MConfig';
+        $replace_output['JController'] 		                                                                    = 'MController';
+        $replace_output['JRequest'] 		                                                                    = 'MRequest';
+        $replace_output['JDatabase'] 		                                                                    = 'MDatabase';
+        $replace_output['JDate'] 		                                                                    	= 'MDate';
+        $replace_output['JEditor'] 		                                                                        = 'MEditor';
+        $replace_output['JFactory'] 		                                                                    = 'MFactory';
+        $replace_output['JFile'] 		                                                                        = 'MFile';
+        $replace_output['JPath'] 		                                                                        = 'MPath';
+        $replace_output['JRegistry'] 		                                                                    = 'MRegistry';
+        $replace_output['JRoute'] 		                                                                        = 'MRoute';
+        $replace_output['jimport(\'joomla.'] 		                                                            = 'mimport(\'framework.';
+        $replace_output['jimport'] 		                                                                        = 'mimport';
+        $replace_output['jexit'] 		                                                                        = 'mexit';
+        $replace_output['Joomla.checkAll(this)'] 		                                                        = 'Miwi.checkAll(this)';
+        $replace_output['JACTION'] 		                                               					        = 'MACTION';
+        $replace_output['JAdministratorHelper'] 		                                               			= 'MAdministratorHelper';
+        $replace_output['JApplication'] 		                                               					= 'MApplication';
+        $replace_output['JArchive'] 		                                               						= 'MArchive';
+        $replace_output['JArrayHelper'] 		                                               					= 'MArrayHelper';
+        $replace_output['JBrowser'] 		                                               						= 'MBrowser';
+        $replace_output['JCache'] 		                                               							= 'MCache';
+        $replace_output['JDispatcher'] 		                                               						= 'MDispatcher';
+        $replace_output['JDocument'] 		                                               						= 'MDocument';
+        $replace_output['JError'] 		                                               							= 'MError';
+        $replace_output['JFEATURED'] 		                                               						= 'MFEATURED';
+        $replace_output['JTable'] 		                                               							= 'MTable';
+
+        $replace_output['MijoShop'] 											                                = 'MiwoShop';
+        $replace_output['mijoshop'] 											                                = 'miwoshop';
+
+        $replace_output_regex['~JPATH_(ROOT|SITE)\s*.\s*("|\')/components/com_mijo([a-zA-Z0-9_\.\-]+)~'] 		                 = 'MPATH_WP_PLG.$2/miwo$3/site';
+        $replace_output_regex['~JPATH_(ROOT|ADMINISTRATOR|SITE)\s*.\s*("|\')/(administrator/|)components/com_mijoshop~'] 		 = 'MPATH_WP_PLG.$2/miwo$4/admin';
+        $replace_output_regex['~J(Uri|URI)::root\((true|false|)\)\s*.\s*("|\')(/|)components/com_mijoshop~'] 	                 = 'MURL_MIWO$5.$3/site/$6$7';
+        $replace_output_regex['~<\?php echo J(Uri|URI)::root\((true|false|)\)(\W+)\?>(/|)components/com_mijoshop~'] 		     = '<?php echo MURL_MIWO$5; ?>/site/$6';
+        $replace_output_regex['~(addStyleSheet|addScript|stylesheet|script)\(("|\')components/com_mijoshop~'] 		             = '$1(MURL_MIWO$3.$2/site';
+        $replace_output_regex['~(href|src)\s*=\s*("|\')(/|)components/com_mijoshop~'] 		                                     = '$1=$2<?php echo MURL_MIWO$4; ?>/site';
+        $replace_output_regex['~J(Show|SHOW|HIDE|Hide)~'] 		                                                                 = 'M$1';
+        $replace_output_regex['~(JURI|JUri|Juri)~'] 		                                                                     = 'MUri';
+
+        foreach($replace_output_regex as $key => $value) {
+            $edit_page = preg_replace($key, $value, $edit_page);
+        }
+
+        foreach($replace_output as $key => $value) {
+            $edit_page = str_replace($key, $value, $edit_page);
+        }
+
+        return $edit_page;
+    }
+
+    public function permission_control($edit_page_url){
+        $search_page = array(
+            'product' 				=> 'product.',
+            'common' 				=> 'common',
+            'design' 		    	=> 'design',
+            'error' 				=> 'error',
+            'extension' 			=> 'extension',
+            'feed' 		        	=> 'feed',
+            'localisation' 		    => 'localisation',
+            'module' 	    		=> 'module',
+            'payment' 				=> 'payment',
+            'report'                => 'report',
+            'sale' 				    => 'sale',
+            'setting' 				=> 'setting',
+            'shipping' 				=> 'shipping',
+            'tool'   				=> 'tool',
+            'total' 				=> 'total',
+            'user' 				    => 'user'
+        );
+        foreach($search_page as $page)
+        if (strpos($edit_page_url, 'upload/admin/controller/'.$page)!== false){
+
+            $permissions_page = explode($page,$edit_page_url);
+            $permissions_page = $page.str_replace('.php','',$permissions_page[1]);
+
+            $this->permission($permissions_page);
+
+        }
+
+    }
+
+    public function permission($page){
+        $jdb = MiwoShop::get('db')->getDbo();
+
+        //insert permission for support/support
+        $jdb->setQuery("SELECT permission FROM `#__miwoshop_user_group` WHERE `user_group_id` = 1");
+        $permission = $jdb->loadResult();
+        $permission = unserialize($permission);
+
+            if (!array_search($page, $permission['access'])){
+                $permission['access'][] = $page;
+                $permission['modify'][] = $page;
+            }
+
+        $permission = serialize($permission);
+
+        $jdb->setQuery("UPDATE `#__miwoshop_user_group` SET `permission` = '".$permission."' WHERE `user_group_id` = 1");
+        $jdb->query();
+    }
 
 	public function sql() {
 		$this->load->language('extension/installer');

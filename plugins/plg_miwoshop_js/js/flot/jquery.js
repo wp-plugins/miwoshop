@@ -1282,7 +1282,7 @@ return jQuery;
 		div = tds = null;
 	});
 
-	// Technique from MUriy Zaytsev
+	// Technique from Juriy Zaytsev
 	// http://thinkweb2.com/projects/prototype/detecting-event-support-without-browser-sniffing/
 	var eventSupported = function( eventName ) {
 		var el = document.createElement("div");

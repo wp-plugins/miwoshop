@@ -75,10 +75,16 @@ class com_MiwoshopInstallerScript {
 			MFolder::copy(MPath::clean(MPATH_WP_PLG.'/miwoshop/plugins'), MPath::clean(MPATH_MIWI.'/plugins'), null, true);
 			MFolder::delete(MPath::clean(MPATH_WP_PLG.'/miwoshop/plugins'));
 		}
-		
-        if ($this->_is_new_installation == true) {
-			$this->_installMiwoshop();
+
+		#delete this part in next version
+		if ($type == 'upgrade') {
+			return;
 		}
+		##################################
+
+        if ($this->_is_new_installation) {
+            $this->_installMiwoshop();
+        }
         else {
             $this->_updateMiwoshop();
         }
@@ -102,7 +108,7 @@ class com_MiwoshopInstallerScript {
         $config->miwoshop_display = '0';
         $config->button_class = 'button_oc';
         $config->comments = '0';
-        $config->miwosef_integration = '0';
+        $config->mijosef_integration = '0';
         $config->account_sync_done = '0';
         $config->alias_sync_done = '1';
 
