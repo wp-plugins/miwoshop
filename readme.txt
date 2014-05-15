@@ -31,16 +31,16 @@ MiwoShop is well supported, frequently updated and one of the leading eCommerce 
 * Unlimited Products
 * Unlimited Images
 * Unlimited Manufacturers
-* Front-end Management **(Pro Version)**
-* Android app to manage the store **(Pro Version)**
+* [Front-end Management](http://miwisoft.com/wordpress-plugins/miwoshop-wordpress-shopping-cart) **(Pro Version)**
+* [Android app](http://miwisoft.com/wordpress-plugins/miwoshop/android-app) **(Pro Version)**
 * Product Reviews
 * Product Ratings
 * Downloadable (Digital) Products
 * Related Products
 * Compare Products
 * Automatic Image Resize
-* 25+ Payment Gateways **(Pro Version)**
-* 10+ Shipping Methods **(Pro Version)**
+* [25+ Payment Gateways](http://miwisoft.com/wordpress-plugins/miwoshop/payment-gateways) **(Pro Version)**
+* [10+ Shipping Methods](http://miwisoft.com/wordpress-plugins/miwoshop/shipping-methods) **(Pro Version)**
 * Modular System (1000+ modules)
 * Templatable
 * Custom Reports (50+ reports)
