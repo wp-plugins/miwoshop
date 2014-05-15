@@ -17,13 +17,13 @@ MiwoShop is a powerful shopping cart that is designed user friendly and extremel
 [Documentation](http://miwisoft.com/support/docs/wordpress/miwoshop) |
 [Tickets Support](http://miwisoft.com/support/tickets) 
 
-Introducing, [MiwoShop](http://miwisoft.com/wordpress-plugins/miwoshop-wordpress-shopping-cart): The leading e-Commerce application for WordPress!
+Introducing, [MiwoShop](http://miwisoft.com/wordpress-plugins/miwoshop-wordpress-shopping-cart): The leading eCommerce application for WordPress!
 
-MiwoShop is a powerful shopping cart plugin that is designed feature rich and user friendly. It's a turn-key ready "out of the box" shopping cart and e-Commerce plugin for WordPress with an intuitive admin interface that allows you to have complete control over your store and detailed sales reports.
+MiwoShop is a powerful shopping cart plugin that is designed feature rich and user friendly. It's a turn-key ready "out of the box" shopping cart and eCommerce plugin for WordPress with an intuitive admin interface that allows you to have complete control over your store and detailed sales reports.
 
 MiwoShop has hundreds Payment Gateway and Shipping Method integrations available. With over 6000 extensions (except themes) for OpenCart that are compatible with MiwoShop it will be very easy for you to customize your online shop in order to meet your website ecommerce needs.
 
-MiwoShop is well supported, frequently updated and one of the leading e-Commerce applications for WordPress. Don't hesitate to contact us if you find something is missing.
+MiwoShop is well supported, frequently updated and one of the leading eCommerce applications for WordPress. Don't hesitate to contact us if you find something is missing.
 
 = Features =
 
