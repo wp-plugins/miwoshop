@@ -95,7 +95,7 @@ MiwoShop is translated in 35+ languages and offers a multi-language interface in
 
 = Migration tools =
 
-You can migrate your data from WooCommerce, WP e-Commerce, Ready! Ecommerce, Jigoshop and eCommerce Product Catalog plugins within a couple of clicks.
+You can migrate your data from WooCommerce, WP e-Commerce, Ready! Ecommerce, Jigoshop, eCommerce Product Catalog, TheCartPress and MarketPress plugins within a couple of clicks.
 
 = Documentation =
 
