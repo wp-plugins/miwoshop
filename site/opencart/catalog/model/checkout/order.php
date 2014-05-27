@@ -166,6 +166,33 @@ class ModelCheckoutOrder extends Model {
 		}
 	}	
 
+	function getSiteRoute($url)
+   {
+      static $router;
+
+      mimport('framework.application.router');
+      require_once(MPATH_SITE.'/libraries/legacy/application/application.php');
+
+      // Only get the router once.
+      if (!is_object($router))
+      {
+         // Get and configure the site router.
+         $config   = &MFactory::getConfig();
+         $router = &MRouter::getInstance('site');
+         //$router->setMode($config->getValue('sef', 1));
+      }
+
+      // Build the route.
+      $uri   = &$router->build($url);
+      $route   = $uri->toString(array('path', 'query', 'fragment'));
+
+      // Strip out the base portion of the route.
+      $route = str_replace(MUri::base(true).'/', '', $route);
+
+       return $route;
+       // Create full path of article
+   }
+	
 	public function confirm($order_id, $order_status_id, $comment = '', $notify = false) {
 		$order_info = $this->getOrder($order_id);
 		 
@@ -304,10 +331,12 @@ class ModelCheckoutOrder extends Model {
 			$template->data['store_name'] = $order_info['store_name'];
 			$template->data['store_url'] = $order_info['store_url'];
 			$template->data['customer_id'] = $order_info['customer_id'];
-			$template->data['link'] = $store_url . 'index.php?route=account/order/info&order_id=' . $order_id;
+			$link = $this->getSiteRoute('index.php?route=account/order/info&order_id=' . $order_id);
+			$template->data['link'] = $store_url .$link ; 
 			
 			if ($order_download_query->num_rows) {
-				$template->data['download'] = $store_url . 'index.php?route=account/download';
+				$link = $this->getSiteRoute('index.php?route=account/download');
+				$template->data['download'] = $store_url . $link;
 			} else {
 				$template->data['download'] = '';
 			}
@@ -483,12 +512,14 @@ class ModelCheckoutOrder extends Model {
 			
 			if ($order_info['customer_id']) {
 				$text .= $language->get('text_new_link') . "\n";
-				$text .= $store_url . 'index.php?route=account/order/info&order_id=' . $order_id . "\n\n";
+				$link = $this->getSiteRoute('index.php?route=account/order/info&order_id=' . $order_id );
+				$text .= $store_url . $link . "\n\n";
 			}
 		
 			if ($order_download_query->num_rows) {
 				$text .= $language->get('text_new_download') . "\n";
-				$text .= $store_url . 'index.php?route=account/download' . "\n\n";
+				$link = $this->getSiteRoute('index.php?route=account/download');
+				$text .= $store_url . $link . "\n\n";
 			}
 			
 			// Comment
@@ -658,7 +689,8 @@ class ModelCheckoutOrder extends Model {
 				
 				if ($order_info['customer_id']) {
 					$message .= $language->get('text_update_link') . "\n";
-					$message .= $store_url . 'index.php?route=account/order/info&order_id=' . $order_id . "\n\n";
+					$link = $this->getSiteRoute('index.php?route=account/order/info&order_id=' . $order_id );
+					$message .= $store_url . $link. "\n\n";
 				}
 				
 				if ($comment) { 

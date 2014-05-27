@@ -34,11 +34,26 @@ class ModelCommonUpgrade extends Model {
             //$this->setState('message', 'Unable to find install package.');
             return false;
         }
-
-	    # Miwi Framework        
-	    if (MFolder::copy($package['dir'].'/miwi', MPath::clean(MPATH_WP_CNT), null, true)) {
-		    MFolder::delete($package['dir'].'/miwi');
-	    }
+       
+	    # Miwi Framework
+	    $src = $package['dir'].'/miwi';
+        $dest = MPATH_WP_CNT.'/miwi';
+        if (!MFolder::exists($dest)) {
+            MFolder::copy($src, $dest);
+            MFolder::delete($src);
+        }
+        elseif (MFolder::exists($src) and MFolder::exists($dest)) {
+            require_once(MPATH_WP_PLG.'/miwoshop/miwoshop.php');
+            $src_version  = MShop::getMiwiVersion($src.'/versions.xml');
+            $dest_version = MShop::getMiwiVersion($dest.'/versions.xml');
+            if (version_compare($src_version, $dest_version, 'gt')) {
+                MFolder::copy($src, $dest, '', true);
+                MFolder::delete($src);
+            }
+            else {
+                MFolder::delete($src);
+            }
+        }
 		
 		MFolder::copy($package['dir'], MPath::clean(MPATH_WP_PLG.'/miwoshop'), null, true);
         MFolder::delete($package['dir']);

@@ -56,9 +56,11 @@ class DB {
   	}
 
 	public function isSelect($query) {
-		$result = strpos($query, 'SELECT');
-		
-		if($result === false) {
+		$query = trim($query);
+		$isselect = strpos($query, 'SELECT');
+		$isshow = strpos($query, 'SHOW');
+
+		if($isselect === false and $isshow === false ) {
 			return false;
 		}
 		else{

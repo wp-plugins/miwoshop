@@ -102,7 +102,7 @@ class MiwoShopOpencart {
         self::$registry->set('load', self::$loader);
 
         // Config
-        self::$config = new Config();
+        self::$config = new MiwoshopConfig();
         self::$registry->set('config', self::$config);
 
         // Database

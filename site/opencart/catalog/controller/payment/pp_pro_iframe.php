@@ -71,9 +71,9 @@ class ControllerPaymentPPProIframe extends Controller {
         }
         
         if (file_exists(DIR_APPLICATION . 'view/theme/' . $this->config->get('config_template') . '/stylesheet/stylesheet.css')) {
-            $this->data['stylesheet'] = '/catalog/view/theme/' . $this->config->get('config_template') . '/stylesheet/stylesheet.css';
+            $this->data['stylesheet'] = MURL_MIWOSHOP.'/site/opencart/catalog/view/theme/' . $this->config->get('config_template') . '/stylesheet/stylesheet.css';
         } else {
-            $this->data['stylesheet'] = '/catalog/view/theme/default/stylesheet/stylesheet.css';
+            $this->data['stylesheet'] = MURL_MIWOSHOP.'/site/opencart/catalog/view/theme/default/stylesheet/stylesheet.css';
         }
         
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/pp_pro_iframe_body.tpl')) {

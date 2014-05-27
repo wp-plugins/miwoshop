@@ -124,7 +124,7 @@ class MiwoShopUtility {
         $uploaded = MFile::upload($tmp_src, $tmp_dest);
 
         if (!$uploaded) {
-            MError::raiseWarning('SOME_ERROR_CODE', '<br /><br />' . MText::_('File not uploaded, please, make sure that your "MiwoShop => Options => Personal ID" and/or the "Global Configuration => Server => Path to Temp-folder" field has a valid value.') . '<br /><br /><br />');
+            MError::raiseWarning(100, '<br /><br />' . MText::_('File not uploaded, please, make sure that your "MiwoShop => Options => Personal ID" and/or the "Global Configuration => Server => Path to Temp-folder" field has a valid value.') . '<br /><br /><br />');
             return false;
         }
 
@@ -160,14 +160,19 @@ class MiwoShopUtility {
 
         // Grab the package
         $data = $this->getRemoteData($url);
-
+		
+		if (strpos($data, 'Error') !== false) {
+		    MError::raiseWarning(100, MText::_('Please, enter your Personal-ID in MiwoVideos => Configuration page or upgrade manually (see the next tab).'));
+		    return false;
+	    }
+		
         $target = $tmp_dest.'/miwoshop_upgrade.zip';
 
         // Write buffer to file
         $written = MFile::write($target, $data);
 
         if (!$written) {
-            MError::raiseWarning('SOME_ERROR_CODE', '<br /><br />' . MText::_('File not uploaded, please, make sure that your "MiwoShop => Options => Personal ID" and/or the "Global Configuration=>Server=>Path to Temp-folder" field has a valid value.') . '<br /><br /><br />');
+            MError::raiseWarning(100, '<br /><br />' . MText::_('File not uploaded, please, make sure that your "MiwoShop => Options => Personal ID" and/or the "Global Configuration=>Server=>Path to Temp-folder" field has a valid value.') . '<br /><br /><br />');
             return false;
         }
 
@@ -175,7 +180,7 @@ class MiwoShopUtility {
 
         // Was the package downloaded?
         if (!$p_file) {
-            MError::raiseWarning('SOME_ERROR_CODE', MText::_('Invalid Personal ID'));
+            MError::raiseWarning(100, MText::_('Invalid Personal ID'));
             return false;
         }
 
@@ -183,7 +188,7 @@ class MiwoShopUtility {
         $package = self::unpack($tmp_dest.'/'.$p_file);
 
         if (!$package) {
-            MError::raiseWarning('SOME_ERROR_CODE', MText::_('An error occured, please, make sure that your "MiwoShop => Options => Personal ID" and/or the "Global Configuration=>Server=>Path to Temp-folder" field has a valid value.'));
+            MError::raiseWarning(100, MText::_('An error occured, please, make sure that your "MiwoShop => Options => Personal ID" and/or the "Global Configuration=>Server=>Path to Temp-folder" field has a valid value.'));
             return false;
         }
 

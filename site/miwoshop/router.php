@@ -131,7 +131,8 @@ class MiwoShopRouter extends MiwisoftComponentRouterBase
 
                         if (strpos($id, '_')) {
                             $old_id = $id;
-                            $id = end(explode('_', $id));
+							$_id = explode('_', $id);
+                            $id = end($_id);
 
                             self::$cats[$id] = $old_id;
                         } else {

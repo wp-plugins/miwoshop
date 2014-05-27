@@ -8,20 +8,20 @@
     <state>
         <name>MiwoShop: Manufacturer</name>
         <description>This layout will display the products of the selected manufacturer.</description>
-		<url addpath="/miwoshop/miwoshop/elements">
+		<url addpath="/miwoshop/site/miwoshop/elements">
             <field name="manufacturer_id" type="miwoshopmanufacturer" default="" label="Select Manufacturer" description="Displays the products of the selected manufacturer."/>
 		</url>
-		<params addpath="/miwoshop/miwoshop/elements">
+		<params addpath="/miwoshop/site/miwoshop/elements">
 			<param name="miwoshop_store_id" type="miwoshopstore" default="" label="Select Store" description="Select the proper store for this page." />
 		</params>
     </state>
 	<fields name="request">
-		<fieldset name="request" label="MiwoShop: Manufacturer" addfieldpath="/miwoshop/miwoshop/elements">
+		<fieldset name="request" label="MiwoShop: Manufacturer" addfieldpath="/miwoshop/site/miwoshop/elements">
             <field name="manufacturer_id" type="miwoshopmanufacturer" default="" label="Select Manufacturer" description="Displays the products of the selected manufacturer."/>
         </fieldset>
     </fields>
 	<fields name="params">
-		<fieldset name="basic" label="MiwoShop: Store" addfieldpath="/miwoshop/miwoshop/elements">
+		<fieldset name="basic" label="MiwoShop: Store" addfieldpath="/miwoshop/site/miwoshop/elements">
             <field name="miwoshop_store_id" type="miwoshopstore" default="" label="Select Store" description="Select the proper store for this page." />
         </fieldset>
     </fields>

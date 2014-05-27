@@ -9,8 +9,8 @@
 // No Permission
 defined('MIWI') or die('Restricted access');
 
-class Config {
-	private $data = array();
+class MiwoshopConfig {
+
 
   	public function get($key) {
     	return (isset($this->data[$key]) ? $this->data[$key] : null);

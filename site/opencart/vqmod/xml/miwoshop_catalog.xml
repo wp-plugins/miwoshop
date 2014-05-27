@@ -313,6 +313,19 @@
                 $title = MText::sprintf('MPAGETITLE', $title, $mainframe->getCfg('sitename'));
             }
 
+            $route = MRequest::getString('route', '');
+            if(!empty($route) and ($route == 'product/popular' or $route == 'product/latest' or $route == 'product/special' or $route == 'product/bestseller' or $route == 'product/featured')) {
+                $active_menu  = $mainframe->getMenu()->getActive();
+                $page_title = $active_menu->params->get('page_title');
+
+                if(!empty($page_title)){
+                    $title = $page_title;
+                }
+                else {
+                    $title = $active_menu->title;
+                }
+            }
+
             $document->setTitle($title);
             $document->setMetaData('title', $title);
             $document->setMetaData('description', html_entity_decode($this->data['description']));
@@ -606,13 +619,44 @@
 			<add><![CDATA[ $template->data['store_url'] = $order_info['store_url'] . 'index.php?option=com_miwoshop';]]></add>
 		</operation>
     </file>
-	
+
+	<file name="catalog/model/total/coupon.php">
+		<operation error="skip">
+			<search position="replace" ><![CDATA[$coupon_info = $this->model_checkout_coupon->getCoupon($code);]]></search>
+			<add><![CDATA[$coupon_info = $this->model_checkout_coupon->getCoupon($code, 0);]]></add>
+		</operation>
+	</file>
+
     <file name="catalog/model/checkout/coupon.php">
-        <operation error="skip">
+		<operation error="skip">
             <search position="replace"><![CDATA[$coupon_category_query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "product_to_category` p2c LEFT JOIN `" . DB_PREFIX . "category` c ON (p2c.category_id = c.category_id) WHERE p2c.`product_id` = '" . (int)$product['product_id'] . "' AND c.`left` BETWEEN '" . (int)$category['left'] . "' AND '" . (int)$category['right'] . "'");]]></search>
             <add><![CDATA[$coupon_category_query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "product_to_category` p2c LEFT JOIN `" . DB_PREFIX . "category` c ON (p2c.category_id = c.category_id) WHERE p2c.`product_id` = '" . (int)$product['product_id'] . "'");]]></add>
         </operation>
-    </file>
+        <operation error="skip">
+            <search position="replace" ><![CDATA[public function getCoupon($code) {]]></search>
+            <add><![CDATA[public function getCoupon($code, $verify = 1) {]]></add>
+        </operation>
+        <operation error="skip">
+            <search position="replace"><![CDATA[if ($coupon_query->row['total'] >= $this->cart->getSubTotal()) {]]></search>
+            <add><![CDATA[if ($verify && $coupon_query->row['total'] >= $this->cart->getSubTotal()) {]]></add>
+        </operation>
+        <operation error="skip">
+            <search position="replace"><![CDATA[if ($coupon_query->row['uses_total'] > 0 && ($coupon_history_query->row['total'] >= $coupon_query->row['uses_total'])) {]]></search>
+            <add><![CDATA[if ($verify && $coupon_query->row['uses_total'] > 0 && ($coupon_history_query->row['total'] >= $coupon_query->row['uses_total'])) {]]></add>
+        </operation>
+        <operation error="skip">
+			<search position="replace"><![CDATA[if ($coupon_query->row['logged'] && !$this->customer->getId()) {]]></search>
+			<add><![CDATA[if ($verify && $coupon_query->row['logged'] && !$this->customer->getId()) {]]></add>
+		</operation>
+        <operation error="skip">
+			<search position="replace"><![CDATA[if ($this->customer->getId()) {]]></search>
+			<add><![CDATA[if ($verify && $this->customer->getId()) {]]></add>
+		</operation>        
+        <operation error="skip">
+			<search position="replace"><![CDATA[if (!$product_data) {]]></search>
+			<add><![CDATA[if ($verify && !$product_data) {]]></add>
+		</operation>
+	</file>
 	
     <file name="catalog/model/shipping/ups.php">
         <operation error="skip">
@@ -703,5 +747,16 @@
             <add><![CDATA[		$this->data['logo'] = $this->config->get('config_url') . 'components/com_miwoshop/opencart/image/' . $this->config->get('config_logo');]]></add>
         </operation>
     </file>
+	
+	<file name="catalog/controller/module/currency.php">
+		<operation error="log">
+			<search position="replace"><![CDATA[$this->data['redirect'] = $this->url->link('common/home');]]></search>
+			<add><![CDATA[$uri = MUri::getInstance();
+		$path = $uri->root(true);
+		$root = $uri->root();
+		$host = str_replace($path.'/', '', $root);
+		$this->data['redirect'] = $host. $_SERVER['REQUEST_URI'];]]></add>
+		</operation>
+	</file>
 	
 </modification>

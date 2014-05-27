@@ -1058,7 +1058,7 @@ class MiwoShopBase {
             $replace_output["HTTP_SERVER . 'admin/"]          						= "HTTP_SERVER . '".MID_PATH."miwoshop/site/opencart/admin/";
             $replace_output['index.php?option=com_miwoshop&route=checkout/manual']	= MURL_ADMIN.'/admin-ajax.php?action=miwoshop&option=com_miwoshop&format=raw&tmpl=component&route=checkout/manual';
             $replace_output['src="index.php?option=com_miwoshop&format=raw']      	= 'src="'.MURL_ADMIN.'/admin-ajax.php?action=miwoshop&option=com_miwoshop&format=raw';
-            $replace_output["url = 'index.php?route"]      							= "url = '".MURL_ADMIN."/admin.php?action=miwoshop&option=com_miwoshop&route";
+			$replace_output["url = 'index.php?route"]      							= "url = '".MURL_ADMIN."/admin.php?page=miwoshop&option=com_miwoshop&route";
         }
     
         if ($source == 'admin' || $source == 'site' || $source == 'module') {

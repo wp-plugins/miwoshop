@@ -667,7 +667,7 @@ class ModelSaleOrder extends Model {
 			return $order_info['invoice_prefix'] . $invoice_no;
 		}
 	}
-	
+
 	public function addOrderHistory($order_id, $data) {
 		$this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int)$data['order_status_id'] . "', date_modified = NOW() WHERE order_id = '" . (int)$order_id . "'");
 
@@ -705,7 +705,8 @@ class ModelSaleOrder extends Model {
 			
 			if ($order_info['customer_id']) {
 				$message .= $language->get('text_link') . "\n";
-				$message .= html_entity_decode(($this->config->get('config_secure') ? str_replace('http://', 'https://', $order_info['store_url']) : $order_info['store_url']) . 'index.php?route=account/order/info&order_id=' . $order_id, ENT_QUOTES, 'UTF-8') . "\n\n";
+                $parsed_url = $this->editLink('index.php?option=com_miwoshop&route=account/order/info&order_id=' . $order_id);
+				$message .= html_entity_decode(($this->config->get('config_secure') ? str_replace('http://', 'https://', $order_info['store_url']) : $order_info['store_url']) .$parsed_url, ENT_QUOTES, 'UTF-8') . "\n\n";
 			}
 			
 			if ($data['comment']) {
@@ -780,6 +781,16 @@ class ModelSaleOrder extends Model {
 		$query = $this->db->query("SELECT DISTINCT email FROM `" . DB_PREFIX . "order` o LEFT JOIN " . DB_PREFIX . "order_product op ON (o.order_id = op.order_id) WHERE (" . implode(" OR ", $implode) . ") AND o.order_status_id <> '0'");
 
 		return $query->row['total'];
-	}	
+	}
+
+    public function editLink($link){
+        $app    = MApplication::getInstance('site');
+        $router = &$app->getRouter();
+        $uri = $router->build($link);
+        $parsed_url = $uri->toString();
+        $links = explode('administrator/',$parsed_url) ;
+        $parsed_url = $links[1];
+        return $parsed_url;
+    }
 }
 ?>

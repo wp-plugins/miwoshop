@@ -1,5 +1,5 @@
 <?php if ($checkout_method == 'iframe') { ?>
-    <iframe name="hss_iframe" width="560px" height="540px" style="border:0px solid #DDDDDD; margin-left:210px;" scrolling="no" src="<?php echo HTTPS_SERVER.'index.php?route=payment/pp_pro_iframe/create'; ?>"></iframe>
+    <iframe name="hss_iframe" width="800px" height="540px" style="border:0px solid #DDDDDD; margin-left:10px;" scrolling="no" src="<?php echo HTTPS_SERVER.'index.php?option=com_miwoshop&format=raw&tmpl=component&route=payment/pp_pro_iframe/create'; ?>"></iframe>
 <?php } else { ?>
     
     <?php if (!$error_connection) { ?>

@@ -76,10 +76,11 @@ class com_MiwoshopInstallerScript {
 			MFolder::delete(MPath::clean(MPATH_WP_PLG.'/miwoshop/plugins'));
 		}
 
-		#delete this part in next version
+		#todo delete this part next version
 		if ($type == 'upgrade') {
 			return;
 		}
+		##################################
 		##################################
 
         if ($this->_is_new_installation) {

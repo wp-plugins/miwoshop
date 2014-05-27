@@ -4,7 +4,7 @@ Plugin Name: MiwoShop
 Plugin URI: http://miwisoft.com
 Description: MiwoShop is a powerful shopping cart that is designed user friendly and extremely powerful out of the box with tons of built-in features.
 Author: Miwisoft LLC
-Version: 1.0.3
+Version: 1.0.4
 Author URI: http://miwisoft.com
 Plugin URI: http://miwisoft.com/miwoshop
 */
@@ -20,6 +20,10 @@ final class MShop extends MWordpress {
     public function __construct() {
 	    if (!defined('MURL_MIWOSHOP')) {
 			define('MURL_MIWOSHOP', plugins_url('', __FILE__));
+		}
+
+	    if (!defined('MIWOSHOP_PACK')) {
+			define('MIWOSHOP_PACK', 'pro');
 		}
         
 		parent::__construct('miwoshop', '33.0001', false);
@@ -49,6 +53,8 @@ final class MShop extends MWordpress {
 
         require_once(MPATH_WP_PLG.'/miwoshop/site/miwoshop/miwoshop.php');
         $m_user = MiwoShop::get('user');
+		
+		add_action('wp_head', array($this, 'pageUrl'), 999);
 
         # wordpress user hooks
         add_action('profile_update', array($m_user, 'user_update'));
@@ -74,6 +80,13 @@ final class MShop extends MWordpress {
 
         $dispatcher = MDispatcher::getInstance();
         $dispatcher->trigger('onInit', array());
+    }
+	
+	public function pageUrl(){
+        $p_id = MFactory::getWOption('miwoshop_page_id');
+        echo '<script type="text/javascript">
+        var miwoshop_page_id = \''. $p_id .'\';
+        </script>';
     }
 }
 

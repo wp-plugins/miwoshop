@@ -8,12 +8,12 @@
     <state>
         <name>MiwoShop: Shopping Cart</name>
         <description>This layout will display the cart page.</description>
-		<params addpath="/miwoshop/miwoshop/elements">
+		<params addpath="/miwoshop/site/miwoshop/elements">
 			<param name="miwoshop_store_id" type="miwoshopstore" default="" label="Select Store" description="Select the proper store for this page." />
 		</params>
     </state>
 	<fields name="params">
-		<fieldset name="basic" label="MiwoShop: Store" addfieldpath="/miwoshop/miwoshop/elements">
+		<fieldset name="basic" label="MiwoShop: Store" addfieldpath="/miwoshop/site/miwoshop/elements">
             <field name="miwoshop_store_id" type="miwoshopstore" default="" label="Select Store" description="Select the proper store for this page." />
         </fieldset>
     </fields>
