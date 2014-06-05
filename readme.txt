@@ -85,7 +85,7 @@ Full Feature List:
 
 = Tons of Payment Gateways =
 
-The most powerful part of MiwoShop is the huge number of payment gateways available, 500+ already. The Lite version includes Free Checkout, Cach On Delivery and PayPal Standart gateways. The Pro version includes 25+ payment gateways such as PayPal Pro, Payflow, Amazon, 2Checkout, Authorize.Net, Payza and a lot more you can find in [this page](http://miwisoft.com/wordpress-plugins/miwoshop/payment-gateways).
+The most powerful part of MiwoShop is the huge number of payment gateways available, 500+ already. The Lite version includes Free Checkout, Cash On Delivery and PayPal Standard gateways. The Pro version includes 25+ payment gateways such as PayPal Pro, Payflow, Amazon, 2Checkout, Authorize.Net, Payza and a lot more you can find in [this page](http://miwisoft.com/wordpress-plugins/miwoshop/payment-gateways).
 
 = Lots of Shipping Methods =
 
