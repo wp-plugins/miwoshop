@@ -20,3 +20,6 @@ div.header.icon-48-miwoshop {
 #MiwoshopQuickIcons div.icon a span { display:block; text-align:center; }
 
 .dashboard-slider { float: left !important; margin: 5px !important; width: 98% !important; }
+#element-box div.m {background-color: #FFFFFF !important;}
+.box > .heading h1 {padding: 12px 0 0 !important;}
+.box > .heading h1 img {margin-top: -1px !important;}

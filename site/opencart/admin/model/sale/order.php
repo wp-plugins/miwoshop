@@ -783,14 +783,14 @@ class ModelSaleOrder extends Model {
 		return $query->row['total'];
 	}
 
-    public function editLink($link){
-        $app    = MApplication::getInstance('site');
-        $router = &$app->getRouter();
-        $uri = $router->build($link);
-        $parsed_url = $uri->toString();
-        $links = explode('administrator/',$parsed_url) ;
-        $parsed_url = $links[1];
-        return $parsed_url;
-    }
+	public function editLink($link){
+		$app    = MApplication::getInstance('site');
+		$router = &$app->getRouter();
+		$uri = $router->build($link);
+		$parsed_url = $uri->toString();
+		$links = explode('administrator/',$parsed_url) ;
+		$parsed_url = $links[1];
+		return $parsed_url;
+	}
 }
 ?>

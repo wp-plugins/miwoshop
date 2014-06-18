@@ -106,13 +106,6 @@ class plgMiwoshopJs extends MPlugin {
             $document->addScript($lib_folder.'/ui/external/jquery.bgiframe-2.1.2.js');
             $document->addScript($lib_folder.'/superfish/js/superfish.js');
 
-            if (empty($route) || $route == 'common/home') {
-                if ($browser == 'msie') {
-                    $document->addScript($lib_folder.'/flot/excanvas.js'); // Only IE
-                }
-
-                $document->addScript($lib_folder.'/flot/jquery.flot.js');
-            }
 
             if ($route == 'catalog/product/insert' || $route == 'catalog/product/update' || strpos($route, 'order')) {
                 $document->addScript($lib_folder.'/ui/jquery-ui-timepicker-addon.js');

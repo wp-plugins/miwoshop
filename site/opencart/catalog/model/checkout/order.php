@@ -166,31 +166,25 @@ class ModelCheckoutOrder extends Model {
 		}
 	}	
 
-	function getSiteRoute($url)
-   {
-      static $router;
+	function getSiteRoute($url) {
+		static $router;
 
-      mimport('framework.application.router');
-      require_once(MPATH_SITE.'/libraries/legacy/application/application.php');
+		// Only get the router once.
+		if (!is_object($router)) {
+			// Get and configure the site router.
+			$config   = &MFactory::getConfig();
+			$router = &MRouter::getInstance('site');
+		}
 
-      // Only get the router once.
-      if (!is_object($router))
-      {
-         // Get and configure the site router.
-         $config   = &MFactory::getConfig();
-         $router = &MRouter::getInstance('site');
-         //$router->setMode($config->getValue('sef', 1));
-      }
+		// Build the route.
+		$uri   = &$router->build($url);
+		$route   = $uri->toString(array('path', 'query', 'fragment'));
 
-      // Build the route.
-      $uri   = &$router->build($url);
-      $route   = $uri->toString(array('path', 'query', 'fragment'));
+		// Strip out the base portion of the route.
+		$route = str_replace(MUri::base(true).'/', '', $route);
 
-      // Strip out the base portion of the route.
-      $route = str_replace(MUri::base(true).'/', '', $route);
-
-       return $route;
-       // Create full path of article
+		return $route;
+		// Create full path of article
    }
 	
 	public function confirm($order_id, $order_status_id, $comment = '', $notify = false) {

@@ -59,8 +59,9 @@ class DB {
 		$query = trim($query);
 		$isselect = strpos($query, 'SELECT');
 		$isshow = strpos($query, 'SHOW');
+		$isdescibe = strpos($query, 'DESCRIBE');
 
-		if($isselect === false and $isshow === false ) {
+		if($isselect !== 0 and $isshow !== 0 and $isdescibe !== 0) {
 			return false;
 		}
 		else{

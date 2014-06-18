@@ -1108,7 +1108,7 @@ class ControllerSaleOrder extends Controller {
 		
 		$this->load->model('catalog/product');
 		
-		MiwoShop::get('base')->addHeader(MPATH_ROOT.'/plugins/system/miwoshopjquery/miwoshopjquery/ajaxupload.js', false);
+		MiwoShop::get('base')->addHeader(MPATH_ROOT.'/plugins/plg_miwoshop_js/ajaxupload.js', false);
 		
 		$this->data['order_products'] = array();		
 		

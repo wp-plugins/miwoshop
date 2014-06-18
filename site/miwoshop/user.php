@@ -283,10 +283,12 @@ class MiwoShopUser {
 
         $wp_userdata['user_login']  = $userdata['email'];
         $wp_userdata['user_email']  = $userdata['email'];
-        $wp_userdata['first_name']   = $userdata['firstname'];
+        $wp_userdata['first_name']  = $userdata['firstname'];
         $wp_userdata['last_name']   = $userdata['lastname'];
         $wp_userdata['user_status'] = $status;
-        $wp_userdata['user_pass']   = $userdata['password'];
+        if(!empty($userdata['password'])) {
+            $wp_userdata['user_pass'] = $userdata['password'];
+        }
 
         if(is_multisite()) {
             $wp_user_id = wpmu_create_user($wp_userdata['user_login'], $wp_userdata['user_pass'], $wp_userdata['user_email']);

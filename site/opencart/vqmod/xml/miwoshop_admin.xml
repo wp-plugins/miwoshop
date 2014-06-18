@@ -809,7 +809,7 @@
         $this->data['entry_miwoshop_button_class'] = $this->language->get('entry_miwoshop_button_class');
         $this->data['entry_miwoshop_comments'] = $this->language->get('entry_miwoshop_comments');
         $this->data['entry_miwoshop_miwosef_integration'] = $this->language->get('entry_miwoshop_miwosef_integration');
-        $this->data['entry_miwoshop_set_input_with'] = $this->language->get('entry_miwoshop_set_input_with');
+        $this->data['entry_miwoshop_set_input_width'] = $this->language->get('entry_miwoshop_set_input_width');
         $this->data['entry_miwoshop_acymailling_register'] = $this->language->get('entry_miwoshop_acymailling_register');
         $this->data['entry_miwoshop_acymailling_checkout'] = $this->language->get('entry_miwoshop_acymailling_checkout');
         $this->data['entry_miwoshop_check_j_block_status'] = $this->language->get('entry_miwoshop_check_j_block_status');
@@ -1067,7 +1067,7 @@ $_['entry_miwoshop_button_class']           = 'Button CSS class';
 $_['entry_miwoshop_comments']               = 'Enable comments';
 $_['entry_miwoshop_check_j_block_status']   = 'Check Joomla activation status';
 $_['entry_miwoshop_miwosef_integration']    = 'Enable MiwoSEF integration';
-$_['entry_miwoshop_set_input_with']   		= 'Set input with (120px)';
+$_['entry_miwoshop_set_input_width']   		= 'Set input width (120px)';
 $_['entry_miwoshop_acymailling_register']   = 'Add to AcyMailing list after registration';
 $_['entry_miwoshop_acymailling_checkout']   = 'Add to AcyMailing list after checkout';
 $_['error_language_no_in_db']               = 'Language wasn`t found in MiwoShop database';
@@ -1545,6 +1545,11 @@ $_['button_fix_lang_ids']                   = 'Fix Language IDs';
         <operation error="skip">
             <search position="replace"><![CDATA[index.php?route=]]></search>
             <add><![CDATA[index.php?option=com_miwoshop&route=]]></add>
+        </operation>
+		
+		<operation error="skip">
+            <search position="after"><![CDATA[$this->db->query("DELETE FROM " . DB_PREFIX . "order_total WHERE order_id = '" . (int)$order_id . "'");]]></search>
+            <add><![CDATA[      $this->cache->delete('product.bestseller');]]></add>
         </operation>
 	</file>
 	
@@ -2582,61 +2587,24 @@ jQuery(document).ready(function() {
                     <tr>
                       <td><?php echo $entry_miwoshop_button_class; ?></td>
                       <td>
-                          <input type="text" name="config_miwoshop[button_class]" value="<?php echo $config_miwoshop['button_class']; ?>" />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td><?php echo $entry_miwoshop_comments; ?></td>
-                      <td>
-                          <select name="config_miwoshop[comments]">
-                            <?php if (!isset($config_miwoshop['comments']) or $config_miwoshop['comments'] == 0) { ?>
-                            <option value="0" selected="selected"><?php echo $text_no; ?></option>
-                            <?php } else { ?>
-                            <option value="0"><?php echo $text_no; ?></option>
-                            <?php } ?>
-
-                            <?php if ($config_miwoshop['comments'] == 'jcomments') { ?>
-                            <option value="jcomments" selected="selected">JComments</option>
-                            <?php } else { ?>
-                            <option value="jcomments">JComments</option>
-                            <?php } ?>
-
-                            <?php if ($config_miwoshop['comments'] == 'komento') { ?>
-                            <option value="komento" selected="selected">Komento</option>
-                            <?php } else { ?>
-                            <option value="komento">Komento</option>
-                            <?php } ?>
-                          </select>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td><?php echo $entry_miwoshop_miwosef_integration; ?></td>
-                      <td><?php if ($config_miwoshop['miwosef_integration']) { ?>
-                        <input type="radio" name="config_miwoshop[miwosef_integration]" value="1" checked="checked" />
-                        <?php echo $text_yes; ?>
-                        <input type="radio" name="config_miwoshop[miwosef_integration]" value="0" />
-                        <?php echo $text_no; ?>
-                        <?php } else { ?>
-                        <input type="radio" name="config_miwoshop[miwosef_integration]" value="1" />
-                        <?php echo $text_yes; ?>
-                        <input type="radio" name="config_miwoshop[miwosef_integration]" value="0" checked="checked" />
-                        <?php echo $text_no; ?>
-                        <?php } ?>
+						<input type="text" name="config_miwoshop[button_class]" value="<?php echo $config_miwoshop['button_class']; ?>" />
+						<input type="hidden" name="config_miwoshop[comments]" value="0">
+                        <input type="hidden" name="config_miwoshop[miwosef_integration]" value="0">
                         <input type="hidden" name="config_miwoshop[account_sync_done]" value="1">
                         <input type="hidden" name="config_miwoshop[alias_sync_done]" value="<?php echo Miwoshop::get('base')->getConfig()->get('account_sync_done', 0); ?>">
                       </td>
                     </tr>
 					<tr>
-                      <td><?php echo $entry_miwoshop_set_input_with; ?></td>
-                      <td><?php if ($config_miwoshop['set_input_with'] || !isset($config_miwoshop['set_input_with'])) { ?>
-                        <input type="radio" name="config_miwoshop[set_input_with]" value="1" checked="checked" />
+                      <td><?php echo $entry_miwoshop_set_input_width; ?></td>
+                      <td><?php if ($config_miwoshop['set_input_width'] || !isset($config_miwoshop['set_input_width'])) { ?>
+                        <input type="radio" name="config_miwoshop[set_input_width]" value="1" checked="checked" />
                         <?php echo $text_yes; ?>
-                        <input type="radio" name="config_miwoshop[set_input_with]" value="0" />
+                        <input type="radio" name="config_miwoshop[set_input_width]" value="0" />
                         <?php echo $text_no; ?>
                         <?php } else { ?>
-                        <input type="radio" name="config_miwoshop[set_input_with]" value="1" />
+                        <input type="radio" name="config_miwoshop[set_input_width]" value="1" />
                         <?php echo $text_yes; ?>
-                        <input type="radio" name="config_miwoshop[set_input_with]" value="0" checked="checked" />
+                        <input type="radio" name="config_miwoshop[set_input_width]" value="0" checked="checked" />
                         <?php echo $text_no; ?>
                         <?php } ?>
                       </td>
@@ -2814,4 +2782,14 @@ jQuery(document).ready(function() {
             <add><![CDATA[$_['text_installer']                   = 'Extension Installer'; ]]></add>
         </operation>
     </file>
+	<!-- Extension Manager Finish -->
+	
+	<!-- zone_id is numeric control start -->	
+	 <file name="admin/controller/sale/affiliate.php">
+        <operation error="log">
+            <search position="replace"><![CDATA[if (!isset($this->request->post['zone_id']) || $this->request->post['zone_id'] == '') {]]></search>
+            <add><![CDATA[if (!isset($this->request->post['zone_id']) || $this->request->post['zone_id'] == '' || !is_numeric($this->request->post['zone_id'])) {]]></add>
+        </operation>
+    </file>
+	<!-- zone_id is numeric control finish -->	
 </modification>

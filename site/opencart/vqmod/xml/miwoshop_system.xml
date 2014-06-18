@@ -112,6 +112,10 @@
 			}//
             ]]></add>
         </operation>
+		<operation error="log">
+            <search position="replace" index="2"><![CDATA[if ((int)$qty && ((int)$qty > 0)) {]]></search>
+            <add><![CDATA[if ((int)$qty && ((int)$qty > 0) && isset($this->session->data['cart'][$key])) {]]></add>
+        </operation>
     </file>
 
     <file name="system/library/currency.php">
@@ -121,6 +125,19 @@
             $this->set($this->request->get['currency']);
         } elseif (isset($this->request->post['currency_code']) && (array_key_exists($this->request->post['currency_code'], $this->currencies))) {
             $this->set($this->request->post['currency_code']);]]></add>
+        </operation>
+		<operation error="skip">
+            <search position="replace"><![CDATA['value'         => $result['value']]]></search>
+            <add><![CDATA['value'         => $result['value'],
+				'status'        => $result['status']]]></add>
+        </operation>
+		<operation error="skip">
+            <search position="after"><![CDATA[public function set($currency) {]]></search>
+            <add><![CDATA[
+        if (empty($this->currencies[$currency]['status'])) {
+            $currency = $this->config->get('config_currency');
+        }
+            ]]></add>
         </operation>
     </file>
 

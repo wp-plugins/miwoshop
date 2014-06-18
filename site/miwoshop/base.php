@@ -1109,6 +1109,7 @@ class MiwoShopBase {
         if ($source == 'admin' || $source == 'admin2') {
 		    $replace_output[MURL_ADMIN.'/admin-ajax.php?action=miwoshop&'] = MURL_ADMIN.'/admin-ajax.php?action=miwoshop&client=admin&';
             $replace_output['index.php?option=com_miwoshop&route='] = 'admin.php?page=miwoshop&option=com_miwoshop&route=';
+			$replace_output['index.php?route=checkout/manual&j_user_id'] = 'wp-admin/admin-ajax.php?action=miwoshop&option=com_miwoshop&route=checkout/manual&format=raw&tmpl=component&j_user_id=';
         }
 
         foreach($replace_output as $key => $value) {
