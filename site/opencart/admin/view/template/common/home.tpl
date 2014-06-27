@@ -79,6 +79,7 @@
             $latest_version = $base->getLatestMiwoshopVersion();
             $version_status = version_compare($installed_version, $latest_version);
             $config = $base->getConfig();
+            $pid = $base->getConfig()->get('pid');
           ?>
           <table class="adminlist table-striped table">
             <tr height="70">
@@ -110,6 +111,7 @@
                     ?>
                 </td>
             </tr>
+            
             <tr height="40">
                 <td>
                     <?php

@@ -22,14 +22,14 @@
                         <div style="text-align: center;"><a href="http://miwisoft.com/support/search" target="_blank"><strong>Find Solutions</strong></a></div>
                     </td>
                     <td class="column-css">
-                        <a href="http://miwisoft.com/support/docs/wordpress/miwoshop" target="_blank"><img src="http://miwisoft.com/images/support/documentation.png" class="image-css" /></a>
+                        <a href="http://miwisoft.com/support/docs/miwoshop" target="_blank"><img src="http://miwisoft.com/images/support/documentation.png" class="image-css" /></a>
                         <br />
-                        <div style="text-align: center;"><a href="http://miwisoft.com/support/docs/wordpress/miwoshop" target="_blank"><strong>Documentation</strong></a></div>
+                        <div style="text-align: center;"><a href="http://miwisoft.com/support/docs/miwoshop" target="_blank"><strong>Documentation</strong></a></div>
                     </td>
                     <td class="column-css">
-                        <a href="http://miwisoft.com/support/docs/wordpress/miwoshop/video-tutorials" target="_blank"><img src="http://miwisoft.com/images/support/videos.png" class="image-css" /></a>
+                        <a href="http://miwisoft.com/support/docs/miwoshop/video-tutorials" target="_blank"><img src="http://miwisoft.com/images/support/videos.png" class="image-css" /></a>
                         <br />
-                        <div style="text-align: center;"><a href="http://miwisoft.com/support/docs/wordpress/miwoshop/video-tutorials" target="_blank"><strong>Video Tutorials</strong></a></div>
+                        <div style="text-align: center;"><a href="http://miwisoft.com/support/docs/miwoshop/video-tutorials" target="_blank"><strong>Video Tutorials</strong></a></div>
                     </td>
                 </tr>
                 <tr>

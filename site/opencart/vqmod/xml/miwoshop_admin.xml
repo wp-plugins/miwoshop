@@ -2354,6 +2354,10 @@ jQuery(document).ready(function() {
     <?php echo MiwoShop::get('base')->editor()->save("message"); ?>
     ]]></add>
 		</operation>
+		<operation error="skip">
+			<search position="replace"><![CDATA[send(json['next']);]]></search>
+			<add><![CDATA[sendEmail(json['next']);]]></add>
+		</operation>
         <operation error="skip">
 			<search position="replace"><![CDATA[$('textarea[name=\'message\']').html(CKEDITOR.instances.message.getData());]]></search>
 			<add><![CDATA[$('textarea[name=\'message\']').html(jQuery('textarea[name=\'message\']').val());]]></add>
@@ -2587,12 +2591,47 @@ jQuery(document).ready(function() {
                     <tr>
                       <td><?php echo $entry_miwoshop_button_class; ?></td>
                       <td>
-						<input type="text" name="config_miwoshop[button_class]" value="<?php echo $config_miwoshop['button_class']; ?>" />
-						<input type="hidden" name="config_miwoshop[comments]" value="0">
-                        <input type="hidden" name="config_miwoshop[miwosef_integration]" value="0">
+                          <input type="text" name="config_miwoshop[button_class]" value="<?php echo $config_miwoshop['button_class']; ?>" />
+                      </td>
+                    </tr>
+                    <tr>
+                        <input type="hidden" name="config_miwoshop[comments]" value="0">
+						<input type="hidden" name="config_miwoshop[miwosef_integration]" value="0">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                         <input type="hidden" name="config_miwoshop[account_sync_done]" value="1">
                         <input type="hidden" name="config_miwoshop[alias_sync_done]" value="<?php echo Miwoshop::get('base')->getConfig()->get('account_sync_done', 0); ?>">
-                      </td>
                     </tr>
 					<tr>
                       <td><?php echo $entry_miwoshop_set_input_width; ?></td>
