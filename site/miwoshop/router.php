@@ -63,7 +63,7 @@ class MiwoShopRouter extends MiwisoftComponentRouterBase
             $a_menu = $menu->getItem($Itemid);
         }
 
-        if (isset($query['view'])) {
+        if (!empty($query['view'])) {
             if ($query['view'] == 'admin') {
                 unset($query['view']);
 
@@ -233,6 +233,18 @@ class MiwoShopRouter extends MiwisoftComponentRouterBase
             $vars['view'] = $segments[0];
             $vars['route'] = $this->getRoute($segments[0]);
 
+            $menu = $this->getMenu();
+            $active_menu = $menu->getActive();
+
+            if($segments[0] == 'success' and !empty($active_menu) and !empty($active_menu->query['view'])){
+                $vars['view'] = '';
+                $vars['route'] = $active_menu->query['view'].'/success';
+            }
+
+            if (MiwoShop::get('base')->is30()) {
+                MRequest::set($vars, 'get');
+            }
+
             return $vars;
         }
 
@@ -336,6 +348,10 @@ class MiwoShopRouter extends MiwisoftComponentRouterBase
 
             if (($oc_config->get('config_secure') == 1) and (substr($url, 0, 5) == 'https') and (substr($domain, 0, 5) != 'https')) {
                 $domain = str_replace('http://', 'https://', $domain);
+            }
+			
+			if(strpos($url, '/callback')) {
+                return $url;
             }
 
             $url = str_replace($full_url, '', $url);

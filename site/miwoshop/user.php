@@ -329,6 +329,8 @@ class MiwoShopUser {
         if (!empty($user)) {
             $db->run("UPDATE #__miwoshop_user SET password = '". $encrypted_password ."' WHERE email = '".$db->run($email, 'escape')."'", 'query');
         }
+		
+		return $encrypted_password;
     }
 
     public function approveJUserFromO($cust_id) {

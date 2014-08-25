@@ -545,6 +545,7 @@ class ControllerModuleVQModManager extends Controller {
 		header('Content-Transfer-Encoding: binary');
 		readfile($temp);
 		unlink($temp);
+		exit;
 	}
 
 	private function vqmod_installation_check() {

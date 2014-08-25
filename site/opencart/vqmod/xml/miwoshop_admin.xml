@@ -1531,8 +1531,8 @@ $_['button_fix_lang_ids']                   = 'Fix Language IDs';
             <add><![CDATA[		MiwoShop::get('base')->trigger('onMiwoshopBeforeOrderStatusUpdate', array(&$data, &$order_id, &$data['order_status_id'], &$data['notify']));]]></add>
         </operation>
         <operation error="skip">
-            <search position="before"><![CDATA[$order_info = $this->getOrder($order_id);]]></search>
-            <add><![CDATA[		MiwoShop::get('base')->trigger('onMiwoshopBeforeOrderStatusUpdate', array(&$data, &$order_id, &$data['order_status_id'], &$data['notify']));]]></add>
+            <search position="before" index="2"><![CDATA[$order_info = $this->getOrder($order_id);]]></search>
+            <add><![CDATA[		MiwoShop::get('base')->trigger('onMiwoshopAfterOrderStatusUpdate', array(&$data, &$order_id, &$data['order_status_id'], &$data['notify']));]]></add>
         </operation>
         <operation error="skip">
             <search position="after"><![CDATA[public function deleteOrder($order_id) {]]></search>
@@ -2595,7 +2595,9 @@ jQuery(document).ready(function() {
                       </td>
                     </tr>
                     <tr>
-                        <input type="hidden" name="config_miwoshop[comments]" value="0">
+                      <td><?php echo $entry_miwoshop_comments; ?></td>
+                      <td>
+                          <input type="hidden" name="config_miwoshop[comments]" value="0">
 						<input type="hidden" name="config_miwoshop[miwosef_integration]" value="0">
 
 
@@ -2632,6 +2634,7 @@ jQuery(document).ready(function() {
 
                         <input type="hidden" name="config_miwoshop[account_sync_done]" value="1">
                         <input type="hidden" name="config_miwoshop[alias_sync_done]" value="<?php echo Miwoshop::get('base')->getConfig()->get('account_sync_done', 0); ?>">
+                      </td>
                     </tr>
 					<tr>
                       <td><?php echo $entry_miwoshop_set_input_width; ?></td>

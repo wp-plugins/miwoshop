@@ -181,7 +181,12 @@ class ModelCheckoutOrder extends Model {
 		$route   = $uri->toString(array('path', 'query', 'fragment'));
 
 		// Strip out the base portion of the route.
-		$route = str_replace(MUri::base(true).'/', '', $route);
+		$base = MUri::base(true);
+		if(!empty($base)){
+			$route = str_replace(MUri::base(true).'/', '', $route);
+		}
+
+		$route = ltrim($route, '/');
 
 		return $route;
 		// Create full path of article

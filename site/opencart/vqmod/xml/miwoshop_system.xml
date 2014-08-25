@@ -115,6 +115,10 @@
 		<operation error="log">
             <search position="replace" index="2"><![CDATA[if ((int)$qty && ((int)$qty > 0)) {]]></search>
             <add><![CDATA[if ((int)$qty && ((int)$qty > 0) && isset($this->session->data['cart'][$key])) {]]></add>
+        </operation>		
+		<operation error="log">
+            <search position="replace"><![CDATA[if (!$option) {]]></search>
+            <add><![CDATA[if (!$option || !is_array($option)) {]]></add>
         </operation>
     </file>
 

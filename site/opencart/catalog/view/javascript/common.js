@@ -30,7 +30,17 @@ $(document).ready(function() {
 	$('#cart > .heading a').live('click', function() {
 		$('#cart').addClass('active');
 		
-		$('#cart').load(miwiajaxurl + '?action=miwoshop&option=com_miwoshop&format=raw&tmpl=component&route=module/cart #cart > *');
+		//$('#cart').load(miwiajaxurl + '?action=miwoshop&option=com_miwoshop&format=raw&tmpl=component&route=module/cart #cart > *');
+
+        jQuery.ajax({
+            url: 'index.php?option=com_miwoshop&format=raw&tmpl=component&route=module/cart',
+            type: 'post',
+            dataType: 'html',
+            success: function(html) {
+                var _html =  jQuery.parseHTML(html);
+                jQuery('#cart').html(_html[0].innerHTML);
+            }
+        });
 		
 		$('#cart').live('mouseleave', function() {
 			$(this).removeClass('active');

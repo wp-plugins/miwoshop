@@ -192,48 +192,7 @@ class MiwoShopBase {
 	}
 
 	public function getFullUrl($path_only = false, $host_only = false) {
-        if (MFactory::isJ() and MFactory::getApplication()->isSite()) { #miwo
-            $url = '';
-			
-			$live_site = $this->getMConfig()->live_site;
-			
-			if (trim($live_site) != '') {
-				$uri = MURI::getInstance($live_site);
-				
-				if ($host_only == false) {
-					$url = rtrim($uri->toString(array('path')), '/\\');
-				}
-				
-				if ($path_only == false) {
-					$url = $uri->toString(array('scheme', 'host', 'port')) . $url;
-				}
-			}
-			else {
-				if ($host_only == false) {
-					if (strpos(php_sapi_name(), 'cgi') !== false && !ini_get('cgi.fix_pathinfo') && !empty($_SERVER['REQUEST_URI'])) {
-						$script_name = $_SERVER['PHP_SELF'];
-					}
-					else {
-						$script_name = $_SERVER['SCRIPT_NAME'];
-					}
-					
-					$url = rtrim(dirname($script_name), '/.\\');
-				}
-				
-				if ($path_only == false) {
-					$port = 'http://';
-					if (isset($_SERVER['HTTPS']) && (($_SERVER['HTTPS'] == 'on') || ($_SERVER['HTTPS'] == '1'))) {
-						$port = 'https://';
-					}
-				
-					$url = $port . $_SERVER['HTTP_HOST'] . $url;
-				}
-			}
-		}
-		else {
-			$url = MURI::root($path_only);
-		}
-
+       $url = MURI::root($path_only);
 
         if (substr($url, -1) != '/') {
             $url .= '/';
@@ -581,17 +540,18 @@ class MiwoShopBase {
         return $status[$folder][$name];
     }
 
-    public function isAdmin($type = 'miwoshop') {
+	public function isAdmin($type = 'miwoshop') {
         static $is_admin = array();
+        $view = MRequest::getCmd('view');
 
-        if (!isset($is_admin[$type])) {
+        if (!isset($is_admin[$type]) or $view == 'admin' ) {
             $mainframe = MFactory::getApplication();
 
             if ($type == 'miwoshop') {
                 $state = false;
 
                 if ($mainframe->isSite()) {
-                    $state = (MRequest::getCmd('view') == 'admin');
+                    $state = ($view == 'admin');
 
                     if (!$state) {
                         $home_menu_id = MiwoShop::get('router')->getItemid('home', 0);
@@ -615,9 +575,9 @@ class MiwoShopBase {
             }
         }
 
-        return $is_admin[$type];
-   	}
-
+		return $is_admin[$type];
+	}
+	
     public function isExternal() {
         static $is_external;
 
@@ -957,12 +917,6 @@ class MiwoShopBase {
             return false;
         }
 
-        
-
-
-
-
-
         if (!file_exists(MPATH_WP_PLG.'/miwoshop/site/opencart/index.php')) {
             MError::raiseWarning(404, MText::_('COM_MIWOSHOP_MISSING_LIBRARY'));
             return false;
@@ -1106,10 +1060,15 @@ class MiwoShopBase {
         $replace_output['$jQuery']                      = '$$';
         $replace_output['.catcomplete({']               = '.autocomplete({';
 
-        if ($source == 'admin' || $source == 'admin2') {
+        if ($source == 'admin') {
 		    $replace_output[MURL_ADMIN.'/admin-ajax.php?action=miwoshop&'] = MURL_ADMIN.'/admin-ajax.php?action=miwoshop&client=admin&';
             $replace_output['index.php?option=com_miwoshop&route='] = 'admin.php?page=miwoshop&option=com_miwoshop&route=';
 			$replace_output['index.php?route=checkout/manual&j_user_id'] = 'wp-admin/admin-ajax.php?action=miwoshop&option=com_miwoshop&route=checkout/manual&format=raw&tmpl=component&j_user_id=';
+        }
+
+        if($source == 'admin2') {
+            $replace_output[MURL_ADMIN.'/admin-ajax.php?action=miwoshop&'] = MURL_ADMIN.'/admin-ajax.php?action=miwoshop&client=admin&';
+            $replace_output['?route='] = '?view=admin&route=';
         }
 
         foreach($replace_output as $key => $value) {

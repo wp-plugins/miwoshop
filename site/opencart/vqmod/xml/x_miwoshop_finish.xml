@@ -207,6 +207,16 @@
                            <?php } ?>
    			]]></add>
    		</operation>
+		<operation error="skip">
+   			<search position="replace"><![CDATA[
+                           <li><a href="<?php echo $installer; ?>"><?php echo $text_installer; ?></a></li>
+   			]]></search>
+   			<add><![CDATA[
+                           <?php if($this->user->hasPermission('access','extension/installer')) {  ?>
+                           <li><a href="<?php echo $installer; ?>"><?php echo $text_installer; ?></a></li>
+                           <?php } ?>
+   			]]></add>
+   		</operation>
    		<operation error="skip">
    			<search position="replace"><![CDATA[
                            <li><a href="<?php echo $order; ?>"><?php echo $text_order; ?></a></li>
@@ -536,7 +546,7 @@
                            <?php } ?>
    			]]></add>
    		</operation>
-           <operation error="skip">
+        <operation error="skip">
    			<search position="replace"><![CDATA[
                            <li><a href="<?php echo $themeeditor; ?>"><?php echo $text_themeeditor; ?></a></li>
    			]]></search>
@@ -546,7 +556,7 @@
                            <?php } ?>
    			]]></add>
    		</operation>
-           <operation error="skip">
+        <operation error="skip">
    			<search position="replace"><![CDATA[
                            <li><a href="<?php echo MiwoShop::get('router')->route('index.php?option=com_miwoshop&route=tool/aceshop'); ?>">AceShop</a></li>
    			]]></search>
@@ -556,7 +566,7 @@
                            <?php } ?>
    			]]></add>
    		</operation>
-           <operation error="skip">
+        <operation error="skip">
    			<search position="replace"><![CDATA[
                            <li><a href="<?php echo MiwoShop::get('router')->route('index.php?option=com_miwoshop&route=tool/virtuemart'); ?>">VirtueMart</a></li>
    			]]></search>
@@ -566,7 +576,7 @@
                            <?php } ?>
    			]]></add>
    		</operation>
-           <operation error="skip">
+        <operation error="skip">
    			<search position="replace"><![CDATA[
                            <li><a href="<?php echo MiwoShop::get('router')->route('index.php?option=com_miwoshop&route=tool/hikashop'); ?>">HikaShop</a></li>
    			]]></search>
@@ -576,7 +586,7 @@
                            <?php } ?>
    			]]></add>
    		</operation>
-           <operation error="skip">
+        <operation error="skip">
    			<search position="replace"><![CDATA[
                            <li><a href="<?php echo MiwoShop::get('router')->route('index.php?option=com_miwoshop&route=tool/redshop'); ?>">redSHOP</a></li>
    			]]></search>
@@ -586,7 +596,7 @@
                            <?php } ?>
    			]]></add>
    		</operation>
-           <operation error="skip">
+        <operation error="skip">
    			<search position="replace"><![CDATA[
                            <li><a href="<?php echo MiwoShop::get('router')->route('index.php?option=com_miwoshop&route=tool/tienda'); ?>">Tienda</a></li>
    			]]></search>
@@ -596,7 +606,7 @@
                            <?php } ?>
    			]]></add>
    		</operation>
-           <operation error="skip">
+        <operation error="skip">
    			<search position="replace"><![CDATA[
                            <li><a href="<?php echo MiwoShop::get('router')->route('index.php?option=com_miwoshop&route=tool/joomshopping'); ?>">JoomShopping</a></li>
    			]]></search>
@@ -606,7 +616,7 @@
                            <?php } ?>
    			]]></add>
    		</operation>
-           <operation error="skip">
+        <operation error="skip">
    			<search position="replace"><![CDATA[
                            <li><a href="<?php echo MiwoShop::get('router')->route('index.php?option=com_miwoshop&route=tool/rokquickcart'); ?>">RokQuickCart</a></li>
    			]]></search>
@@ -616,7 +626,17 @@
                            <?php } ?>
    			]]></add>
    		</operation>
-           <operation error="skip">
+		<operation error="skip">
+   			<search position="replace"><![CDATA[
+                           <li><a href="<?php echo MiwoShop::get('router')->route('index.php?option=com_miwoshop&route=tool/eshop'); ?>">EShop</a></li>
+   			]]></search>
+   			<add><![CDATA[
+                           <?php if($this->user->hasPermission('access','tool/eshop')) {?>
+                           <li><a href="<?php echo MiwoShop::get('router')->route('index.php?option=com_miwoshop&route=tool/eshop'); ?>">EShop</a></li>
+                           <?php } ?>
+   			]]></add>
+   		</operation>
+        <operation error="skip">
    			<search position="replace"><![CDATA[
                            <li><a href="<?php echo MiwoShop::get('router')->route('index.php?option=com_miwoshop&route=tool/joocart'); ?>">JooCart</a></li>
    			]]></search>
@@ -626,7 +646,7 @@
                            <?php } ?>
    			]]></add>
    		</operation>
-           <operation error="skip">
+        <operation error="skip">
    			<search position="replace"><![CDATA[
                            <li><a href="<?php echo MiwoShop::get('router')->route('index.php?option=com_miwoshop&route=tool/ayelshop'); ?>">AyelShop</a></li>
    			]]></search>
