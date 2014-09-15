@@ -2379,7 +2379,7 @@ jQuery(document).ready(function() {
         <operation error="skip">
             <search position="before" offset="1"><![CDATA[<td><span class="required">*</span> <?php echo $entry_name; ?></td>]]></search>
             <add><![CDATA[          <tr>
-            <td><span class="required">*</span> Joomla Group:</td>
+            <td><span class="required">*</span> WordPress Role:</td>
             <td><?php echo $jgroups; ?></td>
           </tr>]]></add>
         </operation>
@@ -2698,7 +2698,7 @@ jQuery(document).ready(function() {
         <operation error="skip">
             <search position="after" offset="2"><![CDATA[<span class="error"><?php echo $error_name; ?></span>]]></search>
             <add><![CDATA[          <tr>
-            <td><span class="required">*</span> Joomla Group:</td>
+            <td><span class="required">*</span> WordPress Role:</td>
             <td><?php echo $jgroups; ?></td>
           </tr>]]></add>
         </operation>
