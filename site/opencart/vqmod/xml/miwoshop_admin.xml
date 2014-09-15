@@ -1502,11 +1502,11 @@ $_['button_fix_lang_ids']                   = 'Fix Language IDs';
         <operation error="skip">
             <search position="after"><![CDATA[$customer_group_id = $this->db->getLastId();]]></search>
             <add><![CDATA[
-        $this->db->query("INSERT INTO " . DB_PREFIX . "mgroup_cgroup_map SET mgroup_id = '" . (int)$data['mgroup_id'] . "', cgroup_id = '" . (int)$customer_group_id . "'");]]></add>
+        $this->db->query("INSERT INTO " . DB_PREFIX . "mgroup_cgroup_map SET mgroup_id = '" . $data['mgroup_id'] . "', cgroup_id = '" . (int)$customer_group_id . "'");]]></add>
         </operation>
         <operation error="skip">
             <search position="after"><![CDATA[public function editCustomerGroup($customer_group_id, $data) {]]></search>
-            <add><![CDATA[        $this->db->query("UPDATE " . DB_PREFIX . "mgroup_cgroup_map SET mgroup_id = '" . (int)$data['mgroup_id'] . "' WHERE cgroup_id = '" . (int)$customer_group_id . "'");
+            <add><![CDATA[        $this->db->query("UPDATE " . DB_PREFIX . "mgroup_cgroup_map SET mgroup_id = '" . $data['mgroup_id'] . "' WHERE cgroup_id = '" . (int)$customer_group_id . "'");
             ]]></add>
         </operation>
         <operation error="skip">
@@ -1593,11 +1593,11 @@ $_['button_fix_lang_ids']                   = 'Fix Language IDs';
             <search position="after"><![CDATA[$this->db->query("INSERT INTO " . DB_PREFIX . "user_group SET name = '" . $this->db->escape($data['name']) . "', permission = '" . (isset($data['permission']) ? serialize($data['permission']) : '') . "'");]]></search>
             <add><![CDATA[
         $user_group_id = $this->db->getLastId();
-        $this->db->query("INSERT INTO " . DB_PREFIX . "mgroup_ugroup_map SET mgroup_id = '" . (int)$data['mgroup_id'] . "', ugroup_id = '" . (int)$user_group_id . "'");]]></add>
+        $this->db->query("INSERT INTO " . DB_PREFIX . "mgroup_ugroup_map SET mgroup_id = '" . $data['mgroup_id'] . "', ugroup_id = '" . (int)$user_group_id . "'");]]></add>
         </operation>
         <operation error="skip">
             <search position="after"><![CDATA[public function editUserGroup($user_group_id, $data) {]]></search>
-            <add><![CDATA[        $this->db->query("UPDATE " . DB_PREFIX . "mgroup_ugroup_map SET mgroup_id = '" . (int)$data['mgroup_id'] . "' WHERE ugroup_id = '" . (int)$user_group_id . "'");]]></add>
+            <add><![CDATA[        $this->db->query("UPDATE " . DB_PREFIX . "mgroup_ugroup_map SET mgroup_id = '" . $data['mgroup_id'] . "' WHERE ugroup_id = '" . (int)$user_group_id . "'");]]></add>
         </operation>
         <operation error="skip">
             <search position="after"><![CDATA[public function deleteUserGroup($user_group_id) {]]></search>
