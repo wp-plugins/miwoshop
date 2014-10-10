@@ -124,7 +124,7 @@ class MiwoShopMiwosef {
 
             if ($post['meta_id'] == 0) {
                 $db->run("INSERT IGNORE INTO #__miwosef_metadata (url_sef, title, description, keywords, lang, robots, googlebot, canonical) ".
-                                    "VALUES('{$post['url_sef']}', ".$db->run($post['title'], 'Quote').", ".$db->run($post['description'], 'Quote').", ".$db->run($post['keywords'], 'Quote').", '{$post['lang']}', '{$post['robots']}', '{$post['googlebot']}', '{$post['canonical']}')", 'query');
+                                    "VALUES('".htmlspecialchars_decode($post['url_sef'])."', ".htmlspecialchars_decode($db->run($post['title'], 'Quote')).", ".htmlspecialchars_decode($db->run($post['description'], 'Quote')).", ".htmlspecialchars_decode($db->run($post['keywords'], 'Quote')).", '{$post['lang']}', '{$post['robots']}', '{$post['googlebot']}', '{$post['canonical']}')", 'query');
             }
             else {
                 $db->run("UPDATE #__miwosef_metadata SET url_sef = ".$db->run($post['url_sef'], 'Quote').", title = ".$db->run($post['title'], 'Quote').", description = ".$db->run($post['description'], 'Quote').", keywords = ".$db->run($post['keywords'], 'Quote').", lang = '{$post['lang']}', robots = '{$post['robots']}', googlebot = '{$post['googlebot']}', canonical = '{$post['canonical']}' WHERE id = {$post['meta_id']}", 'query');

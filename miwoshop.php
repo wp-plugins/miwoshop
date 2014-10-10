@@ -4,7 +4,7 @@ Plugin Name: MiwoShop
 Plugin URI: http://miwisoft.com
 Description: MiwoShop is a powerful shopping cart that is designed user friendly and extremely powerful out of the box with tons of built-in features.
 Author: Miwisoft LLC
-Version: 1.1.4
+Version: 1.1.5
 Author URI: http://miwisoft.com
 Plugin URI: http://miwisoft.com/miwoshop
 */
@@ -63,7 +63,9 @@ final class MShop extends MWordpress {
         add_action('deleted_user', array($m_user, 'delete_miwouser'));
         add_action('reset_password', array($m_user, 'reset_password_wp'));
         ##############################################
-		
+
+        add_filter('wp_authenticate_user', array($m_user, 'isCustomerApproved'), 10, 2);
+
 		# auto upgrade
         mimport('joomla.application.component.helper');
         $config = MiwoShop::get('base')->getConfig();

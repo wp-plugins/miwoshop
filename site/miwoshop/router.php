@@ -45,6 +45,13 @@ class MiwoShopRouter extends MiwisoftComponentRouterBase
         if($menu->getActive()){
             $_get_itemid = $menu->getActive()->id;
         }
+
+        if(isset($query['_lang_code'])) {
+            $_default = $menu->getDefault($query['_lang_code']);
+            $query['Itemid'] = $_default->id;
+            unset($query['_lang_code']);
+        }
+
         $_get_route = MRequest::getVar('route', '');
 
         if( isset($query['Itemid']) and $_get_itemid != $query['Itemid'] and $_get_route == 'product/category' and isset($query['route']) and $query['route'] == 'product/product' ){
@@ -94,7 +101,7 @@ class MiwoShopRouter extends MiwisoftComponentRouterBase
 
                     if (isset($query['product_id'])) {
                         $id = $query['product_id'];
-                        $name = MiwoShop::get('db')->getRecordAlias($id);
+                        $name = MiwoShop::get('db')->getRecordAlias($id, 'product', $query);
 
                         if (!empty($name)) {
                             $segments[] = $id . ':' . $name;
@@ -139,7 +146,7 @@ class MiwoShopRouter extends MiwisoftComponentRouterBase
                             self::$cats[$id] = $id;
                         }
 
-                        $name = MiwoShop::get('db')->getRecordAlias($id, 'category');
+                        $name = MiwoShop::get('db')->getRecordAlias($id, 'category', $query);
 
                         if (!empty($name)) {
                             $segments[] = $id . ':' . $name;
@@ -161,7 +168,7 @@ class MiwoShopRouter extends MiwisoftComponentRouterBase
 
                     if (isset($query['manufacturer_id'])) {
                         $id = $query['manufacturer_id'];
-                        $name = MiwoShop::get('db')->getRecordAlias($id, 'manufacturer');
+                        $name = MiwoShop::get('db')->getRecordAlias($id, 'manufacturer', $query);
 
                         if (!empty($name)) {
                             $segments[] = $id . ':' . $name;
@@ -183,7 +190,7 @@ class MiwoShopRouter extends MiwisoftComponentRouterBase
 
                     if (isset($query['information_id'])) {
                         $id = $query['information_id'];
-                        $name = MiwoShop::get('db')->getRecordAlias($id, 'information');
+                        $name = MiwoShop::get('db')->getRecordAlias($id, 'information', $query);
 
                         if (!empty($name)) {
                             $segments[] = $id . ':' . $name;
@@ -208,6 +215,15 @@ class MiwoShopRouter extends MiwisoftComponentRouterBase
                     }
 
                     break;
+            }
+
+            if(isset($query['_lang'])){
+                $array_notset = array('Itemid', 'option');
+                foreach ($query as $key => $value) {
+                    if(!in_array($key, $array_notset)) {
+                       unset($query[$key]);
+                    }
+                }
             }
 
             unset($query['route']);

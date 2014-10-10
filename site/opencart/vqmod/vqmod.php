@@ -50,6 +50,19 @@ class VQMod {
      */
     public function __construct($path = false, $logging = true) {
         global $vqmod;
+
+        if(!defined('DIR_SYSTEM')) {
+            // Config
+            if (MiwoShop::get('base')->isAdmin('miwoshop') || MiwoShop::get('base')->isAdmin('joomla')) {
+                require_once(MPATH_MIWOSHOP_OC.'/admin/config.php');
+            }
+            else {
+                require_once(MPATH_MIWOSHOP_OC.'/config.php');
+            }
+        }
+
+		self::$modCache = 'vqmod/mods.cache.'.md5(DIR_SYSTEM);
+
         if (empty($vqmod)) {
             self::bootup();
         }

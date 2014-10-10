@@ -43,8 +43,8 @@ class MiwoShopUser {
         $password = $this->getCleanPassword($wp_user->user_pass);
 
         $fname = $wp_user->user_login;
-        if(!empty($wp_user->firs_name)){
-            $fname = $wp_user->firs_name;
+        if(!empty($wp_user->first_name)){
+            $fname = $wp_user->first_name;
         }
 
         $lname = '';
@@ -74,7 +74,7 @@ class MiwoShopUser {
 
         if (!empty($customer_exists)) {
 		
-            $db->run("UPDATE #__miwoshop_customer SET firstname = '".$fname."', lastname = '".$lname."', email = '".$email."',  password = '".$password."', customer_group_id = '".$customer_group_id."', status = ".$status.", approved = ".$status." WHERE customer_id = '".$customer_id."'", 'query');
+            $db->run("UPDATE #__miwoshop_customer SET firstname = '".$fname."', lastname = '".$lname."', email = '".$email."',  password = '".$password."', customer_group_id = '".$customer_group_id."', status = ".$status." WHERE customer_id = '".$customer_id."'", 'query');
 		}
         else {
             $db->run("INSERT INTO #__miwoshop_customer SET firstname = '".$fname."', lastname = '".$lname."', email = '".$email."', telephone = '', fax = '', password = '".$password."', newsletter = '0', customer_group_id = '".$customer_group_id."', status = '".$status."', approved = '".$status."', date_added = NOW()", 'query');
@@ -290,6 +290,14 @@ class MiwoShopUser {
             $wp_userdata['user_pass'] = $userdata['password'];
         }
 
+        if (isset($userdata['customer_group_id'])) {
+            $wp_userdata['role'] = $this->getJGroupIdOfCGroup($userdata['customer_group_id']);
+        }
+
+        if (isset($userdata['user_group_id'])) {
+            $wp_userdata['role'] = $this->getJGroupIdOfUGroup($userdata['user_group_id']);
+        }
+
         if(is_multisite()) {
             $wp_user_id = wpmu_create_user($wp_userdata['user_login'], $wp_userdata['user_pass'], $wp_userdata['user_email']);
         }
@@ -471,13 +479,12 @@ class MiwoShopUser {
     }
 
     public function getOCustomerGroupIdByJGroup($mgroup_id) {
-        $mgroup_id = (int)$mgroup_id;
         $db = MiwoShop::get('db');
 
         static $cache;
 
         if (!isset($cache[$mgroup_id])) {
-            $cache[$mgroup_id] = $db->run("SELECT cgroup_id FROM #__miwoshop_mgroup_cgroup_map WHERE mgroup_id = {$mgroup_id}", 'loadResult');
+            $cache[$mgroup_id] = $db->run("SELECT cgroup_id FROM #__miwoshop_mgroup_cgroup_map WHERE mgroup_id = '{$mgroup_id}'", 'loadResult');
         }
 
         return $cache[$mgroup_id];
@@ -858,4 +865,23 @@ class MiwoShopUser {
             $db->run("UPDATE #__miwoshop_customer SET password = '". $new_pass ."' WHERE customer_id = '". $o_cus_id ."' ", 'query');
         }
     }
+
+    public function isCustomerApproved($user) {
+        $db = MiwoShop::get('db');
+
+        $o_customer_id = $this->getOCustomerIdFromJUser($user->ID);
+
+        if(empty($o_customer_id)) {
+            return $user;
+        }
+
+   		$result = $db->run("SELECT DISTINCT approved FROM #__miwoshop_customer c  WHERE c.customer_id = '" . (int)$o_customer_id . "'", 'loadResult');
+
+        if(!empty($result)) {
+            return $user;
+        }
+
+        return new WP_Error('need_approve', MText::_('COM_MIWOSHOP_AFFILIATE_LOGIN_ERROR_APPROVED'));
+   	}
+
 }

@@ -1,4 +1,4 @@
-<?php foreach ($links as $link) { ?>
+  <?php foreach ($links as $link) { ?>
 <link href="<?php echo $link['href']; ?>" rel="<?php echo $link['rel']; ?>" />
 <?php } ?>
 <?php MiwoShop::getClass('base')->addHeader(MPATH_MIWOSHOP_OC . '/catalog/view/theme/default/stylesheet/stylesheet.css'); ?>
@@ -23,7 +23,8 @@ DD_belatedPNG.fix('#logo img');
 <?php echo $google_analytics; ?>
 
 <div id="container">
-<div id="header" <?php echo (MiwoShop::get('base')->getConfig()->get('show_header', 1) == 1) ? '' : 'style="display:none;"'; ?>>
+<?php if(MiwoShop::get('base')->getConfig()->get('show_header', 1) == 1){ ?>
+<div id="header">
   <?php echo $currency; ?>
   <?php echo $cart; ?>
   <div id="search">
@@ -43,6 +44,7 @@ DD_belatedPNG.fix('#logo img');
   </div>
   <div class="links"><a href="<?php echo $home; ?>"><?php echo $text_home; ?></a><a href="<?php echo $wishlist; ?>" id="wishlist-total"><?php echo $text_wishlist; ?></a><a href="<?php echo $account; ?>"><?php echo $text_account; ?></a><a href="<?php echo $shopping_cart; ?>"><?php echo $text_shopping_cart; ?></a><a href="<?php echo $checkout; ?>"><?php echo $text_checkout; ?></a></div>
 </div>
+<?php } ?>
 <?php if (!empty($categories)) { ?>
 <div id="menu">
   <ul>

@@ -192,7 +192,7 @@ class MiwoShopBase {
 	}
 
 	public function getFullUrl($path_only = false, $host_only = false) {
-       $url = MURI::root($path_only);
+        $url = MURI::root($path_only);
 
         if (substr($url, -1) != '/') {
             $url .= '/';

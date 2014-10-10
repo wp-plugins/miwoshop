@@ -42,10 +42,23 @@ function addProductToCart(product_id, product_options) {
 
                 jQuery('#cart-total').html(json['total']);
 
-                updateMiwocartModule();
+                _updateMiwocartModule();
 
                 jQuery('html, body').animate({ scrollTop: 0 }, 'slow');
             }
         }
     });
+}
+
+function _updateMiwocartModule() {
+	jQuery.ajax({
+		url: 'index.php?option=com_miwoshop&format=raw&tmpl=component&route=module/miwoshopcart/ajax',
+		type: 'post',
+		success: function(output) {
+			var cart = document.getElementById('module_cart');
+			if(cart){
+			    cart.innerHTML = output;
+			}
+		}
+	});
 }

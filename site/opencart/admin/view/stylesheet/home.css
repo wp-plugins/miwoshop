@@ -947,7 +947,7 @@
     white-space: nowrap;
 }
 
-.caret {
+#reportrange .caret {
     vertical-align: middle !important;
 }
 

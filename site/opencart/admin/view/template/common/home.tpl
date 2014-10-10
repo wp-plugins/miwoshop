@@ -83,21 +83,7 @@
           ?>
           <table class="adminlist table-striped table">
             <tr height="70">
-                <td width="%25">
-                    <?php
-                        $icon = 'help';
-                        if ($this->info['version_enabled'] == 0) {
-                            $icon = 'noinfo';
-                        } elseif ($this->info['version_status'] == 0) {
-                            $icon = 'latest';
-                        }
-
-                        $img_path = MURL_MIWOSHOP.'/admin/assets/images/icon-48-v-'.$icon.'.png';
-                    ?>
-
-                    <img src="<?php echo $img_path; ?>" />
-                </td>
-                <td width="%35">
+                <td colspan="2">
                     <?php
                         if ($version_status == 0) {
                             echo '<b><font color="green">'.MText::_('COM_MIWOSHOP_CPANEL_LATEST_VERSION_INSTALLED').'</font></b>';
