@@ -1,0 +1,102 @@
+<?php
+/*
+* @package		MiwoShop
+* @copyright	2009-2014 Miwisoft LLC, miwisoft.com
+* @license		GNU/GPL http://www.gnu.org/copyleft/gpl.html
+* @license		GNU/GPL based on AceShop www.joomace.net
+*/
+
+// No Permission
+defined('MIWI') or die('Restricted access');
+
+class ModelCommonWizard extends Model {
+    public function save($data){
+
+        $miwi_settings = $this->getMiwoSettings();
+
+        $miwi_settings['wizard'] = 1;
+
+        if(isset($data['pid'])) {
+            $miwi_settings['pid'] = $data['pid'];
+        }
+
+        if(isset($data['miwoshop_display'])) {
+            $miwi_settings['miwoshop_display'] = $data['miwoshop_display'];
+        }
+
+        if(empty($miwi_settings['account_sync_done'])) {
+            MiwoShop::get('user')->synchronizeAccountsManually(false);
+            $miwi_settings['account_sync_done'] = 1;
+        }
+
+        $data['config']['config_miwoshop'] = serialize($miwi_settings);
+
+        $this->saveConfig($data['config']);
+
+        if(!empty($data['home_menu'])){
+            $this->addMenu();
+        }
+
+        $result['success'] = 'Success';
+        return $result;
+    }
+
+    public function getInstalledComponents($components) {
+        $installed_comp = array();
+
+        foreach($components as $component) {
+            if(is_plugin_active($component.'/'.$component.'.php')) {
+                $installed_comp[] = $component;
+            }
+        }
+
+        return $installed_comp;
+    }
+
+    public function getLanguageCount() {
+        array();
+    }
+
+    private function addMenu(){
+        return true;
+    }
+
+    private function saveConfig($data){
+        $keys = array_keys($data);
+
+        $result = $this->db->query("DELETE FROM " . DB_PREFIX . "setting WHERE `key` IN ('".implode("', '", $keys)."')");
+
+        if(!$result) {
+            return false;
+        }
+
+        $sql = "INSERT INTO " . DB_PREFIX . "setting (`store_id`, `group`, `key`, `value`, `serialized`) VALUES";
+
+        foreach($data as $key => $value) {
+            $serialized = 0;
+            if($key == 'config_miwoshop') {
+                $serialized = 1;
+            }
+
+            $values[]= "('0', 'config', '".$key."', '".$value."', '".$serialized."')";
+        }
+
+        $sql .= implode(',', $values);
+
+        $this->db->query($sql);
+    }
+
+    private function getMiwoSettings(){
+        $query = $this->db->query("SELECT `value` FROM " . DB_PREFIX . "setting WHERE `key`='config_miwoshop' ");
+
+        $result = array();
+
+        if(!empty($query->row)) {
+            $result = unserialize($query->row['value']);
+        }
+
+        return $result;
+    }
+
+
+}

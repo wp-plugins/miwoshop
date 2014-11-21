@@ -943,7 +943,28 @@ class MiwoShopBase {
             return false;
         }
 
+        $this->setWizardPerms();
+
         return true;
+    }
+
+    public function setWizardPerms(){
+        $jdb = MiwoShop::get('db')->getDbo();
+
+		//insert permission for support/support
+        $jdb->setQuery("SELECT permission FROM `#__miwoshop_user_group` WHERE `user_group_id` = 1");
+        $permission = $jdb->loadResult();
+        $permission = unserialize($permission);
+
+		if (!array_search('common/wizard', $permission['access'])){
+            $permission['access'][] = 'common/wizard';
+            $permission['modify'][] = 'common/wizard';
+        }
+
+        $permission = serialize($permission);
+
+        $jdb->setQuery("UPDATE `#__miwoshop_user_group` SET `permission` = '".$permission."' WHERE `user_group_id` = 1");
+        $jdb->query();
     }
 
     public function replaceOutput($output, $source) {
