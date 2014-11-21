@@ -3,7 +3,7 @@ Contributors: miwisoft, gilbertlici
 Tags: plugin, ecommerce, shopping cart, cart, checkout, commerce, shop, shopping, wordpress ecommerce, admin, reports, sales, digital, download, store, stock, product, shippping, tax
 Donate link: http://miwisoft.com
 Requires at least: 3.5
-Tested up to: 4.0
+Tested up to: 4.0.1
 Stable tag: trunk
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -41,7 +41,7 @@ MiwoShop is well supported, frequently updated and one of the leading eCommerce 
 * Related Products
 * Compare Products
 * Automatic Image Resize
-* [25+ Payment Gateways](http://miwisoft.com/wordpress-plugins/miwoshop/payment-gateways) **(Pro Version)**
+* [30+ Payment Gateways](http://miwisoft.com/wordpress-plugins/miwoshop/payment-gateways) **(Pro Version)**
 * [10+ Shipping Methods](http://miwisoft.com/wordpress-plugins/miwoshop/shipping-methods) **(Pro Version)**
 * Modular System (1000+ modules)
 * Templatable
@@ -85,7 +85,7 @@ Full Feature List:
 
 = Tons of Payment Gateways =
 
-The most powerful part of MiwoShop is the huge number of payment gateways available, 500+ already. The Lite version includes Free Checkout, Cash On Delivery and PayPal Standard gateways. The Pro version includes 25+ payment gateways such as PayPal Pro, Payflow, Amazon, 2Checkout, Authorize.Net, Payza and a lot more you can find in [this page](http://miwisoft.com/wordpress-plugins/miwoshop/payment-gateways).
+The most powerful part of MiwoShop is the huge number of payment gateways available, 500+ already. The Lite version includes Free Checkout, Cash On Delivery and PayPal Standard gateways. The Pro version includes 30+ payment gateways such as PayPal Pro, Payflow, Amazon, 2Checkout, Authorize.Net, Payza and a lot more you can find in [this page](http://miwisoft.com/wordpress-plugins/miwoshop/payment-gateways).
 
 = Lots of Shipping Methods =
 
