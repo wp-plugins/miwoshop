@@ -917,6 +917,12 @@ class MiwoShopBase {
             return false;
         }
 
+        
+
+
+
+
+
         if (!file_exists(MPATH_WP_PLG.'/miwoshop/site/opencart/index.php')) {
             MError::raiseWarning(404, MText::_('COM_MIWOSHOP_MISSING_LIBRARY'));
             return false;
@@ -1068,7 +1074,7 @@ class MiwoShopBase {
 
         if($source == 'admin2') {
             $replace_output[MURL_ADMIN.'/admin-ajax.php?action=miwoshop&'] = MURL_ADMIN.'/admin-ajax.php?action=miwoshop&client=admin&';
-            $replace_output['?route='] = '?view=admin&route=';
+			$replace_output['?route='] = '?view=admin&route=';
         }
 
         foreach($replace_output as $key => $value) {

@@ -815,7 +815,7 @@ class MiwoShopUser {
         MiwoShop::get('install')->createUserTables();
     }
 
-    public function synchronizeAccountsManually() {
+    public function synchronizeAccountsManually($redirect = true) {
         $db = MiwoShop::get('db');
 
 		$users = $db->run('SELECT ID FROM #__users', 'loadAssocList');
@@ -828,7 +828,9 @@ class MiwoShopUser {
 
 		MiwoShop::get('base')->setConfig('account_sync_done', '1');
 
-        MFactory::getApplication()->redirect(MRoute::_('index.php?option=com_miwoshop&ctrl=syncdone'), MText::_('COM_MIWOSHOP_ACCOUNT_SYNC_DONE'));
+        if($redirect) {
+            MFactory::getApplication()->redirect(MRoute::_('index.php?option=com_miwoshop&ctrl=syncdone'), MText::_('COM_MIWOSHOP_ACCOUNT_SYNC_DONE'));
+        }
     }
 
     # WP HOOKS

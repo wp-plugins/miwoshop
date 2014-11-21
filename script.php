@@ -144,10 +144,9 @@ class com_MiwoshopInstallerScript {
             return;
         }
 
-		/*if (version_compare($this->_current_version, '1.0.1') == -1) {
-            MiwoShop::get('install')->upgrade101();
-        }*/
-
+		if (version_compare($this->_current_version, '1.2.0') == -1) {
+            MiwoShop::get('install')->upgrade120();
+        }
     }
 
     public function uninstall($parent) {

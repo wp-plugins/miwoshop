@@ -7,7 +7,7 @@
     <?php } ?>
   </div>
   <?php if ($error_warning) { ?>
-  <div class="warning"><?php echo $error_warning; ?>  </div>
+  <div class="alert"><?php echo $error_warning; ?>  </div>
   <?php } ?>
   <div class="box">
     <div class="heading">
@@ -21,9 +21,9 @@
           <div class="col-sm-10">
             <a id="button-upload" class="button_oc">  <?php echo $button_upload; ?></a>
             <?php if ($error_warning) { ?>
-            <a id="button-clear" class="button_oc" style="opacity:0.5;"> <?php echo $button_clear; ?></a>
+            <a id="button-clear" class="button_oc"> <?php echo $button_clear; ?></a>
             <?php } else { ?>
-            <a id="button-clear" disabled="disabled" style="opacity:0.5;" class="button_oc"><?php echo $button_clear; ?></a>
+            <a id="button-clear" name="disable" style="opacity:0.5;" class="button_oc" disabled="disabled"><?php echo $button_clear; ?></a>
             <?php } ?>
             <span style=" padding-left: 20px; "><?php echo $help_upload; ?></span></div>
         </div>
@@ -141,8 +141,9 @@ function next() {
 				if (json['error']) {
 					$('#progress-bar').addClass('progress-bar-danger');
 					$('#progress-text').html('<div class="text-danger">' + json['error'] + '</div>');
-					$('.button-clear').prop('disabled', false);
-					$('.button-clear').css('opacity',1);
+					$('#button-clear').prop('disabled', false);
+					$('#button-clear').css('opacity',1);
+                    $('#button-clear').attr("name","log") ;
 				} 
 				
 				if (json['success']) {
@@ -164,33 +165,38 @@ function next() {
 }
 
 $('#button-clear').bind('click', function() {
-	$.ajax({
-		url: 'index.php?route=extension/installer/clear&token=<?php echo $token; ?>',	
-		dataType: 'json',
-		beforeSend: function() {
-			$('#button-clear i').replaceWith('<i class="fa fa-spinner fa-spin"></i>');
-			$('#button-clear').prop('disabled', true);
-		},	
-		complete: function() {
-			$('#button-clear i').replaceWith('<i class="fa fa-eraser"></i>');
-		},		
-		success: function(json) {
-			$('.alert').remove();
-				
-			if (json['error']) {
-				$('.panel').before('<div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> ' + json['error'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
-			} 
-		
-			if (json['success']) {
-				$('.panel').before('<div class="alert alert-success"><i class="fa fa-check-circle"></i> ' + json['success'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
-				
-				$('#button-clear').prop('disabled', true);
-			}
-		},			
-		error: function(xhr, ajaxOptions, thrownError) {
-			alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
-		}
-	});
+    var cs = $(this).attr("name");
+    if(cs!="disable"){
+        $.ajax({
+            url: 'index.php?route=extension/installer/clear&token=<?php echo $token; ?>',
+            dataType: 'json',
+            beforeSend: function() {
+                $('#button-clear i').replaceWith('<i class="fa fa-spinner fa-spin"></i>');
+                $('#button-clear').prop('disabled', true);
+            },
+            complete: function() {
+                $('#button-clear i').replaceWith('<i class="fa fa-eraser"></i>');
+            },
+            success: function(json) {
+                $('.alert').remove();
+
+                if (json['error']) {
+                    $('.box').before('<div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> ' + json['error'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+                }
+
+                if (json['success']) {
+                    $('.box').before('<div class="alert alert-success"><i class="fa fa-check-circle"></i> ' + json['success'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+
+                    $('#button-clear').prop('disabled', true);
+                    $('#button-clear').css('opacity','0.5');
+                    $('#button-clear').attr("name","disable") ;
+                }
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+            }
+        });
+    }
 });
 
 //--></script> 

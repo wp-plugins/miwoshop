@@ -509,7 +509,13 @@ class MiwoShopUtility {
             MiwoShop::get('base')->setConfig('alias_sync_done', '1');
             return;
         }
-
+		
+		$check_column = $db->run("SELECT * FROM #__miwoshop_url_alias LIMIT 1", 'loadAssoc');
+        
+        if(empty($check_column) or (!empty($check_column) and !isset($check_column['language_id']))){
+            $db->run("ALTER TABLE  #__miwoshop_url_alias ADD `language_id` INT NOT NULL DEFAULT 1;", 'query');
+        }
+		
         $aliases = $db->run("SELECT COUNT(url_alias_id) FROM `#__miwoshop_url_alias`", 'loadResult');
 
         if (!empty($aliases)) {

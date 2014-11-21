@@ -582,13 +582,13 @@ $_base = MFactory::getUri()->base(true);
                 }
 
                 if ($needle == 'product') {
-                    if ((@$item->query['view'] == $needle) and (@$item->query['product_id'] == $id)) {
+                    if (isset($item->query['view']) and (@$item->query['view'] == $needle) and (@$item->query['product_id'] == $id)) {
                         $menu_id = $item->id;
                         $menu_ids[$needle][$id] = $menu_id;
                         break;
                     }
                 } else if ($needle == 'category') {
-                    if ((@$item->query['view'] == $needle)) {
+                    if (isset($item->query['view']) and (@$item->query['view'] == $needle)) {
                         if (@$item->query['path'] == $id) {
                             $menu_id = $item->id;
                             $menu_ids[$needle][$id] = $menu_id;
@@ -607,26 +607,26 @@ $_base = MFactory::getUri()->base(true);
                         }
                     }
                 } else if ($needle == 'manufacturer') {
-                    if ((@$item->query['view'] == $needle) and (@$item->query['manufacturer_id'] == $id)) {
+                    if (isset($item->query['view']) and (@$item->query['view'] == $needle) and (@$item->query['manufacturer_id'] == $id)) {
                         $menu_id = $item->id;
                         $menu_ids[$needle][$id] = $menu_id;
                         break;
                     }
                 } else if ($needle == 'information') {
-                    if ((@$item->query['view'] == $needle) and (@$item->query['information_id'] == $id)) {
+                    if (isset($item->query['view']) and (@$item->query['view'] == $needle) and (@$item->query['information_id'] == $id)) {
                         $menu_id = $item->id;
                         $menu_ids[$needle][$id] = $menu_id;
                         break;
                     }
                 } else {
-                    if (@$item->query['view'] == $needle) {
+                    if (isset($item->query['view']) and @$item->query['view'] == $needle) {
                         $menu_id = $item->id;
                         $menu_ids[$needle][$id] = $menu_id;
                         break;
                     }
                 }
 
-                if (empty($home_id) and @$item->query['view'] == 'home') {
+                if (isset($item->query['view']) and empty($home_id) and @$item->query['view'] == 'home') {
                     $home_id = $item->id;
                     $menu_ids[$needle][$id] = $menu_id;
                 }

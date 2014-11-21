@@ -30,6 +30,11 @@ $installed_ms_version = $base->getMiwoshopVersion();
 $latest_ms_version = $base->getLatestMiwoshopVersion();
 $ms_version_status = version_compare($installed_ms_version, $latest_ms_version);
 
+$wizard = $base->getConfig()->get('wizard', 0);
+if (empty($wizard) and strpos($route, 'common/wizard') === false and $base->isAjax() != true) {
+    $mainframe->redirect(MRoute::_('index.php?option=com_miwoshop&route=common/wizard'), '', '');
+}
+
 if ($view == 'upgrade') {
 	$mainframe->redirect(MRoute::_('index.php?option=com_miwoshop&route=common/upgrade'), '', ''); #miwo
 }
@@ -38,7 +43,7 @@ else if ($view == 'support') {
 }
 
 $redirected = MFactory::getSession()->get('miwoshop.login.redirected');
-if (empty($ctrl) && !$redirected && ($base->getConfig()->get('account_sync_done', 0) == 0)) {
+if ( !empty($wizard) and empty($ctrl) and !$redirected and ($base->getConfig()->get('account_sync_done', 0) == 0)) {
     MError::raiseWarning('100', MText::sprintf('COM_MIWOSHOP_ACCOUNT_SYNC_WARN', '<a href="' . MRoute::_('index.php?option=com_miwoshop&ctrl=sync' ) . '">', '</a>')); #miwo
 }
 

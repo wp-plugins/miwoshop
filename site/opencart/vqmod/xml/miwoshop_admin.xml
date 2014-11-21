@@ -2594,15 +2594,6 @@ jQuery(document).ready(function() {
                           <input type="text" name="config_miwoshop[button_class]" value="<?php echo $config_miwoshop['button_class']; ?>" />
                       </td>
                     </tr>
-                    <tr>
-                      <td><?php echo $entry_miwoshop_comments; ?></td>
-                      <td>
-                          <input type="hidden" name="config_miwoshop[comments]" value="0">
-						  <input type="hidden" name="config_miwoshop[miwosef_integration]" value="0">
-                        <input type="hidden" name="config_miwoshop[account_sync_done]" value="1">
-                        <input type="hidden" name="config_miwoshop[alias_sync_done]" value="<?php echo Miwoshop::get('base')->getConfig()->get('account_sync_done', 0); ?>">
-                      </td>
-                    </tr>
 					<tr>
                       <td><?php echo $entry_miwoshop_set_input_width; ?></td>
                       <td><?php if ($config_miwoshop['set_input_width'] || !isset($config_miwoshop['set_input_width'])) { ?>
@@ -2633,6 +2624,11 @@ jQuery(document).ready(function() {
                     </tr>
                     <?php } ?>
                   </table>
+                  <input type="hidden" name="config_miwoshop[comments]" value="0">
+                  <input type="hidden" name="config_miwoshop[miwosef_integration]" value="0">
+                  <input type="hidden" name="config_miwoshop[account_sync_done]" value="1">
+                  <input type="hidden" name="config_miwoshop[alias_sync_done]" value="<?php echo Miwoshop::get('base')->getConfig()->get('account_sync_done', 0); ?>">
+                  <input type="hidden" name="config_miwoshop[wizard]" value="1" />
                 </div>
             ]]></add>
         </operation>

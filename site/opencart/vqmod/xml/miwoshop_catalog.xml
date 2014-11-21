@@ -829,7 +829,7 @@
     $cache = $this->cache->get('all_categories');
     $total_category_count = $this->model_catalog_category->getTotalCategories();
 
-    if(!empty($cache) and $total_category_count == $cache['total']) {
+    if(!empty($cache['total']) and $total_category_count == $cache['total']) {
         $this->data['categories'] = $cache['categories'];
     } else {
             ]]></add>

@@ -839,10 +839,19 @@
     </file>
 
     <file path="admin/view/template/catalog/" name="attribute_group_list.tpl,attribute_list.tpl,category_list.tpl,download_list.tpl,filter_list.tpl,information_list.tpl,manufacturer_list.tpl,option_list.tpl,product_list.tpl,review_list.tpl">
-   		<operation error="
-   		">
+   		<operation error="">
    			<search position="replace"><![CDATA[onclick="$('form').submit();"]]></search>
    			<add><![CDATA[onclick="$('#form').submit();"]]></add>
+   		</operation>
+    </file>    
+	<file name="admin/view/template/common/home.tpl">
+   		<operation error="">
+   			<search position="replace"><![CDATA[<?php echo $header; ?><?php echo $menu; ?>]]></search>
+   			<add><![CDATA[<?php echo $header; ?><?php if(!empty($menu)) { echo $menu; } ?>]]></add>
+   		</operation>   		
+		<operation error="">
+   			<search position="replace"><![CDATA[<?php if ($error_install) { ?>]]></search>
+   			<add><![CDATA[<?php if (!empty($error_install)) { ?>]]></add>
    		</operation>
     </file>
 
