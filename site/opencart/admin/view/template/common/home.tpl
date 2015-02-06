@@ -385,8 +385,8 @@ jQuery(document).ready(function() {
     var option_daterangepicker = {
         startDate: moment().subtract('days', 29),
         endDate: moment(),
-        minDate: '01/01/2012',
-        maxDate: '12/31/2014',
+        minDate: '01/01/2000',
+        maxDate: '12/31/2100',
         showDropdowns: true,
         showWeekNumbers: true,
         timePicker: false,

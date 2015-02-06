@@ -18,42 +18,63 @@ class com_MiwoshopInstallerScript {
     private $_current_version = null;
     private $_is_new_installation = true;
 
-    public function preflight($type, $parent) {
-        if($type == 'upgrade') {
-            $old = dirname(__FILE__);
-            $upg = MPATH_WP_CNT . '/upgrade';
-            $tmp = $upg.'/miwitmp';
-            $new = $upg.'/miwoshop.tmp/miwoshop';
-
-            if(MFolder::exists(MPath::clean($tmp))) {
-                MFolder::delete(MPath::clean($tmp));
-            }
-
-            # copy old files to tmp
-            MFolder::copy(MPath::clean($old), MPath::clean($tmp));
-
-            # combine old and new filed in tmp
-            MFolder::copy(MPath::clean($new), MPath::clean($tmp));
-
-            # copy tpm files to new
-            MFolder::copy(MPath::clean($tmp), MPath::clean($new));
-
-            #delete tmp
-            MFolder::delete(MPath::clean($tmp));
-        }
-
+    public function preflight($type, $source) {
+		
         $db = MFactory::getDBO();
         $db->setQuery('SELECT option_value FROM #__options WHERE option_name = "miwoshop"');
         $config = $db->loadResult();
 
         if (!empty($config)) {
-            $this->_is_new_installation = false;
+        	$this->_is_new_installation = false;
 
-            $miwoshop_xml = MPATH_WP_PLG . '/miwoshop/site/miwoshop/miwoshop.xml';
+        	$miwoshop_xml = MPATH_WP_PLG . '/miwoshop/miwoshop.xml';
 
-            if (MFile::exists($miwoshop_xml)) {
-                $xml = simplexml_load_file($miwoshop_xml, 'SimpleXMLElement');
-                $this->_current_version = (string)$xml->version;
+        	if (MFile::exists($miwoshop_xml)) {
+        		$xml = simplexml_load_file($miwoshop_xml, 'SimpleXMLElement');
+        		$this->_current_version = (string)$xml->version;
+        	}
+
+        	$new_miwoshop_xml = $source . 'miwoshop.xml';
+
+        	$new_version = '0.0.0';
+        	if (MFile::exists($new_miwoshop_xml)) {
+        		$new_xml = simplexml_load_file($new_miwoshop_xml, 'SimpleXMLElement');
+        		$new_version = (string)$new_xml->version;
+        	}
+
+        	if (!empty($this->_current_version) and version_compare($this->_current_version, '3.0.0') == -1 and version_compare($new_version, '3.0.0', '>=') == true) {
+        		$is_ready = $this->isDbReadyFor3();
+
+        		if($is_ready == false) {
+					MFolder::delete($source);
+        			return new WP_Error(1,'Your MiwoShop is not ready to upgrade latest version. Migrate database for MiwoShop v3.0 plz.');
+        		}
+                else {
+                    return;
+                }
+        	}
+            
+            if($type == 'upgrade') {
+                $old = dirname(__FILE__);
+                $upg = MPATH_WP_CNT . '/upgrade';
+                $tmp = $upg.'/miwitmp';
+                $new = $upg.'/miwoshop.tmp/miwoshop';
+    
+                if(MFolder::exists(MPath::clean($tmp))) {
+                    MFolder::delete(MPath::clean($tmp));
+                }
+    
+                # copy old files to tmp
+                MFolder::copy(MPath::clean($old), MPath::clean($tmp));
+    
+                # combine old and new filed in tmp
+                MFolder::copy(MPath::clean($new), MPath::clean($tmp));
+    
+                # copy tpm files to new
+                MFolder::copy(MPath::clean($tmp), MPath::clean($new));
+    
+                #delete tmp
+                MFolder::delete(MPath::clean($tmp));
             }
         }
     }
@@ -146,11 +167,29 @@ class com_MiwoshopInstallerScript {
 
 		if (version_compare($this->_current_version, '1.2.0') == -1) {
             MiwoShop::get('install')->upgrade120();
+        }		
+		
+		if (version_compare($this->_current_version, '1.2.1') == -1) {
+            MiwoShop::get('install')->upgrade121();
         }
     }
 
     public function uninstall($parent) {
 		$db  = MFactory::getDBO();
 		$src = __FILE__;
+	}
+	
+	public function isDbReadyFor3() {
+		global $wpdb;
+	
+		$db = MFactory::getDBO();
+		$db->setQuery("SHOW TABLES LIKE '".$wpdb->prefix."miwoshop_api'");
+		$table = $db->loadResult();
+		
+		if(empty($table)) {
+			return false;
+		}
+		
+		return true;
 	}
 }

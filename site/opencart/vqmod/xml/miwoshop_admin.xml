@@ -2345,13 +2345,9 @@ jQuery(document).ready(function() {
 			<add><![CDATA[]]></add>
 		</operation>
 		<operation error="skip">
-			<search position="replace"><![CDATA[onclick="send(]]></search>
-			<add><![CDATA[onclick="sendEmail(]]></add>
-		</operation>
-		<operation error="skip">
 			<search position="replace"><![CDATA[function send(url) {]]></search>
 			<add><![CDATA[function sendEmail(url) {
-    <?php echo MiwoShop::get('base')->editor()->save("message"); ?>
+    tinyMCE.triggerSave();
     ]]></add>
 		</operation>
 		<operation error="skip">
@@ -2363,8 +2359,8 @@ jQuery(document).ready(function() {
 			<add><![CDATA[$('textarea[name=\'message\']').html(jQuery('textarea[name=\'message\']').val());]]></add>
 		</operation>
         <operation error="skip">
-			<search position="replace"><![CDATA[url: url,]]></search>
-			<add><![CDATA[url: url+'format=raw&tmpl=component',]]></add>
+			<search position="replace"><![CDATA[onclick="send('index.php?route=sale/contact/send&token=<?php echo $token; ?>');"]]></search>
+			<add><![CDATA[onclick="sendEmail('admin-ajax.php?action=miwoshop&client=admin&option=com_miwoshop&format=raw&tmpl=component&route=sale/contact/send&token=<?php echo $token; ?>');"]]></add>
 		</operation>
 	</file>
 

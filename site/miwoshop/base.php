@@ -960,6 +960,9 @@ class MiwoShopBase {
             $permission['access'][] = 'common/wizard';
             $permission['modify'][] = 'common/wizard';
         }
+		else {
+			return true;
+		}
 
         $permission = serialize($permission);
 

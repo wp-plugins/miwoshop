@@ -556,7 +556,11 @@ class MWordpress {
 			return $source;
 		}
 		
-        $installer->preflight('upgrade', $source);
+        $_source = $installer->preflight('upgrade', $source);
+		
+		if(!empty($_source)) {
+            $source = $_source;
+        }
 		
 		return $source;
     }

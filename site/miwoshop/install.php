@@ -293,9 +293,27 @@ class MiwoShopInstall {
         $jdb->setQuery("UPDATE `#__miwoshop_user_group` SET `permission` = '".$permission."' WHERE `user_group_id` = 1");
         $jdb->query();
 		
-		$this->_addIndexes();
+		//$this->_addIndexes();
    	}
+	
+	public function upgrade121(){
+        $jdb = MiwoShop::get('db')->getDbo();
+		
+        $jdb->setQuery("SELECT permission FROM `#__miwoshop_user_group` WHERE `user_group_id` = 1");
+        $permission = $jdb->loadResult();
+        $permission = unserialize($permission);
+		
+		if (!array_search('common/dbfix', $permission['access'])){
+            $permission['access'][] = 'common/dbfix';
+            $permission['modify'][] = 'common/dbfix';
+        }
 
+        $permission = serialize($permission);
+
+        $jdb->setQuery("UPDATE `#__miwoshop_user_group` SET `permission` = '".$permission."' WHERE `user_group_id` = 1");
+        $jdb->query();
+   	}
+	
     public function checkLanguage(){
         $db = MiwoShop::get('db');
 
