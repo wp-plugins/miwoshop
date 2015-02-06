@@ -73,7 +73,7 @@ final class MShop extends MWordpress {
 		if(!empty($config) and file_exists(MPATH_WP_CNT.'/miwi/autoupdate.php')) {
 			$pid = $config->get('pid');
 			if(!empty($pid)) {
-				$path = 'http://miwisoft.com/index.php?option=com_mijoextensions&view=download&pack=upgrade&model=' . $this->context.'&pid=' . $pid;
+				$path = 'http://miwisoft.com/index.php?option=com_mijoextensions&view=download&pack=upgrade&version=1.2.1&model=' . $this->context.'&pid=' . $pid;
 				require_once(MPATH_WP_CNT.'/miwi/autoupdate.php');
 				new MiwisoftAutoUpdate($path, $this->context);
 			}
