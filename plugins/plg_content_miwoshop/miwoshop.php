@@ -99,13 +99,12 @@ class plgContentMiwoshop extends MPlugin {
         $oc_tax = MiwoShop::get('opencart')->get('tax');
         $oc_currency = MiwoShop::get('opencart')->get('currency');
         $oc_language = MiwoShop::get('opencart')->get('language');
-        $oc_vqmod = MiwoShop::get('opencart')->get('vqmod');
 
-        require_once($oc_vqmod->modCheck(MPATH_MIWOSHOP_OC.'/catalog/model/tool/image.php'));
+        require_once(modification(MPATH_MIWOSHOP_OC.'/catalog/model/tool/image.php'));
         $oc_img_tool = new ModelToolImage($oc_registry);
 
+        MHtml::_('jquery.framework');
         MiwoShop::get('base')->addHeader(MPATH_MIWOSHOP_SITE.'/assets/js/product.js', false);
-        MiwoShop::get('base')->addHeader(MPATH_MIWOSHOP_OC.'/catalog/view/theme/'.$oc_config->get('config_template').'/stylesheet/stylesheet.css');
 
         if (strpos($show_image, ':')) {
             $img_array = explode(':', $show_image);
@@ -241,11 +240,11 @@ class plgContentMiwoshop extends MPlugin {
         $show_heading = $this->p_params->get('show_heading', 0);
         $heading_title = $oc_language->get('heading_title');
 
-        if (file_exists(DIR_TEMPLATE . $oc_config->get('config_template') . '/template/module/product.tpl')) {
-            $template = $oc_config->get('config_template') . '/template/module/product.tpl';
+        if (file_exists(DIR_TEMPLATE . $oc_config->get('config_template') . '/template/product/external_product.tpl')) {
+            $template = $oc_config->get('config_template') . '/template/product/external_product.tpl';
         }
         else {
-            $template = 'default/template/module/product.tpl';
+            $template = 'default/template/product/external_product.tpl';
         }
 
         ob_start();
@@ -261,7 +260,6 @@ class plgContentMiwoshop extends MPlugin {
 
     public function getProductOptionsData($product_id){
         $options = MiwoShop::get('opencart')->loadModelFunction('catalog/product/getProductOptions', $product_id);
-
         foreach ($options as $option) {
             if ($option['type'] == 'select' || $option['type'] == 'radio' || $option['type'] == 'checkbox' || $option['type'] == 'image') {
                 $option_value_data = array();

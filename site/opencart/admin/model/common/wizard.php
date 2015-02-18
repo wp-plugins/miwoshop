@@ -33,31 +33,67 @@ class ModelCommonWizard extends Model {
 
         $this->saveConfig($data['config']);
 
-        if(!empty($data['home_menu'])){
-            $this->addMenu();
-        }
-
         $result['success'] = 'Success';
         return $result;
     }
 
     public function getInstalledComponents($components) {
-        $installed_comp = array();
-
-        foreach($components as $component) {
-            if(is_plugin_active($component.'/'.$component.'.php')) {
-                $installed_comp[] = $component;
-            }
-        }
-
-        return $installed_comp;
+        $result = $this->db->query("SELECT DISTINCT element FROM #__extensions WHERE element IN('".implode("', '", $components)."') AND type='component'");
+        return $result->rows;
     }
 
     public function getLanguageCount() {
-        array();
+        $result = $this->db->query("SELECT COUNT(element) as count FROM #__extensions WHERE type='language' AND enabled='1' AND client_id='1'");
+        return $result->row['count'];
     }
 
     private function addMenu(){
+        return true;
+        $data = array();
+        $data['menutype'] = 'mainmenu';
+        $data['title'] = 'Shop';
+        $data['alias'] = 'shop';
+        $data['path'] = 'shop';
+        $data['link'] = 'index.php?option=com_miwoshop&view=home';
+        $data['type'] = 'component';
+        $data['published'] = 1;
+        $data['parent_id'] = 1;
+        $data['level'] = 1;
+        $data['access'] = 1;
+        $data['client_id'] = 0;
+        $data['language'] = '*';
+        $data['params'] = '{"miwoshop_store_id":"0","menu-anchor_title":"","menu-anchor_css":"","menu_image":"","menu_text":1,"page_title":"","show_page_heading":0,"page_heading":"","pageclass_sfx":"","menu-meta_description":"","menu-meta_keywords":"","robots":"","secure":0}';
+
+        $db = MFactory::getDbo();
+        $db->setQuery("SELECT `extension_id` FROM `#__extensions` WHERE `type`='component' and `element`='com_miwoshop'");
+        $data['component_id'] = $db->loadResult();
+
+        $db->setQuery("SELECT menutype FROM #__menu_types WHERE menutype='mainmenu'");
+        $mainMenu = $db->loadResult();
+
+        if(!empty($mainMenu)){
+            MTable::addIncludePath(MPATH_ADMINISTRATOR.'/components/com_menus/tables/');
+            $table = MTable::getInstance('Menu', 'MenusTable');
+
+            $table->setLocation($data['parent_id'], 'last-child');
+
+            if (!$table->bind($data)) {
+                return false;
+            }
+
+            if (!$table->check()) {
+                return false;
+            }
+
+            if (!$table->store()) {
+                return false;
+            }
+
+            if (!$table->rebuildPath($table->id)) {
+                return false;
+            }
+        }
+
         return true;
     }
 
@@ -70,7 +106,7 @@ class ModelCommonWizard extends Model {
             return false;
         }
 
-        $sql = "INSERT INTO " . DB_PREFIX . "setting (`store_id`, `group`, `key`, `value`, `serialized`) VALUES";
+        $sql = "INSERT INTO " . DB_PREFIX . "setting (`store_id`, `code`, `key`, `value`, `serialized`) VALUES";
 
         foreach($data as $key => $value) {
             $serialized = 0;

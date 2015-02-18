@@ -1,67 +1,48 @@
 <?php
-/*
-* @package		MiwoShop
-* @copyright	2009-2014 Miwisoft LLC, miwisoft.com
-* @license		GNU/GPL http://www.gnu.org/copyleft/gpl.html
-* @license		GNU/GPL based on AceShop www.joomace.net
-*/
-
-// No Permission
-defined('MIWI') or die('Restricted access');
-
 final class Front {
-	protected $registry;
-	protected $pre_action = array();
-	protected $error;
-	
+	private $registry;
+	private $pre_action = array();
+	private $error;
+
 	public function __construct($registry) {
 		$this->registry = $registry;
 	}
-	
+
 	public function addPreAction($pre_action) {
 		$this->pre_action[] = $pre_action;
 	}
-	
-  	public function dispatch($action, $error) {
+
+	public function dispatch($action, $error) {
 		$this->error = $error;
-			
+
 		foreach ($this->pre_action as $pre_action) {
 			$result = $this->execute($pre_action);
-					
+
 			if ($result) {
 				$action = $result;
-				
+
 				break;
 			}
 		}
-			
+
 		while ($action) {
 			$action = $this->execute($action);
 		}
-  	}
-    
-	private function execute($action) {
-		if (file_exists($action->getFile())) {
-			require_once($action->getFile());
-			
-			$class = $action->getClass();
+	}
 
-			$controller = new $class($this->registry);
-			
-			if (is_callable(array($controller, $action->getMethod()))) {
-				$action = call_user_func_array(array($controller, $action->getMethod()), $action->getArgs());
-			} else {
-				$action = $this->error;
-			
-				$this->error = '';
-			}
-		} else {
+	private function execute($action) {
+		$result = $action->execute($this->registry);
+
+		if (is_object($result)) {
+			$action = $result;
+		} elseif ($result === false) {
 			$action = $this->error;
-			
+
 			$this->error = '';
+		} else {
+			$action = false;
 		}
-		
+
 		return $action;
 	}
 }
-?>

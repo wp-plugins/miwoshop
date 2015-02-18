@@ -1,14 +1,4 @@
 <?php
-/*
-* @package		MiwoShop
-* @copyright	2009-2014 Miwisoft LLC, miwisoft.com
-* @license		GNU/GPL http://www.gnu.org/copyleft/gpl.html
-* @license		GNU/GPL based on AceShop www.joomace.net
-*/
-
-// No Permission
-defined('MIWI') or die('Restricted access');
-
 // Text
 $_['text_approve_subject']      = '%s - Your Affiliate Account has been activated!';
 $_['text_approve_welcome']      = 'Welcome and thank you for registering at %s!';
@@ -18,4 +8,3 @@ $_['text_approve_thanks']       = 'Thanks,';
 $_['text_transaction_subject']  = '%s - Affiliate Commission';
 $_['text_transaction_received'] = 'You have received %s commission!';
 $_['text_transaction_total']    = 'Your total amount of commission is now %s.';
-?>

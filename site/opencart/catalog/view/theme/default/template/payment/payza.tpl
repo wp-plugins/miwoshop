@@ -8,8 +8,8 @@
   <input type="hidden" name="ap_returnurl" value="<?php echo $ap_returnurl; ?>" />
   <input type="hidden" name="ap_cancelurl" value="<?php echo $ap_cancelurl; ?>" />
   <div class="buttons">
-    <div class="right">
-      <input type="submit" value="<?php echo $button_confirm; ?>" class="<?php echo MiwoShop::getButton(); ?>" />
+    <div class="pull-right">
+      <input type="submit" value="<?php echo $button_confirm; ?>" class="button button-primary" />
     </div>
   </div>
 </form>

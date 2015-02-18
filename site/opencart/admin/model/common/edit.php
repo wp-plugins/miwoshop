@@ -15,12 +15,12 @@ class ModelCommonEdit extends Model {
 		
         if($extension){
             foreach($ids as $id) {
-                $db->run("UPDATE #__miwoshop_setting SET `value` = {$status} WHERE `group` = '{$id}' AND `key` = '{$id}_status'");
+                $db->run("UPDATE #__miwoshop_setting SET `value` = {$status} WHERE `code` = '{$id}' AND `key` = '{$id}_status'", 'query');
             }
         }
         else{
             foreach($ids as $id) {
-                $db->run("UPDATE #__miwoshop_{$type} SET status = {$status} WHERE {$type}_id = {$id}");
+                $db->run("UPDATE #__miwoshop_{$type} SET status = {$status} WHERE {$type}_id = {$id}", 'query');
             }
         }
     }
@@ -36,7 +36,7 @@ class ModelCommonEdit extends Model {
                 continue;
             }
 
-            $result = $db->run("UPDATE {$table} SET language_id = {$new_id} WHERE language_id = {$old_id}");
+            $result = $db->run("UPDATE {$table} SET language_id = {$new_id} WHERE language_id = {$old_id}", 'query');
             $results[$table] = $result;
         }
 
@@ -44,7 +44,7 @@ class ModelCommonEdit extends Model {
     }
 
     public function updateOcLang($old_id, $new_id){
-        $db = MiwoShop::get('db')->run("UPDATE #__miwoshop_language SET language_id = {$new_id} WHERE language_id = {$old_id}");
+        $db = MiwoShop::get('db')->run("UPDATE #__miwoshop_language SET language_id = {$new_id} WHERE language_id = {$old_id}", 'query');
     }
 
     public function getJoomlaLangs(){
@@ -72,7 +72,7 @@ class ModelCommonEdit extends Model {
                 'locale'      => $result['locale'],
                 'image'       => $result['image'],
                 'directory'   => $result['directory'],
-                'filename'    => $result['filename'],
+                /*'filename'    => $result['filename'],*/
                 'sort_order'  => $result['sort_order'],
                 'status'      => $result['status']
             );

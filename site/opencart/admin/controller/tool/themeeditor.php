@@ -20,28 +20,28 @@ class ControllerToolThemeEditor extends Controller {
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
-		$this->data['heading_title'] = $this->language->get('heading_title');
+		$data['heading_title'] = $this->language->get('heading_title');
 
-		$this->data['button_clear_cache'] = $this->language->get('button_clear_cache');
-		$this->data['button_save'] = $this->language->get('button_save');
-		$this->data['button_restore'] = $this->language->get('button_restore');
-		$this->data['button_delete'] = $this->language->get('button_delete');
+		$data['button_clear_cache'] = $this->language->get('button_clear_cache');
+		$data['button_save'] = $this->language->get('button_save');
+		$data['button_restore'] = $this->language->get('button_restore');
+		$data['button_delete'] = $this->language->get('button_delete');
 
-		$this->data['text_wait'] = $this->language->get('text_wait');
-		$this->data['text_confirm_remove_files'] = $this->language->get('text_confirm_remove_files');
-		$this->data['text_backup'] = $this->language->get('text_backup');
+		$data['text_wait'] = $this->language->get('text_wait');
+		$data['text_confirm_remove_files'] = $this->language->get('text_confirm_remove_files');
+		$data['text_backup'] = $this->language->get('text_backup');
 
-        $this->data['entry_backup_files'] = $this->language->get('entry_backup_files');
-        $this->data['entry_last_backup_files'] = $this->language->get('entry_last_backup_files');
-        $this->data['entry_available_backups'] = $this->language->get('entry_available_backups');
+        $data['entry_backup_files'] = $this->language->get('entry_backup_files');
+        $data['entry_last_backup_files'] = $this->language->get('entry_last_backup_files');
+        $data['entry_available_backups'] = $this->language->get('entry_available_backups');
 
-		$this->data['save'] = $this->url->link('tool/themeeditor', 'token=' . $this->session->data['token'], 'SSL');
+		$data['save'] = $this->url->link('tool/themeeditor', 'token=' . $this->session->data['token'], 'SSL');
 
 		if(!is_dir($this->getPathCache())){
             mkdir($this->getPathCache(), 0777, true);
         }
 
-		$this->data['files'] = array();
+		$data['files'] = array();
 
 		$files = glob($this->getPathCache() . '*.*.back', 0);
 
@@ -54,7 +54,7 @@ class ControllerToolThemeEditor extends Controller {
 				$filename = preg_replace('/^.*\//', '', $file);
 				$date = substr($filename, 0, strpos($filename, '.'));
 
-				$this->data['files'][] = array(
+				$data['files'][] = array(
 					'date' => date("d/m/Y H:i:s", $date),
 					'name' => $filename,
 					'size' => $this->getFilesize($file)
@@ -70,50 +70,48 @@ class ControllerToolThemeEditor extends Controller {
 		}
 
 		if (!is_writable($this->getPathCache())) {
-			$this->data['text_folder_no_writable'] = sprintf($this->language->get('text_folder_no_writable'), $this->getPathCache());
+			$data['text_folder_no_writable'] = sprintf($this->language->get('text_folder_no_writable'), $this->getPathCache());
 		} else {
-			$this->data['text_folder_no_writable'] = '';
+			$data['text_folder_no_writable'] = '';
 		}
 
-		$this->data['size'] = sizeof($files);
-		$this->data['token'] = $this->session->data['token'];
-		$this->data['connected'] = null;
+		$data['size'] = sizeof($files);
+		$data['token'] = $this->session->data['token'];
+		$data['connected'] = null;
 
  		if (isset($this->error['warning'])) {
-			$this->data['error_warning'] = $this->error['warning'];
+			$data['error_warning'] = $this->error['warning'];
 		} else {
-			$this->data['error_warning'] = '';
+			$data['error_warning'] = '';
 		}
 
 		if (isset($this->session->data['success'])) {
-			$this->data['success'] = $this->session->data['success'];
+			$data['success'] = $this->session->data['success'];
 		
 			unset($this->session->data['success']);
 		} else {
-			$this->data['success'] = '';
+			$data['success'] = '';
 		}
 		
   		$this->document->breadcrumbs = array();
 
-   		$this->data['breadcrumbs'][] = array(
+   		$data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
       		'separator' => false
    		);
 
-   		$this->data['breadcrumbs'][] = array(
+   		$data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('tool/themeeditor', 'token=' . $this->session->data['token'], 'SSL'),
       		'separator' => ' :: '
    		);
-
-		$this->template = 'tool/themeeditor.tpl';
-		$this->children = array(
-			'common/header',	
-			'common/footer'	
-		);
 		
-		$this->response->setOutput($this->render());
+		$data['header'] = $this->load->controller('common/header');
+		$data['column_left'] = $this->load->controller('common/column_left');
+		$data['footer'] = $this->load->controller('common/footer');
+		
+		$this->response->setOutput($this->load->view('tool/themeeditor.tpl', $data));
 	}
 
 	public function folder() {
@@ -156,20 +154,20 @@ class ControllerToolThemeEditor extends Controller {
 	public function edit() {
 		$this->load->language('tool/themeeditor');
 
-		$this->data['text_edit'] = $this->language->get('text_edit');
+		$data['text_edit'] = $this->language->get('text_edit');
 
-		$this->data['entry_available_backups'] = $this->language->get('entry_available_backups');
+		$data['entry_available_backups'] = $this->language->get('entry_available_backups');
 
-		$this->data['button_restore'] = $this->language->get('button_restore');
-		$this->data['button_cancel'] = $this->language->get('button_cancel');
-		$this->data['button_delete'] = $this->language->get('button_delete');
+		$data['button_restore'] = $this->language->get('button_restore');
+		$data['button_cancel'] = $this->language->get('button_cancel');
+		$data['button_delete'] = $this->language->get('button_delete');
 
-		$this->data['action'] = $this->url->link('tool/themeeditor', 'token=' . $this->session->data['token'], 'SSL');
+		$data['action'] = $this->url->link('tool/themeeditor', 'token=' . $this->session->data['token'], 'SSL');
 
 		$root = $this->getPathTheme();
 		$path_file = $root . trim($this->request->post['path_file']);
 
-		$this->data['restore'] = array();
+		$data['restore'] = array();
 
 		$files = glob($this->getPathCache() . '*.' . str_replace('/', '_', ltrim($this->request->post['path_file'], '/')) . '.back', 0);
 
@@ -178,7 +176,7 @@ class ControllerToolThemeEditor extends Controller {
 				$filename = preg_replace('/^.*\//', '', $file);
 				$date = substr($filename, 0, strpos($filename, '.'));
 
-				$this->data['restore'][] = array(
+				$data['restore'][] = array(
 					'id'   => $date,
 					'name' => date("d/m/Y H:i:s", $date),
 					'size' => $this->getFilesize($file)
@@ -188,26 +186,24 @@ class ControllerToolThemeEditor extends Controller {
 
 		$content = trim(file_get_contents($path_file));
 
-		$this->data['text_file_empty'] = '';
+		$data['text_file_empty'] = '';
 
 		if (empty($content)) {
-			$this->data['text_file_empty'] = $this->language->get('text_file_empty');
+			$data['text_file_empty'] = $this->language->get('text_file_empty');
 		}
 
-		$this->data['content'] = htmlentities($content);
+		$data['content'] = htmlentities($content);
 		$ext = preg_replace('/^.*\./', '', $this->request->post['path_file']);
-		$this->data['ext'] = $ext;
-		$this->data['path_file'] =  $path_file;
-		$this->data['filename'] = $this->request->post['file'];
-		$this->data['edit_file'] = ltrim($this->request->post['path_file'], '/');
+		$data['ext'] = $ext;
+		$data['path_file'] =  $path_file;
+		$data['filename'] = $this->request->post['file'];
+		$data['edit_file'] = ltrim($this->request->post['path_file'], '/');
 		$tmp = (explode('/', ltrim($this->request->post['path_file'], '/')));
-        $this->data['curr_theme'] = $tmp[0];
+        $data['curr_theme'] = $tmp[0];
 
-        $this->data['themes'] = MFolder::folders(self::getPathTheme());
-
-		$this->template = 'tool/themeeditoredit.tpl';
-
-		$this->response->setOutput($this->render());
+        $data['themes'] = MFolder::folders(self::getPathTheme());
+		
+		$this->response->setOutput($this->load->view('tool/themeeditoredit.tpl', $data));
 	}
 
 	public function save() {

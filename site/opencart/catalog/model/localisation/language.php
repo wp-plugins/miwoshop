@@ -1,31 +1,35 @@
 <?php
-/*
-* @package		MiwoShop
-* @copyright	2009-2014 Miwisoft LLC, miwisoft.com
-* @license		GNU/GPL http://www.gnu.org/copyleft/gpl.html
-* @license		GNU/GPL based on AceShop www.joomace.net
-*/
-
-// No Permission
-defined('MIWI') or die('Restricted access');
-
 class ModelLocalisationLanguage extends Model {
-    public function getLanguage($language_id) {
-        $language_data = MiwoShop::get('db')->getLanguage($language_id);
+	public function getLanguage($language_id) {
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "language WHERE language_id = '" . (int)$language_id . "'");
 
-        return $language_data;
-   	}
+		return $query->row;
+	}
 
-   	public function getLanguages($data = array()) {
-        $language_data = $this->cache->get('language');
+	public function getLanguages() {
+		$language_data = $this->cache->get('language');
 
-        if (!$language_data) {
-            $language_data = MiwoShop::get('db')->getLanguageList();
+		if (!$language_data) {
+			$language_data = array();
 
-            $this->cache->set('language', $language_data);
-        }
+			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "language ORDER BY sort_order, name");
 
-        return $language_data;
-   	}
+			foreach ($query->rows as $result) {
+				$language_data[$result['code']] = array(
+					'language_id' => $result['language_id'],
+					'name'        => $result['name'],
+					'code'        => $result['code'],
+					'locale'      => $result['locale'],
+					'image'       => $result['image'],
+					'directory'   => $result['directory'],
+					'sort_order'  => $result['sort_order'],
+					'status'      => $result['status']
+				);
+			}
+
+			$this->cache->set('language', $language_data);
+		}
+
+		return $language_data;
+	}
 }
-?>

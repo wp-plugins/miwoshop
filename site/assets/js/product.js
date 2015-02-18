@@ -40,25 +40,12 @@ function addProductToCart(product_id, product_options) {
 
                 jQuery('.success').fadeIn('slow');
 
-                jQuery('#cart-total').html(json['total']);
-
-                _updateMiwocartModule();
+                jQuery('#cart-total,#cart > a > span').html(json['total']);
 
                 jQuery('html, body').animate({ scrollTop: 0 }, 'slow');
+				
+				jQuery('#cart > ul,#module_cart > ul').load('index.php?option=com_miwoshop&route=common/cart/info&format=raw&tmpl=component ul li');
             }
         }
     });
-}
-
-function _updateMiwocartModule() {
-	jQuery.ajax({
-		url: 'index.php?option=com_miwoshop&format=raw&tmpl=component&route=module/miwoshopcart/ajax',
-		type: 'post',
-		success: function(output) {
-			var cart = document.getElementById('module_cart');
-			if(cart){
-			    cart.innerHTML = output;
-			}
-		}
-	});
 }

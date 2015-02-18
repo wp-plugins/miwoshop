@@ -45,7 +45,7 @@ class MiwoShopDb {
         }
 	}
 
-	public function getRecordAlias($id, $type = 'product') {
+	public function getRecordAlias($id, $type = 'product', $_query = array()) {
         $id = intval($id);
 
         if (empty($id)) {
@@ -58,6 +58,9 @@ class MiwoShopDb {
             $query = $type.'_id='.$id;
 
             $lang_id = MiwoShop::get('opencart')->get('config')->get('config_language_id');
+            if(isset($_query['_lang'])){
+                $lang_id = $_query['_lang'];
+            }
             $_name = $this->run("SELECT keyword FROM #__miwoshop_url_alias WHERE query = '{$query}' AND language_id = '{$lang_id}' LIMIT 1", 'loadResult');
 
             if (empty($_name)) {
@@ -441,7 +444,7 @@ class MiwoShopDb {
             $query = $type.'_id='.$id;
 
             $_names = $this->run("SELECT keyword, language_id FROM #__miwoshop_url_alias WHERE query = '{$query}'", 'loadAssocList');
-
+			$aliases = array();
             foreach($_names as $name){
 
                 $alias = $name['keyword'];

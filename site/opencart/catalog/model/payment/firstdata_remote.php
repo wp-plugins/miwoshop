@@ -88,7 +88,7 @@ class ModelPaymentFirstdataRemote extends Model {
 								$xml .= '<v1:OrderId>' . $order_ref . '</v1:OrderId>';
 								$xml .= '<v1:Ip>' . $order_info['ip'] . '</v1:Ip>';
 								$xml .= '<v1:TransactionOrigin>ECI</v1:TransactionOrigin>';
-								$xml .= '<v1:PONumber>MiwoShop</v1:PONumber>';
+								$xml .= '<v1:PONumber>OPENCART2.0' . VERSION . '</v1:PONumber>';
 							$xml .= '</v1:TransactionDetails>';
 
 							$xml .= '<v1:Billing>';
@@ -120,11 +120,6 @@ class ModelPaymentFirstdataRemote extends Model {
 		$xml .= '</SOAP-ENV:Envelope>';
 
 		$xml = simplexml_load_string($this->call($xml));
-
-        if($xml == false) {
-            $response['fault'] = 'Gateway information error';
-            return $response;
-        }
 
 		$xml->registerXPathNamespace('ipgapi', 'http://ipg-online.com/ipgapi/schemas/ipgapi');
 		$xml->registerXPathNamespace('soap', 'http://schemas.xmlsoap.org/soap/envelope/');

@@ -22,9 +22,11 @@ define("DIR_TEMPLATE", MPATH_MIWOSHOP_OC.'/catalog/view/theme/');
 define("DIR_CONFIG", MPATH_MIWOSHOP_OC.'/system/config/');
 define("DIR_IMAGE", MPATH_MIWOSHOP_OC.'/image/');
 define("DIR_CACHE", MPATH_MIWI.'/cache/com_miwoshop/'); #miwo
-define("DIR_DOWNLOAD", MPATH_MIWOSHOP_OC.'/download/');
+define("DIR_DOWNLOAD", MPATH_MIWOSHOP_OC.'/system/download/');
 define("DIR_LOGS", MPATH_MIWOSHOP_OC.'/system/logs/');
 define("DIR_CATALOG", MPATH_MIWOSHOP_OC.'/catalog/');
+define('DIR_MODIFICATION', MPATH_MIWOSHOP_OC.'/system/modification/');
+define('DIR_UPLOAD', MPATH_MIWOSHOP_OC.'/system/upload/');
 
 // DB
 define("DB_DRIVER", 'mysql');

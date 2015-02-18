@@ -1,28 +1,21 @@
 <?php
-/*
-* @package		MiwoShop
-* @copyright	2009-2014 Miwisoft LLC, miwisoft.com
-* @license		GNU/GPL http://www.gnu.org/copyleft/gpl.html
-* @license		GNU/GPL based on AceShop www.joomace.net
-*/
-
-// No Permission
-defined('MIWI') or die('Restricted access');
-
 // Heading
 $_['heading_title']    = 'Handling Fee';
 
 // Text
 $_['text_total']       = 'Order Totals';
 $_['text_success']     = 'Success: You have modified handling fee total!';
+$_['text_edit']        = 'Edit Handling Fee Total';
 
 // Entry
-$_['entry_total']      = 'Order Total:';
-$_['entry_fee']        = 'Fee:';
-$_['entry_tax_class']  = 'Tax Class:';
-$_['entry_status']     = 'Status:';
-$_['entry_sort_order'] = 'Sort Order:';
+$_['entry_total']      = 'Order Total';
+$_['entry_fee']        = 'Fee';
+$_['entry_tax_class']  = 'Tax Class';
+$_['entry_status']     = 'Status';
+$_['entry_sort_order'] = 'Sort Order';
+
+// Help
+$_['help_total']       = 'The checkout total the order must reach before this order total becomes active.';
 
 // Error
 $_['error_permission'] = 'Warning: You do not have permission to modify handling fee total!';
-?>

@@ -30,6 +30,7 @@ class MDocument extends MObject {
     public $_profile 	 		= '';
     public $_scripts 	 		= array();
     public $_script		 		= array();
+    public $_footer_script		= array();
     public $_styleSheets 		= array();
     public $_style 		 		= array();
     public $_metaTags 			= array();
@@ -192,6 +193,14 @@ class MDocument extends MObject {
         $handle = md5(mt_rand());
 
         $this->_script[$handle] = $content;
+
+        return $this;
+    }
+
+    public function addFooterScriptDeclaration($content, $type = 'text/javascript') {
+        $handle = md5(mt_rand());
+
+        $this->_footer_script[$handle] = $content;
 
         return $this;
     }

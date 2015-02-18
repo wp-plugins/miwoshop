@@ -1,23 +1,12 @@
 <?php
-/*
-* @package		MiwoShop
-* @copyright	2009-2014 Miwisoft LLC, miwisoft.com
-* @license		GNU/GPL http://www.gnu.org/copyleft/gpl.html
-* @license		GNU/GPL based on AceShop www.joomace.net
-*/
+class ControllerShippingWeight extends Controller {
+	private $error = array();
 
-// No Permission
-defined('MIWI') or die('Restricted access');
+	public function index() {
+		return true;
+	}
 
-class ControllerShippingWeight extends Controller { 
-    private $error = array();
-
-   	public function index() {
-           return true;
-   	}
-
-   	protected function validate() {
-           return true;
-   	}
+	protected function validate() {
+		return true;
+	}
 }
-?>

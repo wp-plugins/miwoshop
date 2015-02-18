@@ -1,14 +1,4 @@
 <?php
-/*
-* @package		MiwoShop
-* @copyright	2009-2014 Miwisoft LLC, miwisoft.com
-* @license		GNU/GPL http://www.gnu.org/copyleft/gpl.html
-* @license		GNU/GPL based on AceShop www.joomace.net
-*/
-
-// No Permission
-defined('MIWI') or die('Restricted access');
-
 // Text
 $_['text_subject']        = '%s - Thank you for registering';
 $_['text_welcome']        = 'Welcome and thank you for registering at %s!';
@@ -22,7 +12,5 @@ $_['text_website']        = 'Web Site:';
 $_['text_customer_group'] = 'Customer Group:';
 $_['text_firstname']      = 'First Name:';
 $_['text_lastname']       = 'Last Name:';
-$_['text_company']        = 'Company:';
 $_['text_email']          = 'E-Mail:';
 $_['text_telephone']      = 'Telephone:';
-?>

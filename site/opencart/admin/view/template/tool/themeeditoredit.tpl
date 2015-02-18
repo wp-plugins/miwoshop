@@ -11,14 +11,14 @@
 }
 </style>
 <table class="info">
-    <tr>
-    	<td class="left">
-            <?php $_file = MID_PATH.'/miwoshop/site/opencart/catalog/view/theme/'.$edit_file ?>
+  <tr>
+  	<td class="left">
+         <?php $_file = MID_PATH.'/miwoshop/site/opencart/catalog/view/theme/'.$edit_file ?>
+         <?php echo sprintf($text_edit, (is_writable($path_file) ? 'green' : 'red'), $_file); ?>
+    </td>
+  </tr>
 
-
-
-
-
+  <tr>
     <td class="left" id="backups">
         <?php if ($restore) { ?>
             <?php echo $entry_available_backups; ?>

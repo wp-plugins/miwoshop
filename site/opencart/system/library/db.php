@@ -11,16 +11,16 @@ defined('MIWI') or die('Restricted access');
 
 class DB {
 	private $driver;
-	
+
 	public function __construct($driver, $hostname, $username, $password, $database) {
 		$this->driver = MiwoShop::get('db')->getDbo();
 	}
-		
+
   	public function query($sql) {
         $this->driver->setQuery($sql);
-		
+
 		$isSelect = $this->isSelect($sql);
-		
+
 		if ($isSelect) {
 			$data =  $this->driver->loadAssocList();
 
@@ -35,18 +35,18 @@ class DB {
 
         return $query;
   	}
-	
+
 	public function run($sql) {
         $this->driver->setQuery($sql);
         $data =  $this->driver->execute();
 
         return $data;
   	}
-	
+
 	public function escape($value) {
 		return $this->driver->escape($value);
 	}
-	
+
   	public function countAffected() {
 		return $this->driver->getAffectedRows();
   	}

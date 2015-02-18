@@ -12,8 +12,8 @@
   <input type="hidden" name="email" value="<?php echo $email; ?>" />
   <input type="hidden" name="testMode" value="<?php echo $test; ?>" />
   <div class="buttons">
-    <div class="right">
-      <input type="submit" value="<?php echo $button_confirm; ?>" class="<?php echo MiwoShop::getButton(); ?>" />
+    <div class="pull-right">
+      <input type="submit" value="<?php echo $button_confirm; ?>" class="button button-primary" />
     </div>
   </div>
 </form>

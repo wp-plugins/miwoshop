@@ -1,33 +1,29 @@
 <?php
-/*
-* @package		MiwoShop
-* @copyright	2009-2014 Miwisoft LLC, miwisoft.com
-* @license		GNU/GPL http://www.gnu.org/copyleft/gpl.html
-* @license		GNU/GPL based on AceShop www.joomace.net
-*/
-
-// No Permission
-defined('MIWI') or die('Restricted access');
-
 // Heading
-$_['heading_title']      = 'Payza';
+$_['heading_title']					= 'Payza';
 
-// Text 
-$_['text_payment']       = 'Payment';
-$_['text_success']       = 'Success: You have modified Payza account details!';
-      
+// Text
+$_['text_payment']					= 'Payment';
+$_['text_success']					= 'Success: You have modified Payza account details!';
+$_['text_edit']                     = 'Edit Payza';
+$_['text_sagepay_direct']			= '<img src="view/image/payment/payza.png" alt="Payza" title="Payza" style="border: 1px solid #EEEEEE;" />';
+
+
 // Entry
-$_['entry_merchant']     = 'Merchant ID:';
-$_['entry_security']     = 'Security Code:';
-$_['entry_callback']     = 'Alert URL:<br /><span class="help">This has to be set in the Payza control panel. You will also need to check the "IPN Status" to enabled.</span>';
-$_['entry_total']        = 'Total:<br /><span class="help">The checkout total the order must reach before this payment method becomes active.</span>';
-$_['entry_order_status'] = 'Order Status:';
-$_['entry_geo_zone']     = 'Geo Zone:';
-$_['entry_status']       = 'Status:';
-$_['entry_sort_order']   = 'Sort Order:';
+$_['entry_merchant']				= 'Merchant ID';
+$_['entry_security']				= 'Security Code';
+$_['entry_callback']				= 'Alert URL';
+$_['entry_total']					= 'Total';
+$_['entry_order_status']			= 'Order Status';
+$_['entry_geo_zone']				= 'Geo Zone';
+$_['entry_status']					= 'Status';
+$_['entry_sort_order']				= 'Sort Order';
+
+// Help
+$_['help_callback']					= 'This has to be set in the Payza control panel. You will also need to check the "IPN Status" to enabled.';
+$_['help_total']					= 'The checkout total the order must reach before this payment method becomes active.';
 
 // Error
-$_['error_permission']   = 'Warning: You do not have permission to modify payment Payza!';
-$_['error_merchant']     = 'Merchant ID Required!';
-$_['error_security']     = 'Security Code Required!';
-?>
+$_['error_permission']				= 'Warning: You do not have permission to modify payment Payza!';
+$_['error_merchant']				= 'Merchant ID Required!';
+$_['error_security']				= 'Security Code Required!';

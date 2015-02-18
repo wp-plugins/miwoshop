@@ -1,56 +1,60 @@
-<?php echo $header; ?>
-<?php MiwoShop::getClass('base')->addHeader(MPATH_MIWOSHOP_OC . '/admin/view/stylesheet/progress.css'); ?>
+<?php echo $header; ?><?php echo $column_left; ?>
 <div id="content">
-	 <div class="breadcrumb">
-    <?php foreach ($breadcrumbs as $breadcrumb) { ?>
-    <?php echo $breadcrumb['separator']; ?><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a>
+  <div class="page-header">
+    <div class="container-fluid">
+      <h1><?php echo $heading_title; ?></h1>
+      <ul class="breadcrumb">
+        <?php foreach ($breadcrumbs as $breadcrumb) { ?>
+        <li><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a></li>
+        <?php } ?>
+      </ul>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <?php if ($error_warning) { ?>
+    <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> <?php echo $error_warning; ?>
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
     <?php } ?>
-  </div>
-  <?php if ($error_warning) { ?>
-  <div class="alert"><?php echo $error_warning; ?>  </div>
-  <?php } ?>
-  <div class="box">
-    <div class="heading">
-     <h1><img src="view/image/module.png" alt="" /> <?php echo $heading_title; ?></h1>
-    </div>
-    <div class="content">
-      <form class="form-horizontal">
-			
-        <div class="form-group">
-          <label class="col-sm-2 control-label" for="button-upload"><?php echo $entry_upload; ?> </label>
-          <div class="col-sm-10">
-            <a id="button-upload" class="button_oc">  <?php echo $button_upload; ?></a>
-            <?php if ($error_warning) { ?>
-            <a id="button-clear" class="button_oc"> <?php echo $button_clear; ?></a>
-            <?php } else { ?>
-            <a id="button-clear" name="disable" style="opacity:0.5;" class="button_oc" disabled="disabled"><?php echo $button_clear; ?></a>
-            <?php } ?>
-            <span style=" padding-left: 20px; "><?php echo $help_upload; ?></span></div>
-        </div>
-		</br>
-        <div class="form-group">
-          <label class="col-sm-2 control-label"><?php echo $entry_progress; ?></label>
-          <div class="col-sm-10" style="padding-top: 6px;">
-            <div class="progress">
-              <div id="progress-bar" class="progress-bar" style="width: 0%;"></div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-puzzle-piece"></i> <?php echo $heading_title; ?></h3>
+      </div>
+      <div class="panel-body">
+        <form class="form-horizontal">
+          <div class="form-group required">
+            <label class="col-sm-2 control-label" for="button-upload"><span data-toggle="tooltip" title="<?php echo $help_upload; ?>"><?php echo $entry_upload; ?></span></label>
+            <div class="col-sm-10">
+              <button type="button" id="button-upload" data-loading-text="<?php echo $text_loading; ?>" class="button button-primary"><i class="fa fa-upload"></i> <?php echo $button_upload; ?></button>
+              <?php if ($error_warning) { ?>
+              <button type="button" id="button-clear" data-loading-text="<?php echo $text_loading; ?>" class="button btn-danger"><i class="fa fa-eraser"></i> <?php echo $button_clear; ?></button>
+              <?php } else { ?>
+              <button type="button" id="button-clear" data-loading-text="<?php echo $text_loading; ?>" disabled="disabled" class="button btn-danger"><i class="fa fa-eraser"></i> <?php echo $button_clear; ?></button>
+              <?php } ?>
             </div>
-            <div id="progress-text"></div>
           </div>
-        </div>
-		<label class="col-sm-2 control-label"><?php echo $entry_overwrite; ?></label><br /><br />
-        <div class="form-group">
-          
-          <div class="col-sm-10">
-            <textarea rows="10" style="width:100% !important;" readonly="readonly" id="overwrite" class="form-control"></textarea>
-            <br /><br />
-            <a id="button-continue" class="button_oc" style="opacity:0.5;" disabled="disabled"><?php echo $button_continue; ?></a>
+          <div class="form-group">
+            <label class="col-sm-2 control-label"><?php echo $entry_progress; ?></label>
+            <div class="col-sm-10">
+              <div class="progress">
+                <div id="progress-bar" class="progress-bar" style="width: 0%;"></div>
+              </div>
+              <div id="progress-text"></div>
+            </div>
           </div>
-        </div>
-      </form>
+          <div class="form-group">
+            <label class="col-sm-2 control-label"><?php echo $entry_overwrite; ?></label>
+            <div class="col-sm-10">
+              <textarea rows="10" readonly="readonly" id="overwrite" class="form-control"></textarea>
+              <br />
+              <button type="button" id="button-continue" class="button button-primary" disabled="disabled"><i class="fa fa-check"></i> <?php echo $button_continue; ?></button>
+            </div>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
-</div>
-<script type="text/javascript"><!--
+  <script type="text/javascript"><!--
 var step = new Array();
 var total = 0;
 
@@ -61,68 +65,67 @@ $('#button-upload').on('click', function() {
 
 	$('#form-upload input[name=\'file\']').trigger('click');
 
-	$('#form-upload input[name=\'file\']').on('change', function() {
-		// Reset everything
-		$('.alert').remove();
-		$('#progress-bar').css('width', '0%');
-		$('#progress-bar').removeClass('progress-bar-danger progress-bar-success');		
-		$('#progress-text').html('');
-	
-		$.ajax({
-			url: 'index.php?route=extension/installer/upload&token=<?php echo $token; ?>',
-			type: 'post',		
-			dataType: 'json',
-			data: new FormData($(this).parent()[0]),
-			cache: false,
-			contentType: false,
-			processData: false,		
-			beforeSend: function() {
-				$('#button-upload i').replaceWith('<i class="fa fa-spinner fa-spin"></i>');
-				$('#button-upload').prop('disabled', true);
-			},
-			complete: function() {
-				$('#button-upload i').replaceWith('<i class="fa fa-upload"></i>');
-				$('#button-upload').prop('disabled', false);
-			},		
-			success: function(json) {
-				if (json['error']) {
-					$('#progress-bar').addClass('progress-bar-danger');				
-					$('#progress-text').html('<div class="text-danger">' + json['error'] + '</div>');
-				}
-				
-				if (json['step']) {
-					step = json['step'];
-					total = step.length;
+	timer = setInterval(function() {
+		if ($('#form-upload input[name=\'file\']').val() != '') {
+			clearInterval(timer);	
+			
+			// Reset everything
+			$('.alert').remove();
+			$('#progress-bar').css('width', '0%');
+			$('#progress-bar').removeClass('progress-bar-danger progress-bar-success');		
+			$('#progress-text').html('');
+		
+			$.ajax({
+				url: 'index.php?route=extension/installer/upload&token=<?php echo $token; ?>',
+				type: 'post',		
+				dataType: 'json',
+				data: new FormData($('#form-upload')[0]),
+				cache: false,
+				contentType: false,
+				processData: false,		
+				beforeSend: function() {
+					$('#button-upload').button('loading');
+				},
+				complete: function() {
+					$('#button-upload').button('reset');
+				},
+				success: function(json) {
+					if (json['error']) {
+						$('#progress-bar').addClass('progress-bar-danger');				
+						$('#progress-text').html('<div class="text-danger">' + json['error'] + '</div>');
+					}
 					
-					if (json['overwrite'].length) {
-						html = '';
+					if (json['step']) {
+						step = json['step'];
+						total = step.length;
 						
-						for (i = 0; i < json['overwrite'].length; i++) {
-							html += json['overwrite'][i] + "\n";
-						}
-						
-						$('#overwrite').html(html);
-						
-						$('#button-continue').prop('disabled', false);
-						$('#button-continue').css('opacity','1');
-					} else {
-						next();
-					}	
+						if (json['overwrite'].length) {
+							html = '';
+							
+							for (i = 0; i < json['overwrite'].length; i++) {
+								html += json['overwrite'][i] + "\n";
+							}
+							
+							$('#overwrite').html(html);
+							
+							$('#button-continue').prop('disabled', false);
+						} else {
+							next();
+						}	
+					}
+				},			
+				error: function(xhr, ajaxOptions, thrownError) {
+					alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
 				}
-			},			
-			error: function(xhr, ajaxOptions, thrownError) {
-				alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
-			}
-		});
-	});
+			});	
+		}
+	}, 500);
 });
 
 $('#button-continue').on('click', function() {
 	next();
 	
 	$('#button-continue').prop('disabled', true);
-	
-
 });
 
 function next() {
@@ -142,16 +145,18 @@ function next() {
 					$('#progress-bar').addClass('progress-bar-danger');
 					$('#progress-text').html('<div class="text-danger">' + json['error'] + '</div>');
 					$('#button-clear').prop('disabled', false);
-					$('#button-clear').css('opacity',1);
-                    $('#button-clear').attr("name","log") ;
 				} 
 				
 				if (json['success']) {
+					$('#progress-bar').removeClass('progress-bar-danger'); //#miwoshop-start
 					$('#progress-bar').addClass('progress-bar-success');
 					$('#progress-text').html('<span class="text-success">' + json['success'] + '</span>');
-					$('#button-continue').css('opacity','0.5');
-					$('#overwrite').html('');
 				}
+				//#miwoshop-start
+				if ((typeof json['overwrite'] != 'undefined') && json['overwrite'].length) {						
+					$('#button-continue').prop('disabled', false);
+				}
+				//#miwoshop-finish
 									
 				if (!json['error'] && !json['success']) {
 					next();
@@ -165,39 +170,32 @@ function next() {
 }
 
 $('#button-clear').bind('click', function() {
-    var cs = $(this).attr("name");
-    if(cs!="disable"){
-        $.ajax({
-            url: 'index.php?route=extension/installer/clear&token=<?php echo $token; ?>',
-            dataType: 'json',
-            beforeSend: function() {
-                $('#button-clear i').replaceWith('<i class="fa fa-spinner fa-spin"></i>');
-                $('#button-clear').prop('disabled', true);
-            },
-            complete: function() {
-                $('#button-clear i').replaceWith('<i class="fa fa-eraser"></i>');
-            },
-            success: function(json) {
-                $('.alert').remove();
-
-                if (json['error']) {
-                    $('.box').before('<div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> ' + json['error'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
-                }
-
-                if (json['success']) {
-                    $('.box').before('<div class="alert alert-success"><i class="fa fa-check-circle"></i> ' + json['success'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
-
-                    $('#button-clear').prop('disabled', true);
-                    $('#button-clear').css('opacity','0.5');
-                    $('#button-clear').attr("name","disable") ;
-                }
-            },
-            error: function(xhr, ajaxOptions, thrownError) {
-                alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
-            }
-        });
-    }
+	$.ajax({
+		url: 'index.php?route=extension/installer/clear&token=<?php echo $token; ?>',	
+		dataType: 'json',
+		beforeSend: function() {
+			$('#button-clear').button('loading');
+		},	
+		complete: function() {
+			$('#button-clear').button('reset');
+		},		
+		success: function(json) {
+			$('.alert').remove();
+				
+			if (json['error']) {
+				$('#content > .container-fluid').prepend('<div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> ' + json['error'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+			} 
+		
+			if (json['success']) {
+				$('#content > .container-fluid').prepend('<div class="alert alert-success"><i class="fa fa-check-circle"></i> ' + json['success'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				
+				$('#button-clear').prop('disabled', true);
+			}
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {
+			alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		}
+	});
 });
-
-//--></script> 
+//--></script></div>
 <?php echo $footer; ?>

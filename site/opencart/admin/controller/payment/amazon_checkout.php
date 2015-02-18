@@ -1,13 +1,12 @@
 <?php
 class ControllerPaymentAmazonCheckout extends Controller {
-    private $error = array();
+	private $error = array();
 
-   	public function index() {
-           return true;
-   	}
+	public function index() {
+		return true;
+	}
 
-   	private function validate() {
-           return true;
-   	}
+	protected function validate() {
+		return true;
+	}
 }
-?>

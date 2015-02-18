@@ -1,106 +1,94 @@
 <?php echo $header; ?><?php echo $column_left; ?><?php echo $column_right; ?>
-<div id="content"><?php echo $content_top; ?>
-    <h2><?php echo $heading_address; ?></h2>
-        <div style="float: left" id="amazon-address-widget"></div>
-        <div style="float: left; width: 58%" class="shipping-methods"></div>
-        <div style="clear: both;"></div>
-        <div class="buttons" style="margin-top: 15px">
-            <a href="<?php echo $cart ?>" class="button_oc left"><span><?php echo $text_cart ?></span></a>
-            <a class="button_oc right" id="continue-button"><span><?php echo $text_continue ?></span></a>
-        </div>
-        <input type="hidden" name="addressSelected" value="0" />
-    <?php echo $content_bottom; ?>
+<div class="container"><?php echo $content_top; ?>
+  <div style="text-align:center;">
+    <h3><?php echo $heading_address; ?></h3>
+    <div style="margin: 0 auto; width: 400px;" id="amazon-address-widget"></div>
+    <div style="margin: 5px auto 0; width: 180px;">
+      <div class="shipping-methods amazon-payments-box"></div>
+    </div>
+  </div>
+  <div style="clear: both;"></div>
+  <div class="buttons">
+    <div class="pull-left">
+      <a href="<?php echo $cart; ?>" class="button button-primary"><?php echo $text_cart; ?></a>
+    </div>
+    <div class="pull-right">
+      <input class="button button-primary" id="continue-button" type="submit" value="<?php echo $text_continue; ?>" />
+    </div>
+  </div>
+  <input type="hidden" name="addressSelected" value="0" />
+  <?php echo $content_bottom; ?>
 </div>
-<?php if($amazon_payment_js=="PaymentWidgets.js"){ ?>
-<?php MiwoShop::get('base')->addHeader(MPATH_MIWOSHOP_OC . '/catalog/view/javascript/amazon_payment/PaymentWidgets.js', false); ?>
-<?php }else { ?>
-<script type="text/javascript" src="https://static-eu.payments-amazon.com/cba/js/gb/<?php echo $amazon_payment_js; ?>" />
-<?php } ?>
-<?php if($status=="live"){ ?>
-<?php // MiwoShop::get('base')->addHeader(MPATH_MIWOSHOP_OC . '/catalog/view/javascript/amazon_payment/PaymentWidgets_core._V1373579077_.js', false); ?>
-<?php } else {?>
-<?php MiwoShop::get('base')->addHeader(MPATH_MIWOSHOP_OC . '/catalog/view/javascript/amazon_payment/PaymentWidgets_core._V1373579082_.js', false); ?>
-<?php } ?>
-
 <script type="text/javascript"><!--
-    $(document).ready(function(){
-        $('#continue-button').click(function(){
-            $('div.warning').remove();
-            
-            if ($('input[name="addressSelected"]').val() == '0') {
-                $('#amazon-address-widget').before('<div class="warning"><?php echo $error_shipping_address ?></div>');
-            } else if($('input[name="shipping_method"]:checked').length == 0) {
-                $('#amazon-address-widget').before('<div class="warning"><?php echo $error_shipping ?></div>');
-            } else {
-                $.ajax({
-                    url: 'index.php?route=payment/amazon_checkout/set_shipping',
-                    type: 'post',
-                    data: $('input[name="shipping_method"]:checked'),
-                    dataType: 'json',
+  $(document).ready(function(){
+    $('#continue-button').click(function(){
+      $('div.warning').remove();
 
-                    success: function(json) {
-                        location = json['redirect'];
-                    },
-
-                    error: function(xhr, ajaxOptions, thrownError) {
-                        alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
-                    }
-                });
-            }
-            
+      if ($('input[name="addressSelected"]').val() == '0') {
+        $('#amazon-address-widget').before('<div class="warning"><?php echo $error_shipping_address ?></div>');
+      } else if($('input[name="shipping_method"]:checked').length == 0) {
+        $('#amazon-address-widget').before('<div class="warning"><?php echo $error_shipping ?></div>');
+      } else {
+        $.ajax({
+          url: 'index.php?route=payment/amazon_checkout/setshipping',
+          type: 'post',
+          data: $('input[name="shipping_method"]:checked'),
+          dataType: 'json',
+          success: function(json) {
+            location = json['redirect'];
+          },
+          error: function(xhr, ajaxOptions, thrownError) {
+            alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+          }
         });
-        
-        new CBA.Widgets.AddressWidget({
-            merchantId: '<?php echo $merchant_id ?>',
-            displayMode: 'edit',
-            onAddressSelect: function(widget) {
-                
-                $('input[name="addressSelected"]').val('1');
-                
-                $('div.warning').remove();
-                $('div.shipping-methods').html('');
-                
-                $.get('<?php echo $shipping_quotes ?>', {}, function(data) {
-                    
-                    $('.shipping-methods').html('');
-                
-                    if (data.error) {
-                        $('#amazon-address-widget').before('<div class="warning">' + data.error + '</div>');
-                    } else if (data.quotes) {
-                        var html = '';
-                        html += '<table class="radio">';
-                        
-                        $.each(data.quotes, function(code, shippingMethod){
-                            html += '<tr><td colspan="3"><b>' + shippingMethod.title + '</b></td></tr>';
-                            
-                            $.each(shippingMethod.quote, function(i, quote){
-                                html += '<tr>';
-                                
-                                if (data.selected == quote.code) {
-                                    html += ' <td><input type="radio" name="shipping_method" value="' + quote.code + '" id="' + quote.code + '" checked="checked" /></td>';
-                                } else {
-                                    html += ' <td><input type="radio" name="shipping_method" value="' + quote.code + '" id="' + quote.code + '" /></td>';
-                                }
-                                
-                                html += ' <td><label for="' + quote.code + '">' + quote.title + '</label></td>';
-                                html += ' <td style="text-align: right;"><label for="' + quote.code + '">' + quote.text + '</label></td>';
-                                html += '</tr>';
-                                
-                            });
-                            
-                        });
-                        
-                        html += '</table>';
-                        $('.shipping-methods').html(html);
-
-                        if ($('input[name="shipping_method"]:checked').length == 0) {
-                            $('input[name="shipping_method"]:first').attr('checked', 'checked');
-                        }
-                    }
-                
-                }, 'json');
-            }
-        }).render('amazon-address-widget');
+      }
     });
+
+    new CBA.Widgets.AddressWidget({
+      merchantId: '<?php echo $merchant_id ?>',
+      displayMode: 'edit',
+      onAddressSelect: function(widget) {
+        $('input[name="addressSelected"]').val('1');
+        $('div.warning').remove();
+        $('div.shipping-methods').html('');
+
+        $.get('<?php echo $shipping_quotes ?>', {}, function(data) {
+
+          $('.shipping-methods').html('');
+
+          if (data.error) {
+            $('#amazon-address-widget').before('<div class="warning">' + data.error + '</div>');
+          } else if (data.quotes) {
+            var html = '';
+
+            $.each(data.quotes, function(code, shippingMethod){
+              html += '<p><strong>' + shippingMethod.title + '</strong></p>';
+
+              $.each(shippingMethod.quote, function(i, quote){
+                html += '<div class="radio">';
+                html += '<label>';
+
+                if (data.selected == quote.code) {
+                  html += '<input type="radio" name="shipping_method" value="' + quote.code + '" id="' + quote.code + '" checked="checked" />';
+                } else {
+                  html += '<input type="radio" name="shipping_method" value="' + quote.code + '" id="' + quote.code + '" />';
+                }
+
+                html += quote.title + ' - ';
+                html += quote.text;
+                html += '</label>';
+                html += '</div>';
+              });
+            });
+            $('.shipping-methods').html(html);
+
+            if ($('input[name="shipping_method"]:checked').length == 0) {
+              $('input[name="shipping_method"]:first').attr('checked', 'checked');
+            }
+          }
+        }, 'json');
+      }
+    }).render('amazon-address-widget');
+  });
 //--></script>
 <?php echo $footer; ?>

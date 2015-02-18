@@ -1,15 +1,5 @@
 <?php
-/*
-* @package		MiwoShop
-* @copyright	2009-2014 Miwisoft LLC, miwisoft.com
-* @license		GNU/GPL http://www.gnu.org/copyleft/gpl.html
-* @license		GNU/GPL based on AceShop www.joomace.net
-*/
-
-// No Permission
-defined('MIWI') or die('Restricted access');
-
-// Heading 
+// Heading
 $_['heading_title']    = 'Account';
 
 // Text
@@ -24,7 +14,8 @@ $_['text_address']     = 'Address Books';
 $_['text_wishlist']    = 'Wish List';
 $_['text_order']       = 'Order History';
 $_['text_download']    = 'Downloads';
+$_['text_reward']      = 'Reward Points';
 $_['text_return']      = 'Returns';
 $_['text_transaction'] = 'Transactions';
 $_['text_newsletter']  = 'Newsletter';
-?>
+$_['text_recurring']   = 'Recurring payments';

@@ -1,46 +1,35 @@
 <?php
-/*
-* @package		MiwoShop
-* @copyright	2009-2014 Miwisoft LLC, miwisoft.com
-* @license		GNU/GPL http://www.gnu.org/copyleft/gpl.html
-* @license		GNU/GPL based on AceShop www.joomace.net
-*/
-
-// No Permission
-defined('MIWI') or die('Restricted access');
-
 class Url {
-	private $url;
+	private $domain;
 	private $ssl;
 	private $rewrite = array();
-	
-	public function __construct($url, $ssl = '') {
-		$this->url = $url;
+
+	public function __construct($domain, $ssl = '') {
+		$this->domain = $domain;
 		$this->ssl = $ssl;
 	}
-		
+
 	public function addRewrite($rewrite) {
 		$this->rewrite[] = $rewrite;
 	}
-		
-	public function link($route, $args = '', $connection = 'NONSSL') {
-		if ($connection ==  'NONSSL') {
-			$url = $this->url;
+
+	public function link($route, $args = '', $secure = false) {
+		if (!$secure) {
+			$url = $this->domain;
 		} else {
-			$url = $this->ssl;	
+			$url = $this->ssl;
 		}
-		
+
 		$url .= 'index.php?route=' . $route;
-			
+
 		if ($args) {
-			$url .= str_replace('&', '&amp;', '&' . ltrim($args, '&')); 
+			$url .= str_replace('&', '&amp;', '&' . ltrim($args, '&'));
 		}
-		
+
 		foreach ($this->rewrite as $rewrite) {
 			$url = $rewrite->rewrite($url);
 		}
-				
+
 		return $url;
 	}
 }
-?>

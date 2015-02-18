@@ -42,7 +42,7 @@
 
 .CodeMirror div.CodeMirror-cursor {
   border-left: 1px solid black;
-  z-index: 3;
+  z-index: -1;
 }
 /* Shown when moving in bi-directional text */
 .CodeMirror div.CodeMirror-secondarycursor {
@@ -151,7 +151,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}
 .CodeMirror-gutters {
   position: absolute; left: 0; top: 0;
   padding-bottom: 30px;
-  z-index: 3;
+  z-index: 0;
 }
 .CodeMirror-gutter {
   white-space: normal;
@@ -184,7 +184,6 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}
   word-wrap: normal;
   line-height: inherit;
   color: inherit;
-  z-index: 2;
   position: relative;
   overflow: visible;
 }

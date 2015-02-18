@@ -1,7 +1,7 @@
 <?php
 /*
 * @package		MiwoShop
-* @copyright	2009-2014 Miwisoft LLC, miwisoft.com
+* @copyright	2009-2015 Miwisoft LLC, miwisoft.com
 * @license		GNU/GPL http://www.gnu.org/copyleft/gpl.html
 */
 
@@ -10,303 +10,300 @@ defined('MIWI') or die('Restricted access');
 
 class ControllerProductBestseller extends Controller {
 
-	public function index() {
+    public function index() {
         $this->language->load('product/category');
-    	$this->language->load('product/bestseller');
-		
-		$this->load->model('catalog/product');
-		
-		$this->load->model('tool/image');
-		
-		if (isset($this->request->get['sort'])) {
-			$sort = $this->request->get['sort'];
-		} else {
-			$sort = 'p.date_added';
-		}
+        $this->language->load('product/bestseller');
 
-		if (isset($this->request->get['order'])) {
-			$order = $this->request->get['order'];
-		} else {
-			$order = 'DESC';
-		}
-			 
-  		if (isset($this->request->get['pg'])) {
-			$page = $this->request->get['pg'];
-		} else {
-			$page = 1;
-		}
-		
-		if (isset($this->request->get['limit'])) {
-			$limit = $this->request->get['limit'];
-		} else {
-			$limit = $this->config->get('config_catalog_limit');
-		}
+        $this->load->model('catalog/product');
 
-		$this->data['breadcrumbs'] = array();
+        $this->load->model('tool/image');
 
-   		$this->data['breadcrumbs'][] = array(
-       		'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home'),
-      		'separator' => false
-   		);
+        if (isset($this->request->get['sort'])) {
+            $sort = $this->request->get['sort'];
+        } else {
+            $sort = 'p.date_added';
+        }
 
-		$url = '';
-		
-		if (isset($this->request->get['sort'])) {
-			$url .= '&sort=' . $this->request->get['sort'];
-		}	
+        if (isset($this->request->get['order'])) {
+            $order = $this->request->get['order'];
+        } else {
+            $order = 'DESC';
+        }
 
-		if (isset($this->request->get['order'])) {
-			$url .= '&order=' . $this->request->get['order'];
-		}
-				
-		if (isset($this->request->get['pg'])) {
-			$url .= '&pg=' . $this->request->get['pg'];
-		}	
-		
-		if (isset($this->request->get['limit'])) {
-			$url .= '&limit=' . $this->request->get['limit'];
-		}
-					
-   		$this->data['breadcrumbs'][] = array(
-       		'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('product/bestseller', $url),
-      		'separator' => $this->language->get('text_separator')
-   		);
-		
-    	$this->data['heading_title'] = $this->language->get('heading_title');
-   
-		$this->data['text_empty'] = $this->language->get('text_empty');
-		$this->data['text_quantity'] = $this->language->get('text_quantity');
-		$this->data['text_manufacturer'] = $this->language->get('text_manufacturer');
-		$this->data['text_model'] = $this->language->get('text_model');
-		$this->data['text_price'] = $this->language->get('text_price');
-		$this->data['text_tax'] = $this->language->get('text_tax');
-		$this->data['text_points'] = $this->language->get('text_points');
-		$this->data['text_compare'] = sprintf($this->language->get('text_compare'), (isset($this->session->data['compare']) ? count($this->session->data['compare']) : 0));
-		$this->data['text_display'] = $this->language->get('text_display');
-		$this->data['text_list'] = $this->language->get('text_list');
-		$this->data['text_grid'] = $this->language->get('text_grid');		
-		$this->data['text_sort'] = $this->language->get('text_sort');
-		$this->data['text_limit'] = $this->language->get('text_limit');
+        if (isset($this->request->get['pg'])) {
+            $page = $this->request->get['pg'];
+        } else {
+            $page = 1;
+        }
 
-		$this->data['button_cart'] = $this->language->get('button_cart');	
-		$this->data['button_wishlist'] = $this->language->get('button_wishlist');
-		$this->data['button_compare'] = $this->language->get('button_compare');
-		
-		$this->data['compare'] = $this->url->link('product/compare');
-		
-		$this->data['products'] = array();
+        if (isset($this->request->get['limit'])) {
+            $limit = $this->request->get['limit'];
+        } else {
+            $limit = $this->config->get('config_product_limit');
+        }
 
-		$data = array(
-			'sort'  => $sort,
-			'order' => $order,
-			'start' => ($page - 1) * $limit,
-			'limit' => $limit
-		);
-		$product_total = $this->model_catalog_product->getTotalProducts($data);
-		$results = $this->model_catalog_product->getBestSellerProducts($limit);
-			
-		foreach ($results as $result) {
-			if ($result['image']) {
-				$image = $this->model_tool_image->resize($result['image'], $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
-			} else {
-				$image = false;
-			}
-			
-			if ($this->config->get('config_review')) {
-					$rating = $this->model_catalog_review->getAverageRating($result['product_id']);	
-				} else {
-					$rating = false;
-				}
-					
-				$special = FALSE;
-			
-			if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
-				$price = $this->currency->format($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax')));
-			} else {
-				$price = false;
-			}
-			
-			if ((float)$result['special']) {
-				$special = $this->currency->format($this->tax->calculate($result['special'], $result['tax_class_id'], $this->config->get('config_tax')));
-			} else {
-				$special = false;
-			}	
-			
-			if ($this->config->get('config_tax')) {
-				$tax = $this->currency->format((float)$result['special'] ? $result['special'] : $result['price']);
-			} else {
-				$tax = false;
-			}				
-			
-			if ($this->config->get('config_review_status')) {
-				$rating = (int)$result['rating'];
-			} else {
-				$rating = false;
-			}
-						
-			$this->data['products'][] = array(
-				'product_id'  => $result['product_id'],
-				'thumb'       => $image,
-				'name'        => $result['name'],
-				'description' => substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, 200) . '..',
-				'price'       => $price,
-				'special'     => $special,
-				'tax'         => $tax,
-				'rating'      => $rating,
-				'reviews'     => sprintf($this->language->get('text_reviews'), (int)$result['reviews']),
-				'href'        => $this->url->link('product/product', $url . '&product_id=' . $result['product_id'])
-			);
-		}
+        $data['breadcrumbs'] = array();
 
-		$url = '';
+        $data['breadcrumbs'][] = array(
+            'text'      => $this->language->get('text_home'),
+            'href'      => $this->url->link('common/home'),
+            'separator' => false
+        );
 
-		if (isset($this->request->get['limit'])) {
-			$url .= '&limit=' . $this->request->get['limit'];
-		}
-			
-		$this->data['sorts'] = array();
-		
-		$this->data['sorts'][] = array(
-			'text'  => $this->language->get('text_default'),
-			'value' => 'p.sort_order-DESC',
-			'href'  => $this->url->link('product/bestseller', 'sort=p.date_added&order=DESC' . $url)
-		);
-		
-		$this->data['sorts'][] = array(
-			'text'  => $this->language->get('text_name_asc'),
-			'value' => 'pd.name-ASC',
-			'href'  => $this->url->link('product/bestseller', 'sort=pd.name&order=ASC' . $url)
-		); 
+        $url = '';
 
-		$this->data['sorts'][] = array(
-			'text'  => $this->language->get('text_name_desc'),
-			'value' => 'pd.name-DESC',
-			'href'  => $this->url->link('product/bestseller', 'sort=pd.name&order=DESC' . $url)
-		);  
+        if (isset($this->request->get['sort'])) {
+            $url .= '&sort=' . $this->request->get['sort'];
+        }
 
-		$this->data['sorts'][] = array(
-				'text'  => $this->language->get('text_price_asc'),
-				'value' => 'p.price-ASC',
-				'href'  => $this->url->link('product/bestseller', '&sort=p.price&order=ASC' . $url)
-			); 
+        if (isset($this->request->get['order'])) {
+            $url .= '&order=' . $this->request->get['order'];
+        }
 
-			$this->data['sorts'][] = array(
-				'text'  => $this->language->get('text_price_desc'),
-				'value' => 'p.price-DESC',
-				'href'  => $this->url->link('product/bestseller', '&sort=p.price&order=DESC' . $url)
-			); 
-			
-			$this->data['sorts'][] = array(
-				'text'  => $this->language->get('text_rating_desc'),
-				'value' => 'rating-DESC',
-				'href'  => $this->url->link('product/bestseller', '&sort=rating&order=DESC' . $url)
-			); 
-			
-			$this->data['sorts'][] = array(
-				'text'  => $this->language->get('text_rating_asc'),
-				'value' => 'rating-ASC',
-				'href'  => $this->url->link('product/bestseller', '&sort=rating&order=ASC' . $url)
-			);
-			
-			$this->data['sorts'][] = array(
-				'text'  => $this->language->get('text_model_asc'),
-				'value' => 'p.model-ASC',
-				'href'  => $this->url->link('product/bestseller', '&sort=p.model&order=ASC' . $url)
-			);
+        if (isset($this->request->get['pg'])) {
+            $url .= '&pg=' . $this->request->get['pg'];
+        }
 
-			$this->data['sorts'][] = array(
-				'text'  => $this->language->get('text_model_desc'),
-				'value' => 'p.model-DESC',
-				'href'  => $this->url->link('product/bestseller', '&sort=p.model&order=DESC' . $url)
-			);
-		
-		$url = '';
+        if (isset($this->request->get['limit'])) {
+            $url .= '&limit=' . $this->request->get['limit'];
+        }
 
-		if (isset($this->request->get['sort'])) {
-			$url .= '&sort=' . $this->request->get['sort'];
-		}	
+        $data['breadcrumbs'][] = array(
+            'text'      => $this->language->get('heading_title'),
+            'href'      => $this->url->link('product/bestseller', $url),
+            'separator' => $this->language->get('text_separator')
+        );
 
-		if (isset($this->request->get['order'])) {
-			$url .= '&order=' . $this->request->get['order'];
-		}
-						
-		$this->data['limits'] = array();
-		
-		$this->data['limits'][] = array(
-			'text'  => $this->config->get('config_catalog_limit'),
-			'value' => $this->config->get('config_catalog_limit'),
-			'href'  => $this->url->link('product/bestseller', $url . '&limit=' . $this->config->get('config_catalog_limit'))
-		);
-					
-		$this->data['limits'][] = array(
-			'text'  => 25,
-			'value' => 25,
-			'href'  => $this->url->link('product/bestseller', $url . '&limit=25')
-		);
-		
-		$this->data['limits'][] = array(
-			'text'  => 50,
-			'value' => 50,
-			'href'  => $this->url->link('product/bestseller', $url . '&limit=50')
-		);
+        $data['heading_title'] = $this->language->get('heading_title');
 
-		$this->data['limits'][] = array(
-			'text'  => 75,
-			'value' => 75,
-			'href'  => $this->url->link('product/bestseller', $url . '&limit=75')
-		);
-		
-		$this->data['limits'][] = array(
-			'text'  => 100,
-			'value' => 100,
-			'href'  => $this->url->link('product/bestseller', $url . '&limit=100')
-		);
+        $data['text_empty'] = $this->language->get('text_empty');
+        $data['text_quantity'] = $this->language->get('text_quantity');
+        $data['text_manufacturer'] = $this->language->get('text_manufacturer');
+        $data['text_model'] = $this->language->get('text_model');
+        $data['text_price'] = $this->language->get('text_price');
+        $data['text_tax'] = $this->language->get('text_tax');
+        $data['text_points'] = $this->language->get('text_points');
+        $data['text_compare'] = sprintf($this->language->get('text_compare'), (isset($this->session->data['compare']) ? count($this->session->data['compare']) : 0));
+        $data['text_display'] = $this->language->get('text_display');
+        $data['text_list'] = $this->language->get('text_list');
+        $data['text_grid'] = $this->language->get('text_grid');
+        $data['text_sort'] = $this->language->get('text_sort');
+        $data['text_limit'] = $this->language->get('text_limit');
 
-		$url = '';
+        $data['button_cart'] = $this->language->get('button_cart');
+        $data['button_wishlist'] = $this->language->get('button_wishlist');
+        $data['button_compare'] = $this->language->get('button_compare');
 
-		if (isset($this->request->get['sort'])) {
-			$url .= '&sort=' . $this->request->get['sort'];
-		}	
+        $data['compare'] = $this->url->link('product/compare');
 
-		if (isset($this->request->get['order'])) {
-			$url .= '&order=' . $this->request->get['order'];
-		}
-		
-		if (isset($this->request->get['limit'])) {
-			$url .= '&limit=' . $this->request->get['limit'];
-		}
-						
-		$pagination = new Pagination();
-		$pagination->total = $product_total;
-		$pagination->page = $page;
-		$pagination->limit = $limit;
-		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = $this->url->link('product/bestseller', $url . '&pg={page}');
-			
-		$this->data['pagination'] = $pagination->render();
-			
-		$this->data['sort'] = $sort;
-		$this->data['order'] = $order;
-		$this->data['limit'] = $limit;
+        $data['products'] = array();
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/product/bestseller.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/product/bestseller.tpl';
-		} else {
-			$this->template = 'default/template/product/bestseller.tpl';
-		}
-		
-		$this->children = array(
-			'common/column_left',
-			'common/column_right',
-			'common/content_top',
-			'common/content_bottom',
-			'common/footer',
-			'common/header'
-		);
-	
-		$this->response->setOutput($this->render());			
-  	}
+        $data_array = array(
+            'sort'  => $sort,
+            'order' => $order,
+            'start' => ($page - 1) * $limit,
+            'limit' => $limit
+        );
+        $product_total = $this->model_catalog_product->getTotalProducts($data_array);
+
+        $results = $this->model_catalog_product->getBestSellerProducts($limit);
+
+        foreach ($results as $result) {
+            if ($result['image']) {
+                $image = $this->model_tool_image->resize($result['image'], $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
+            } else {
+                $image = false;
+            }
+
+            if ($this->config->get('config_review')) {
+                $rating = $this->model_catalog_review->getAverageRating($result['product_id']);
+            } else {
+                $rating = false;
+            }
+
+            $special = FALSE;
+
+            if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
+                $price = $this->currency->format($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax')));
+            } else {
+                $price = false;
+            }
+
+            if ((float)$result['special']) {
+                $special = $this->currency->format($this->tax->calculate($result['special'], $result['tax_class_id'], $this->config->get('config_tax')));
+            } else {
+                $special = false;
+            }
+
+            if ($this->config->get('config_tax')) {
+                $tax = $this->currency->format((float)$result['special'] ? $result['special'] : $result['price']);
+            } else {
+                $tax = false;
+            }
+
+            if ($this->config->get('config_review_status')) {
+                $rating = (int)$result['rating'];
+            } else {
+                $rating = false;
+            }
+
+            $data['products'][] = array(
+                'product_id'  => $result['product_id'],
+                'thumb'       => $image,
+                'name'        => $result['name'],
+                'description' => substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, 200) . '..',
+                'price'       => $price,
+                'special'     => $special,
+                'tax'         => $tax,
+                'rating'      => $rating,
+                'reviews'     => sprintf($this->language->get('text_reviews'), (int)$result['reviews']),
+                'href'        => $this->url->link('product/product', $url . '&product_id=' . $result['product_id'])
+            );
+        }
+
+        $url = '';
+
+        if (isset($this->request->get['limit'])) {
+            $url .= '&limit=' . $this->request->get['limit'];
+        }
+
+        $data['sorts'] = array();
+
+        $data['sorts'][] = array(
+            'text'  => $this->language->get('text_default'),
+            'value' => 'p.sort_order-DESC',
+            'href'  => $this->url->link('product/bestseller', 'sort=p.date_added&order=DESC' . $url)
+        );
+
+        $data['sorts'][] = array(
+            'text'  => $this->language->get('text_name_asc'),
+            'value' => 'pd.name-ASC',
+            'href'  => $this->url->link('product/bestseller', 'sort=pd.name&order=ASC' . $url)
+        );
+
+        $data['sorts'][] = array(
+            'text'  => $this->language->get('text_name_desc'),
+            'value' => 'pd.name-DESC',
+            'href'  => $this->url->link('product/bestseller', 'sort=pd.name&order=DESC' . $url)
+        );
+
+        $data['sorts'][] = array(
+            'text'  => $this->language->get('text_price_asc'),
+            'value' => 'p.price-ASC',
+            'href'  => $this->url->link('product/bestseller', '&sort=p.price&order=ASC' . $url)
+        );
+
+        $data['sorts'][] = array(
+            'text'  => $this->language->get('text_price_desc'),
+            'value' => 'p.price-DESC',
+            'href'  => $this->url->link('product/bestseller', '&sort=p.price&order=DESC' . $url)
+        );
+
+        $data['sorts'][] = array(
+            'text'  => $this->language->get('text_rating_desc'),
+            'value' => 'rating-DESC',
+            'href'  => $this->url->link('product/bestseller', '&sort=rating&order=DESC' . $url)
+        );
+
+        $data['sorts'][] = array(
+            'text'  => $this->language->get('text_rating_asc'),
+            'value' => 'rating-ASC',
+            'href'  => $this->url->link('product/bestseller', '&sort=rating&order=ASC' . $url)
+        );
+
+        $data['sorts'][] = array(
+            'text'  => $this->language->get('text_model_asc'),
+            'value' => 'p.model-ASC',
+            'href'  => $this->url->link('product/bestseller', '&sort=p.model&order=ASC' . $url)
+        );
+
+        $data['sorts'][] = array(
+            'text'  => $this->language->get('text_model_desc'),
+            'value' => 'p.model-DESC',
+            'href'  => $this->url->link('product/bestseller', '&sort=p.model&order=DESC' . $url)
+        );
+
+        $url = '';
+
+        if (isset($this->request->get['sort'])) {
+            $url .= '&sort=' . $this->request->get['sort'];
+        }
+
+        if (isset($this->request->get['order'])) {
+            $url .= '&order=' . $this->request->get['order'];
+        }
+
+        $data['limits'] = array();
+
+        $data['limits'][] = array(
+            'text'  => $this->config->get('config_catalog_limit'),
+            'value' => $this->config->get('config_catalog_limit'),
+            'href'  => $this->url->link('product/bestseller', $url . '&limit=' . $this->config->get('config_catalog_limit'))
+        );
+
+        $data['limits'][] = array(
+            'text'  => 25,
+            'value' => 25,
+            'href'  => $this->url->link('product/bestseller', $url . '&limit=25')
+        );
+
+        $data['limits'][] = array(
+            'text'  => 50,
+            'value' => 50,
+            'href'  => $this->url->link('product/bestseller', $url . '&limit=50')
+        );
+
+        $data['limits'][] = array(
+            'text'  => 75,
+            'value' => 75,
+            'href'  => $this->url->link('product/bestseller', $url . '&limit=75')
+        );
+
+        $data['limits'][] = array(
+            'text'  => 100,
+            'value' => 100,
+            'href'  => $this->url->link('product/bestseller', $url . '&limit=100')
+        );
+
+        $url = '';
+
+        if (isset($this->request->get['sort'])) {
+            $url .= '&sort=' . $this->request->get['sort'];
+        }
+
+        if (isset($this->request->get['order'])) {
+            $url .= '&order=' . $this->request->get['order'];
+        }
+
+        if (isset($this->request->get['limit'])) {
+            $url .= '&limit=' . $this->request->get['limit'];
+        }
+
+        $pagination = new Pagination();
+        $pagination->total = $product_total;
+        $pagination->page = $page;
+        $pagination->limit = $limit;
+        $pagination->text = $this->language->get('text_pagination');
+        $pagination->url = $this->url->link('product/bestseller', $url . '&pg={page}');
+
+        $data['pagination'] = $pagination->render();
+
+        $data['sort'] = $sort;
+        $data['order'] = $order;
+        $data['limit'] = $limit;
+
+        $data['column_left'] = $this->load->controller('common/column_left');
+        $data['column_right'] = $this->load->controller('common/column_right');
+        $data['content_top'] = $this->load->controller('common/content_top');
+        $data['content_bottom'] = $this->load->controller('common/content_bottom');
+        $data['footer'] = $this->load->controller('common/footer');
+        $data['header'] = $this->load->controller('common/header');
+
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/product/bestseller.tpl')) {
+            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/product/bestseller.tpl', $data));
+        } else {
+            $this->response->setOutput($this->load->view('default/template/product/bestseller.tpl', $data));
+        }
+    }
 }
 ?>

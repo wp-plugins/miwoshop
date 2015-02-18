@@ -4,47 +4,41 @@ class ControllerPaymentFirstdataRemote extends Controller {
 		$this->load->language('payment/firstdata_remote');
 		$this->load->model('payment/firstdata_remote');
 
-		$this->data['text_credit_card'] = $this->language->get('text_credit_card');
-		$this->data['text_loading'] = $this->language->get('text_loading');
-		$this->data['text_wait'] = $this->language->get('text_wait');
+		$data['text_credit_card'] = $this->language->get('text_credit_card');
+		$data['text_loading'] = $this->language->get('text_loading');
+		$data['text_wait'] = $this->language->get('text_wait');
 
-		$this->data['entry_cc_number'] = $this->language->get('entry_cc_number');
-		$this->data['entry_cc_name'] = $this->language->get('entry_cc_name');
-		$this->data['entry_cc_expire_date'] = $this->language->get('entry_cc_expire_date');
-		$this->data['entry_cc_cvv2'] = $this->language->get('entry_cc_cvv2');
+		$data['entry_cc_number'] = $this->language->get('entry_cc_number');
+		$data['entry_cc_name'] = $this->language->get('entry_cc_name');
+		$data['entry_cc_expire_date'] = $this->language->get('entry_cc_expire_date');
+		$data['entry_cc_cvv2'] = $this->language->get('entry_cc_cvv2');
 
-		$this->data['help_start_date'] = $this->language->get('help_start_date');
-		$this->data['help_issue'] = $this->language->get('help_issue');
+		$data['help_start_date'] = $this->language->get('help_start_date');
+		$data['help_issue'] = $this->language->get('help_issue');
 
-		$this->data['button_confirm'] = $this->language->get('button_confirm');
+		$data['button_confirm'] = $this->language->get('button_confirm');
 
 		if ($this->config->get('firstdata_remote_card_storage') == 1 && $this->customer->isLogged()) {
-			$this->data['card_storage'] = 1;
-			$this->data['stored_cards'] = $this->model_payment_firstdata_remote->getStoredCards();
+			$data['card_storage'] = 1;
+			$data['stored_cards'] = $this->model_payment_firstdata_remote->getStoredCards();
 		} else {
-			$this->data['card_storage'] = 0;
-			$this->data['stored_cards'] = array();
+			$data['card_storage'] = 0;
+			$data['stored_cards'] = array();
 		}
 
-		$getCarts = $this->config->get('firstdata_remote_cards_accepted');
-        $setCarts = array();
-        foreach($getCarts as $getCart){
-            $setCarts[$getCart] = 1;
-        }
-        $this->data['accepted_cards']       = $setCarts;
-        unset($setCarts); 	unset($getCarts); 	unset($getCart);
-		$this->data['text_card_accepted']   = $this->language->get('text_card_accepted');
-		$this->data['text_card_type_m']     = $this->language->get('text_card_type_m');
-		$this->data['text_card_type_v'] 	= $this->language->get('text_card_type_v');
-		$this->data['text_card_type_c'] 	= $this->language->get('text_card_type_c');
-		$this->data['text_card_type_a'] 	= $this->language->get('text_card_type_a');
-		$this->data['text_card_type_ma'] 	= $this->language->get('text_card_type_ma');
-		$this->data['text_card_new'] 		= $this->language->get('text_card_new');
+		$data['accepted_cards'] = $this->config->get('firstdata_remote_cards_accepted');
+		$data['text_card_accepted'] = $this->language->get('text_card_accepted');
+		$data['text_card_type_m'] = $this->language->get('text_card_type_m');
+		$data['text_card_type_v'] = $this->language->get('text_card_type_v');
+		$data['text_card_type_c'] = $this->language->get('text_card_type_c');
+		$data['text_card_type_a'] = $this->language->get('text_card_type_a');
+		$data['text_card_type_ma'] = $this->language->get('text_card_type_ma');
+		$data['text_card_new'] = $this->language->get('text_card_new');
 
-		$this->data['months'] = array();
+		$data['months'] = array();
 
 		for ($i = 1; $i <= 12; $i++) {
-			$this->data['months'][] = array(
+			$data['months'][] = array(
 				'text'  => strftime('%B', mktime(0, 0, 0, $i, 1, 2000)),
 				'value' => sprintf('%02d', $i)
 			);
@@ -52,22 +46,20 @@ class ControllerPaymentFirstdataRemote extends Controller {
 
 		$today = getdate();
 
-		$this->data['year_expire'] = array();
+		$data['year_expire'] = array();
 
 		for ($i = $today['year']; $i < $today['year'] + 11; $i++) {
-			$this->data['year_expire'][] = array(
+			$data['year_expire'][] = array(
 				'text'  => strftime('%Y', mktime(0, 0, 0, 1, 1, $i)),
 				'value' => strftime('%y', mktime(0, 0, 0, 1, 1, $i))
 			);
 		}
 
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/firstdata_remote.tpl')) {
-            $this->template = $this->config->get('config_template') . '/template/payment/firstdata_remote.tpl';
-        } else {
-            $this->template = 'default/template/payment/firstdata_remote.tpl';
-        }
-
-        $this->render();
+		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/firstdata_remote.tpl')) {
+			return $this->load->view($this->config->get('config_template') . '/template/payment/firstdata_remote.tpl', $data);
+		} else {
+			return $this->load->view('default/template/payment/firstdata_remote.tpl', $data);
+		}
 	}
 
 	public function send() {

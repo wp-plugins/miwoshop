@@ -1,7 +1,5 @@
 <?php
 /*
-* MercadoPago Integration Library
-* Access MercadoPago for payments integration
 * @package		MiwoShop
 * @copyright	2009-2014 Miwisoft LLC, miwisoft.com
 * @license		GNU/GPL http://www.gnu.org/copyleft/gpl.html
@@ -12,308 +10,259 @@
 // No Permission
 defined('MIWI') or die('Restricted access');
 
-$GLOBALS["LIB_LOCATION"] = dirname(__FILE__);
+include_once MPATH_MIWOSHOP_OC."/catalog/controller/payment/mercadopago_include.php";
 
-class MP {
+class ControllerPaymentmercadopago extends Controller {
 
-    const version = "0.2.1";
+	private $error;
+	public  $sucess = true;
+	private $order_info;
+	private $message;
 
-    private $client_id;
-    private $client_secret;
-    private $access_data;
-    private $sandbox = FALSE;
+	public function index() {
 
-    function __construct($client_id, $client_secret) {
-        $this->client_id = $client_id;
-        $this->client_secret = $client_secret;
-    }
+		$data['button_confirm'] = $this->language->get('button_confirm');
+		$data['button_back'] = $this->language->get('button_back');
+		
+		if ($this->config->get('mercadopago_country')) {
+		    $data['action'] = $this->config->get('mercadopago_country');
+		}
 
-    public function sandbox_mode($enable = NULL) {
-        if (!is_null($enable)) {
-            $this->sandbox = $enable === TRUE;
-        }
+		$this->load->model('checkout/order');
+		$this->load->language('payment/mercadopago');
 
-        return $this->sandbox;
-    }
+		$order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
 
-    /**
-     * Get Access Token for API use
-     */
-    public function get_access_token() {
-        $app_client_values = $this->build_query(array(
-            'client_id' => $this->client_id,
-            'client_secret' => $this->client_secret,
-            'grant_type' => 'client_credentials'
-                ));
+		$this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('mercadopago_order_status_id'));             
+		//Cambio el código ISO-3 de la moneda por el que se les ocurrio poner a los de mercadopago!!!
+		                            
+	   switch($order_info['currency_code']) {
+			case"ARS":
+				$currency = 'ARS';
+				break;
+			case"ARG":
+				$currency = 'ARS';
+				break;    
+			case"VEF":
+				$currency = 'VEF';
+				break;  
+			case"BRA":
+			case"BRL":
+			case"REA":
+				$currency = 'BRL';
+				break;
+			case"MXN":
+				$currency = 'MEX';
+				break;
+			case"CLP":
+				$currency = 'CHI';
+				break;
+			default:
+				$currency = 'USD';
+				break;
+		}
+                        
+		$currencies = array('ARS','BRL','MEX','CHI','VEF');
+		if (!in_array($currency, $currencies)) {
+			$currency = '';
+			$data['error'] = $this->language->get('currency_no_support');
+		}
 
-        $access_data = MPRestClient::post("/oauth/token", $app_client_values, "application/x-www-form-urlencoded");
-
-        $this->access_data = $access_data['response'];
-
-        return $this->access_data['access_token'];
-    }
-
-    /**
-     * Get information for specific payment
-     * @param int $id
-     * @return array(json)
-     */
-    public function get_payment($id) {
-        $access_token = $this->get_access_token();
-
-        $uri_prefix = $this->sandbox ? "/sandbox" : "";
-        $payment_info = MPRestClient::get($uri_prefix."/collections/notifications/" . $id . "?access_token=" . $access_token);
-        return $payment_info;
-    }
-    public function get_payment_info($id) {
-        return $this->get_payment($id);
-    }
-
-    /**
-     * Get information for specific authorized payment
-     * @param id
-     * @return array(json)
-    */    
-    public function get_authorized_payment($id) {
-        $access_token = $this->get_access_token();
-
-        $authorized_payment_info = MPRestClient::get("/authorized_payments/" . $id . "?access_token=" . $access_token);
-        return $authorized_payment_info;
-    }
-
-    /**
-     * Refund accredited payment
-     * @param int $id
-     * @return array(json)
-     */
-    public function refund_payment($id) {
-        $access_token = $this->get_access_token();
-
-        $refund_status = array(
-            "status" => "refunded"
-        );
-
-        $response = MPRestClient::put("/collections/" . $id . "?access_token=" . $access_token, $refund_status);
-        return $response;
-    }
-
-    /**
-     * Cancel pending payment
-     * @param int $id
-     * @return array(json)
-     */
-    public function cancel_payment($id) {
-        $access_token = $this->get_access_token();
-
-        $cancel_status = array(
-            "status" => "cancelled"
-        );
-
-        $response = MPRestClient::put("/collections/" . $id . "?access_token=" . $access_token, $cancel_status);
-        return $response;
-    }
-
-    /**
-     * Cancel preapproval payment
-     * @param int $id
-     * @return array(json)
-     */
-    public function cancel_preapproval_payment($id) {
-        $access_token = $this->get_access_token();
-
-        $cancel_status = array(
-            "status" => "cancelled"
-        );
-
-        $response = MPRestClient::put("/preapproval/" . $id . "?access_token=" . $access_token, $cancel_status);
-        return $response;
-    }
-
-    /**
-     * Search payments according to filters, with pagination
-     * @param array $filters
-     * @param int $offset
-     * @param int $limit
-     * @return array(json)
-     */
-    public function search_payment($filters, $offset = 0, $limit = 0) {
-        $access_token = $this->get_access_token();
-
-        $filters["offset"] = $offset;
-        $filters["limit"] = $limit;
-
-        $filters = $this->build_query($filters);
-
-        $uri_prefix = $this->sandbox ? "/sandbox" : "";
-            
-        $collection_result = MPRestClient::get($uri_prefix."/collections/search?" . $filters . "&access_token=" . $access_token);
-        return $collection_result;
-    }
-
-    /**
-     * Create a checkout preference
-     * @param array $preference
-     * @return array(json)
-     */
-    public function create_preference($preference) {
-        $access_token = $this->get_access_token();
-
-        $preference_result = MPRestClient::post("/checkout/preferences?access_token=" . $access_token, $preference);
-        return $preference_result;
-    }
-
-    /**
-     * Update a checkout preference
-     * @param string $id
-     * @param array $preference
-     * @return array(json)
-     */
-    public function update_preference($id, $preference) {
-        $access_token = $this->get_access_token();
-
-        $preference_result = MPRestClient::put("/checkout/preferences/{$id}?access_token=" . $access_token, $preference);
-        return $preference_result;
-    }
-
-    /**
-     * Get a checkout preference
-     * @param string $id
-     * @return array(json)
-     */
-    public function get_preference($id) {
-        $access_token = $this->get_access_token();
-
-        $preference_result = MPRestClient::get("/checkout/preferences/{$id}?access_token=" . $access_token);
-        return $preference_result;
-    }
-
-    /**
-     * Create a preapproval payment
-     * @param array $preapproval_payment
-     * @return array(json)
-     */
-    public function create_preapproval_payment($preapproval_payment) {
-        $access_token = $this->get_access_token();
-
-        $preapproval_payment_result = MPRestClient::post("/preapproval?access_token=" . $access_token, $preapproval_payment);
-        return $preapproval_payment_result;
-    }
-
-    /**
-     * Get a preapproval payment
-     * @param string $id
-     * @return array(json)
-     */
-    public function get_preapproval_payment($id) {
-        $access_token = $this->get_access_token();
-
-        $preapproval_payment_result = MPRestClient::get("/preapproval/{$id}?access_token=" . $access_token);
-        return $preapproval_payment_result;
-    }
-
-	/**
-     * Update a preapproval payment
-     * @param string $preapproval_payment, $id
-     * @return array(json)
-     */	
+		$products = '';
+		
+		foreach ($this->cart->getProducts() as $product) {
+			$products .= $product['quantity'] . ' x ' . $product['name'] . ', ';
+		}
+		
+		$allproducts = $this->cart->getProducts();
+		$firstproduct = reset($allproducts);
+		// dados 2.0
+	    $totalprice = $order_info['total'] * $order_info['currency_value'];                   
+		$this->id = 'payment';
+                
+		$data['server'] = $_SERVER;
+		$data['debug'] = $this->config->get('mercadopago_debug');
+		// get credentials         
+		$client_id     = $this->config->get('mercadopago_client_id');
+		$client_secret = $this->config->get('mercadopago_client_secret');
+		$url           = $this->config->get('mercadopago_url');
+		$installments  = (int) $this->config->get('mercadopago_installments');
+		$shipments = array(
+			"receiver_address" => array(
+				"floor" => "-",
+				"zip_code" => $order_info['shipping_postcode'],
+				"street_name" => $order_info['shipping_address_1'] . " - " . $order_info['shipping_address_2'] . " - " . $order_info['shipping_city'] . " - " . $order_info['shipping_zone'] . " - " . $order_info['shipping_country'],
+				"apartment" => "-",
+				"street_number" => "-"
+			)
+		);
+		   
+		//Force format YYYY-DD-MMTH:i:s
+		$cust = $this->db->query("SELECT * FROM `" . DB_PREFIX . "customer` WHERE customer_id = " . $order_info['customer_id'] . " ");
+		$date_created = "";
+		$date_creation_user = "";
+		
+		if($cust->num_rows > 0):
+			foreach($cust->rows as $customer):
+				$date_created = $customer['date_added'];
+			endforeach;
+			$date_creation_user = date('Y-m-d', strtotime($date_created)) . "T" . date('H:i:s',strtotime($date_created));
+		endif;
 	
-	public function update_preapproval_payment($id, $preapproval_payment) {
-        $access_token = $this->get_access_token();
+		$payer = array(
+		    "name" => $order_info['payment_firstname'],
+		    "surname" => $order_info['payment_lastname'],
+		    "email" => $order_info['email'],
+		    "date_created" => $date_creation_user,
+		    "phone" => array(
+			"area_code" => "-",
+			"number" => $order_info['telephone']
+		    ),
+		    "address" => array(
+			"zip_code" => $order_info['payment_postcode'],
+			"street_name" => $order_info['payment_address_1'] . " - " . $order_info['payment_address_2'] . " - " . $order_info['payment_city'] . " - " . $order_info['payment_zone'] . " - " . $order_info['payment_country'],
+			"street_number" => "-"
+		    ),
+		    "identification" => array(
+			"number" => "null",
+			"type" => "null"
+		    )
+		);
 
-        $preapproval_payment_result = MPRestClient::put("/preapproval/" . $id . "?access_token=" . $access_token, $preapproval_payment);
-        return $preapproval_payment_result;
-    }
+		$items = array(
+		    array (
+		    "id" => $order_info['order_id'],
+		    "title" => $firstproduct['name'],
+		    "description" => $firstproduct['quantity'] . ' x ' . $firstproduct['name'], // string
+		    "quantity" => 1,
+		    "unit_price" => round($totalprice, 2), //decimal
+		    "currency_id" => $currency ,// string Argentina: ARS (peso argentino) � USD (D�lar estadounidense); Brasil: BRL (Real).,
+		    "picture_url"=> HTTP_SERVER . 'image/' . $firstproduct['image'],
+		    "category_id"=> $this->config->get('mercadopago_category_id')
+		    )
+		);
+		
+		//excludes_payment_methods
+		$exclude = $this->config->get('mercadopago_methods');
+		$installments = (int)$installments;
+		
+		if($exclude != ''):	
+		    //case exist exclude methods
+		    $methods_excludes = preg_split("/[\s,]+/", $exclude);
+		    $excludemethods = array();
+		    foreach ($methods_excludes as $exclude ){
+			if($exclude != "")
+			   $excludemethods[] = array('id' => $exclude);     
+		    }
+		
+		    $payment_methods = array(
+			"installments" => $installments,
+			"excluded_payment_methods" => $excludemethods
+		    );
+		else:
+		    //case not exist exclude methods
+		    $payment_methods = array(
+			"installments" => $installments
+		    );
+		endif;
+		
+		//set back url
+		$back_urls = array(
+		    "pending" => $url . '/index.php?route=payment/mercadopago/callback',
+		    "success" => $url . '/index.php?route=payment/mercadopago/callback'
+		);
 
-    /* **************************************************************************************** */
+		//mount array pref
+		$pref = array();
+		$pref['external_reference'] = $order_info['order_id'];
+		$pref['payer'] = $payer;
+		$pref['shipments'] = $shipments;
+		$pref['items'] = $items;
+		$pref['back_urls'] = $back_urls;
+		$pref['payment_methods'] = $payment_methods;
 
-    private function build_query($params) {
-        if (function_exists("http_build_query")) {
-            return http_build_query($params, "", "&");
-        } else {
-            foreach ($params as $name => $value) {
-                $elements[] = "{$name}=" . urlencode($value);
-            }
+		$mp = new MP ($client_id, $client_secret);
+		$preferenceResult = $mp->create_preference($pref);
+		
+		$sandbox = $this->config->get('mercadopago_sandbox') == 1 ? true:false;
+		if($preferenceResult['status'] == 201):
+			$data['type_checkout'] = $this->config->get('mercadopago_type_checkout');
+			if ($sandbox):
+				$data['link'] = $preferenceResult['response']['sandbox_init_point'];
+			else:
+				$data['link'] = $preferenceResult['response']['init_point'];
+			endif;
+		else:
+			$data['error'] = "Error: " . $preferenceResult['status'];
+		endif;
+		
+			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/mercadopago.tpl')) {
+				return $this->load->view($this->config->get('config_template') . '/template/payment/mercadopago.tpl', $data);
+			} else {
+				return $this->load->view('default/template/payment/mercadopago.tpl', $data);
+			} 
+       }
 
-            return implode("&", $elements);
-        }
-    }
+	public function callback() {
+	      $this->response->redirect(HTTP_SERVER . 'index.php?route=checkout/success');
+	}
+        
+	public function retorno() {
 
+		if (isset($_REQUEST['id'])) {
+			$id = $_REQUEST['id'];
+		
+			$client_id     = $this->config->get('mercadopago_client_id');
+			$client_secret = $this->config->get('mercadopago_client_secret');
+			$sandbox = $this->config->get('mercadopago_sandbox') == 1 ? true:null;
+			
+			//$checkdata = New Shop($client_id,$client_secret);
+			$mp = new MP ($client_id, $client_secret);
+			$mp->sandbox_mode($sandbox);
+			
+			//$dados = $checkdata->GetStatus($id);
+			$dados = $mp->get_payment_info ($id);
+			$dados = $dados['response'];
+			
+			$order_id = $dados['collection']['external_reference'];
+			$order_status = $dados['collection']['status'];
+			
+			$this->load->model('checkout/order');
+			$order = $this->model_checkout_order->getOrder($order_id);
+			
+			if ($order['order_status_id'] == '0') {
+				$this->model_checkout_order->addOrderHistory($order_id, $this->config->get('mercadopago_order_status_id'));
+			}
+			
+			switch ($order_status) {
+				case 'approved':
+					$this->model_checkout_order->addOrderHistory($order_id, $this->config->get('mercadopago_order_status_id_completed'));   
+					break;
+				case 'pending':
+					$this->model_checkout_order->addOrderHistory($order_id, $this->config->get('mercadopago_order_status_id_pending'));    
+					break;    
+				case 'in_process':
+					$this->model_checkout_order->addOrderHistory($order_id, $this->config->get('mercadopago_order_status_id_process'));       
+					break;    
+				case 'reject':
+					$this->model_checkout_order->addOrderHistory($order_id, $this->config->get('mercadopago_order_status_id_rejected'));      
+					break;    
+				case 'refunded':
+					$this->model_checkout_order->addOrderHistory($order_id, $this->config->get('mercadopago_order_status_id_refunded'));      
+					break;    
+				case 'cancelled':
+					$this->model_checkout_order->addOrderHistory($order_id, $this->config->get('mercadopago_order_status_id_cancelled'));      
+					break;    
+				case 'in_metiation':
+					$this->model_checkout_order->addOrderHistory($order_id, $this->config->get('mercadopago_order_status_id_in_mediation'));    
+					break;
+				default:
+					$this->model_checkout_order->addOrderHistory($order_id, $this->config->get('mercadopago_order_status_id_pending'));
+					break;
+			}
+			
+			echo "ID: " . $id . " - Status: " . $order_status;		
+		}
+	}     
 }
-
-/**
- * MercadoPago cURL RestClient
- */
-class MPRestClient {
-
-    const API_BASE_URL = "https://api.mercadolibre.com";
-
-    private static function get_connect($uri, $method, $content_type) {
-        $connect = curl_init(self::API_BASE_URL . $uri);
-
-        curl_setopt($connect, CURLOPT_USERAGENT, "MercadoPago PHP SDK v" . MP::version);
-        curl_setopt($connect, CURLOPT_CAINFO, $GLOBALS["LIB_LOCATION"] . "/cacert.pem");
-        curl_setopt($connect, CURLOPT_SSLVERSION, 3);
-        curl_setopt($connect, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($connect, CURLOPT_CUSTOMREQUEST, $method);
-        curl_setopt($connect, CURLOPT_HTTPHEADER, array("Accept: application/json", "Content-Type: " . $content_type));
-
-        return $connect;
-    }
-
-    private static function set_data(&$connect, $data, $content_type) {
-        if ($content_type == "application/json") {
-            if (gettype($data) == "string") {
-                json_decode($data, true);
-            } else {
-                $data = json_encode($data);
-            }
-
-            if(function_exists('json_last_error')) {
-                $json_error = json_last_error();
-                if ($json_error != JSON_ERROR_NONE) {
-                    throw new Exception("JSON Error [{$json_error}] - Data: {$data}");
-                }
-            }
-        }
-
-        curl_setopt($connect, CURLOPT_POSTFIELDS, $data);
-    }
-
-    private static function exec($method, $uri, $data, $content_type) {
-        $connect = self::get_connect($uri, $method, $content_type);
-        if ($data) {
-            self::set_data($connect, $data, $content_type);
-        }
-
-        $api_result = curl_exec($connect);
-        $api_http_code = curl_getinfo($connect, CURLINFO_HTTP_CODE);
-
-        $response = array(
-            "status" => $api_http_code,
-            "response" => json_decode($api_result, true)
-        );
-
-        if ($response['status'] >= 400) {
-            throw new Exception ($response['response']['message'], $response['status']);
-        }
-
-        curl_close($connect);
-
-        return $response;
-    }
-
-    public static function get($uri, $content_type = "application/json") {
-        return self::exec("GET", $uri, null, $content_type);
-    }
-
-    public static function post($uri, $data, $content_type = "application/json") {
-        return self::exec("POST", $uri, $data, $content_type);
-    }
-
-    public static function put($uri, $data, $content_type = "application/json") {
-        return self::exec("PUT", $uri, $data, $content_type);
-    }
-
-}
-
 ?>

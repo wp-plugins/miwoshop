@@ -10,7 +10,6 @@
   <input type="hidden" name="country" value="<?php echo $country; ?>" />
   <input type="hidden" name="email" value="<?php echo $email; ?>" />
   <input type="hidden" name="phone" value="<?php echo $phone; ?>" />
-  <input type="hidden" name="ship_name" value="<?php echo $ship_name; ?>" />
   <input type="hidden" name="ship_street_address" value="<?php echo $ship_street_address; ?>" />
   <input type="hidden" name="ship_city" value="<?php echo $ship_city; ?>" />
   <input type="hidden" name="ship_state" value="<?php echo $ship_state; ?>" />
@@ -30,13 +29,9 @@
   <?php } ?>
   <input type="hidden" name="lang" value="<?php echo $lang; ?>" />
   <input type="hidden" name="return_url" value="<?php echo $return_url; ?>" />
-  <input type="hidden" name="currency_code" value="<?php echo $currency_code; ?>" />
   <div class="buttons">
-    <div class="right">
-      <input type="submit" value="<?php echo $button_confirm; ?>" class="<?php echo MiwoShop::getButton(); ?>" />
+    <div class="pull-right">
+      <input type="submit" value="<?php echo $button_confirm; ?>" class="button button-primary" />
     </div>
   </div>
 </form>
-<?php if ($display) { ?>
-<script type="text/javascript" src="https://www.2checkout.com/static/checkout/javascript/direct.min.js"></script>
-<?php } ?>

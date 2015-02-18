@@ -447,21 +447,20 @@ class MiwoShopBase {
             }
 		}
 		
-		global $vqmod;
-		
-		if (!is_object($vqmod)) {
-			require_once(MPATH_MIWOSHOP_OC.'/vqmod/vqmod.php');
-			$vqmod = new VQMod();
-		}
-		
-		$doc = MFactory::getDocument();
-		
-		$f = 'addStylesheet';
-		if ($css == false) {
-			$f = 'addScript';
-		}
-		
-		$doc->$f(self::clearPath($vqmod->modCheck($path)));
+        $doc = MFactory::getDocument();
+        MiwoShop::get('opencart');
+
+        $f = 'addStylesheet';
+        if ($css == false) {
+            $f = 'addScript';
+        }
+
+        if(!empty($type)) {
+            $doc->$f(self::clearPath(modification($path)), $type);
+        }
+        else{
+            $doc->$f(self::clearPath(modification($path)));
+        }
 		
 		$headers[$path] = 'added';
 	}
@@ -561,6 +560,9 @@ class MiwoShopBase {
                             $state = true;
                         }
                     }
+                }
+                else{
+                    $state = true;
                 }
             }
             else {
@@ -917,12 +919,6 @@ class MiwoShopBase {
             return false;
         }
 
-        
-
-
-
-
-
         if (!file_exists(MPATH_WP_PLG.'/miwoshop/site/opencart/index.php')) {
             MError::raiseWarning(404, MText::_('COM_MIWOSHOP_MISSING_LIBRARY'));
             return false;
@@ -938,36 +934,9 @@ class MiwoShopBase {
             return false;
         }
 
-        if (!is_writable(MPATH_MIWOSHOP_OC.'/vqmod/vqcache')) {
-            MError::raiseWarning(404, MText::_('COM_MIWOSHOP_VQCACHE_NOT_WRITABLE'));
-            return false;
-        }
-
-        $this->setWizardPerms();
+        $this->checkModifications();
 
         return true;
-    }
-
-    public function setWizardPerms(){
-        $jdb = MiwoShop::get('db')->getDbo();
-
-		//insert permission for support/support
-        $jdb->setQuery("SELECT permission FROM `#__miwoshop_user_group` WHERE `user_group_id` = 1");
-        $permission = $jdb->loadResult();
-        $permission = unserialize($permission);
-
-		if (!array_search('common/wizard', $permission['access'])){
-            $permission['access'][] = 'common/wizard';
-            $permission['modify'][] = 'common/wizard';
-        }
-		else {
-			return true;
-		}
-
-        $permission = serialize($permission);
-
-        $jdb->setQuery("UPDATE `#__miwoshop_user_group` SET `permission` = '".$permission."' WHERE `user_group_id` = 1");
-        $jdb->query();
     }
 
     public function replaceOutput($output, $source) {
@@ -980,17 +949,18 @@ class MiwoShopBase {
 		if(isset($constants['HTTP_CATALOG'])){
 			$http_catalog = $constants['HTTP_CATALOG'];
 		}
-
+		
         $replace_output = array(
             '$.' 					=> 'jQuery.',
             '$(' 					=> 'jQuery(',
             '<div id="container">' 	=> '<div id="container_oc">',
             '"header"' 				=> '"header_oc"',
             '"content"' 			=> '"content_oc"',
-            'class="button"' 		=> 'class="button_oc"',
             'id="button"' 			=> 'id="button_oc"',
             '"search"' 				=> '"search_oc"',
+			'name="option[' 		=> 'name="option_oc[',
             'class="button-search"' => 'class="button_oc-search"',
+            'class="container"' => 'class="container_oc"',
             '"menu"' 				=> '"menu_oc"',
             '"banner"' 				=> '"banner_oc"',
             '"footer"' 				=> '"footer_oc"',
@@ -1037,12 +1007,17 @@ class MiwoShopBase {
         if ($source == 'admin' || $source == 'admin2') {
             $replace_output['index.php?token=']            							= 'index.php?option=com_miwoshop&token=';
             $replace_output['view/javascript/jquery/']          					= MURL_WP_CNT.'/miwi/plugins/plg_miwoshop_js/js/';
+            $replace_output['view/javascript/font-awesome/']          				= MURL_WP_CNT.'/miwi/plugins/plg_miwoshop_js/js/font-awesome/';
+            $replace_output['view/javascript/summernote/']          				= MURL_WP_CNT.'/miwi/plugins/plg_miwoshop_js/js/summernote/';
+            $replace_output['view/javascript/bootstrap/']          				    = MURL_WP_CNT.'/miwi/plugins/plg_miwoshop_js/js/bootstrap/';
 			$replace_output['admin/view']               							= MURL_MIWOSHOP . '/site/opencart/admin/view';
 			$replace_output['src="view/']               							= 'src="'.MURL_MIWOSHOP . '/site/opencart/admin/view/';
             $replace_output["HTTP_SERVER . 'admin/"]          						= "HTTP_SERVER . '".MID_PATH."miwoshop/site/opencart/admin/";
             $replace_output['index.php?option=com_miwoshop&route=checkout/manual']	= MURL_ADMIN.'/admin-ajax.php?action=miwoshop&option=com_miwoshop&format=raw&tmpl=component&route=checkout/manual';
             $replace_output['src="index.php?option=com_miwoshop&format=raw']      	= 'src="'.MURL_ADMIN.'/admin-ajax.php?action=miwoshop&option=com_miwoshop&format=raw';
 			$replace_output["url = 'index.php?route"]      							= "url = '".MURL_ADMIN."/admin.php?page=miwoshop&option=com_miwoshop&route";
+			$replace_output['class="button'] 										= 'class="btn';
+            $replace_output['button-primary'] 										= 'btn-primary';
         }
     
         if ($source == 'admin' || $source == 'site' || $source == 'module') {
@@ -1063,10 +1038,18 @@ class MiwoShopBase {
         }
     
         if ($source == 'site' || $source == 'module') {
+
+            $replace_output['catalog/view/javascript/jquery/owl-carousel/'] 			= MURL_WP_CNT.'/miwi/plugins/plg_miwoshop_js/js/owl-carousel/';
+            $replace_output['catalog/view/javascript/jquery/magnific/'] 			    = MURL_WP_CNT.'/miwi/plugins/plg_miwoshop_js/js/magnific/';
+            $replace_output['catalog/view/javascript/jquery/datetimepicker/'] 			= MURL_WP_CNT.'/miwi/plugins/plg_miwoshop_js/js/datetimepicker/';
+            $replace_output['catalog/view/javascript/jquery/datetimepicker/'] 			= MURL_WP_CNT.'/miwi/plugins/plg_miwoshop_js/js/datetimepicker/';
+            $replace_output['view/javascript/bootstrap/'] 						        = MURL_WP_CNT.'/miwi/plugins/plg_miwoshop_js/js/bootstrap/';
+            $replace_output['view/javascript/summernote/'] 						        = MURL_WP_CNT.'/miwi/plugins/plg_miwoshop_js/js/summernote/';
+            $replace_output['view/javascript/font-awesome/'] 					        = MURL_WP_CNT.'/miwi/plugins/plg_miwoshop_js/js/font-awesome/';
+
             $replace_output['class="box"'] 												= 'class="box_oc"';
-            $replace_output['class="button_oc"'] 										= 'class="'.MiwoShop::getButton().'"';
+            $replace_output['class="btn'] 												= 'class="'.MiwoShop::getButton();
             $replace_output['class="button"'] 											= 'class="'.MiwoShop::getButton().'"';
-            $replace_output['id="button"'] 												= 'class="'.MiwoShop::getButton().'"';
             $replace_output[' src="catalog/'] 											= ' src="'.MURL_MIWOSHOP.'/site/opencart/catalog/';
             $replace_output[' src="image/'] 											= ' src="'.MURL_MIWOSHOP.'/site/opencart/image/';
             $replace_output['index.php?route=product/product/captcha'] 					= MURL_ADMIN.'/admin-ajax.php?action=miwoshop&option=com_miwoshop&format=raw&tmpl=component&route=product/product/captcha';
@@ -1075,6 +1058,8 @@ class MiwoShopBase {
             $replace_output['index.php?route='] 										= 'index.php?option=com_miwoshop'.MiwoShop::get('router')->getItemid('home', 0, true).'&route=';
             $replace_output['index.php?token=']											= 'index.php?option=com_miwoshop'.MiwoShop::get('router')->getItemid('home', 0, true).'&token=';
             $replace_output['index.php?option=com_miwoshop&route=facebook_store'] 		= MURL_ADMIN.'/admin-ajax.php?action=miwoshop&option=com_miwoshop&format=raw&tmpl=component&route=facebook_store';
+
+
         }
     
         if ($source == 'module') {
@@ -1082,9 +1067,7 @@ class MiwoShopBase {
             $replace_output['<div class="bottom">&nbsp;</div>'] = '';
             $replace_output['class="box_oc"'] 					= 'class="box_oc" style="margin-bottom: 0px !important;"';
         }
-        
-        $replace_output['"breadcrumb"'] = '"breadcrumb_oc"';
-        
+
         #miwo
         $replace_output['focus: function(event, ui) {'] = 'focus: function(event, ui) {';
         $replace_output['$jQuery']                      = '$$';
@@ -1107,6 +1090,7 @@ class MiwoShopBase {
 
         return $output;
     }
+
     public function getIntegrations($product_id) {
         $integrations = '';
         $db = MiwoShop::get('db')->getDbo();
@@ -1131,6 +1115,299 @@ class MiwoShopBase {
         }
 
         return $html;
+    }
+
+
+    public function checkModifications(){
+
+        $dir_modification = MPATH_MIWOSHOP_OC.'/system/modification/';
+
+	    if(is_dir($dir_modification.'system/') and $this->getConfig()->get('enable_vqmod_cache', '1') == 1) {
+            return;
+        }
+
+        if(!is_dir($dir_modification)) {
+            mkdir($dir_modification, 0777);
+        }
+
+        $modifications = glob($dir_modification . '*.php');
+
+        if(!empty($modifications)) {
+            return;
+        }
+
+        $this->createOverrides();
+
+    }
+
+    public function createOverrides() {
+        $dir_modification = MPATH_MIWOSHOP_OC.'/system/modification/';
+        $dir_application = MPATH_MIWOSHOP_OC.'/admin/';
+        $dir_system =  MPATH_MIWOSHOP_OC.'/system/';
+        $dir_catalog =  MPATH_MIWOSHOP_OC.'/catalog/';
+
+        // Begin
+        $xml = array();
+
+        // Load the default modification XML
+        $xml[] = file_get_contents($dir_system . 'modification.xml');
+
+        // Get the default modification file
+        //$results = $this->model_extension_modification->getModifications();
+
+        #mijoshop
+        $results = glob($dir_system.'xmls/*.xml');
+
+        foreach ($results as $result) {
+            $xml[] = file_get_contents($result);
+        }
+        #mijoshop
+
+        $modification = array();
+
+
+        foreach ($xml as $xml) {
+            $dom = new DOMDocument('1.0', 'UTF-8');
+            $dom->preserveWhiteSpace = false;
+            $dom->loadXml($xml);
+
+            // Wipe the past modification store in the backup array
+            $recovery = array();
+
+            // Set the a recovery of the modification code in case we need to use it if an abort attribute is used.
+            if (isset($modification)) {
+                $recovery = $modification;
+            }
+
+            $files = $dom->getElementsByTagName('modification')->item(0)->getElementsByTagName('file');
+
+            foreach ($files as $file) {
+                $operations = $file->getElementsByTagName('operation');
+
+                $path = '';
+
+                // Get the full path of the files that are going to be used for modification
+                if (substr($file->getAttribute('path'), 0, 7) == 'catalog') {
+                    $path = $dir_catalog . str_replace('../', '', substr($file->getAttribute('path'), 8));
+                }
+
+                if (substr($file->getAttribute('path'), 0, 5) == 'admin') {
+                    $path = $dir_application . str_replace('../', '', substr($file->getAttribute('path'), 6));
+                }
+
+                if (substr($file->getAttribute('path'), 0, 6) == 'system') {
+                    $path = $dir_system . str_replace('../', '', substr($file->getAttribute('path'), 7));
+                }
+
+                if ($path) {
+                    $files = glob($path, GLOB_BRACE);
+
+                    if ($files) {
+                        foreach ($files as $file) {
+                            // Get the key to be used for the modification cache filename.
+                            if (substr($file, 0, strlen($dir_catalog)) == $dir_catalog) {
+                                $key = 'catalog/' . substr($file, strlen($dir_catalog));
+                            }
+
+                            if (substr($file, 0, strlen($dir_application)) == $dir_application) {
+                                $key = 'admin/' . substr($file, strlen($dir_application));
+                            }
+
+                            if (substr($file, 0, strlen($dir_system)) == $dir_system) {
+                                $key = 'system/' . substr($file, strlen($dir_system));
+                            }
+
+                            // If file contents is not already in the modification array we need to load it.
+                            if (!isset($modification[$key])) {
+                                $content = file_get_contents($file);
+
+                                $modification[$key] = preg_replace('~\r?\n~', "\n", $content);
+                                $original[$key] = preg_replace('~\r?\n~', "\n", $content);
+
+                            }
+
+                            foreach ($operations as $operation) {
+                                $error = $operation->getAttribute('error');
+
+                                // Ignoreif
+                                $ignoreif = $operation->getElementsByTagName('ignoreif')->item(0);
+
+                                if ($ignoreif) {
+                                    if ($ignoreif->getAttribute('regex') != 'true') {
+                                        if (strpos($modification[$key], $ignoreif->textContent) !== false) {
+                                            continue;
+                                        }
+                                    } else {
+                                        if (preg_match($ignoreif->textContent, $modification[$key])) {
+                                            continue;
+                                        }
+                                    }
+                                }
+
+                                $status = false;
+
+                                // Search and replace
+                                if ($operation->getElementsByTagName('search')->item(0)->getAttribute('regex') != 'true') {
+                                    // Search
+                                    $search = $operation->getElementsByTagName('search')->item(0)->textContent;
+                                    $trim = $operation->getElementsByTagName('search')->item(0)->getAttribute('trim');
+                                    $index = $operation->getElementsByTagName('search')->item(0)->getAttribute('index');
+
+                                    // Trim line if no trim attribute is set or is set to true.
+                                    if (!$trim || $trim == 'true') {
+                                        $search = trim($search);
+                                    }
+
+                                    // Add
+                                    $add = $operation->getElementsByTagName('add')->item(0)->textContent;
+                                    $trim = $operation->getElementsByTagName('add')->item(0)->getAttribute('trim');
+                                    $position = $operation->getElementsByTagName('add')->item(0)->getAttribute('position');
+                                    $offset = $operation->getElementsByTagName('add')->item(0)->getAttribute('offset');
+
+                                    if ($offset == '') {
+                                         $offset = 0;
+                                     }
+
+                                    // Trim line if is set to true.
+                                    if ($trim == 'true') {
+                                        $add = trim($add);
+                                    }
+
+                                    // Check if using indexes
+                                    if ($index !== '') {
+                                        $indexes = explode(',', $index);
+                                    } else {
+                                        $indexes = array();
+                                    }
+
+                                    // Get all the matches
+                                    $i = 0;
+
+                                    $lines = explode("\n", $modification[$key]);
+
+                                    for ($line_id = 0; $line_id < count($lines); $line_id++) {
+                                        $line = $lines[$line_id];
+
+                                        // Status
+                                        $match = false;
+
+                                        // Check to see if the line matches the search code.
+                                        if (stripos($line, $search) !== false) {
+                                            // If indexes are not used then just set the found status to true.
+                                            if (!$indexes) {
+                                                $match = true;
+                                            } elseif (in_array($i, $indexes)) {
+                                                $match = true;
+                                            }
+
+                                            $i++;
+                                        }
+
+                                        // Now for replacing or adding to the matched elements
+                                        if ($match) {
+                                            switch ($position) {
+                                                default:
+                                                case 'replace':
+                                                    if ($offset < 0) {
+                                                        array_splice($lines, $line_id + $offset, abs($offset) + 1, array(str_replace($search, $add, $line)));
+
+                                                        $line_id -= $offset;
+                                                    } else {
+                                                        array_splice($lines, $line_id, $offset + 1, array(str_replace($search, $add, $line)));
+                                                    }
+                                                    break;
+                                                case 'before':
+                                                    $new_lines = explode("\n", $add);
+
+                                                    array_splice($lines, $line_id - $offset, 0, $new_lines);
+
+                                                    $line_id += count($new_lines);
+                                                    break;
+                                                case 'after':
+                                                    $new_lines = explode("\n", $add);
+
+													array_splice($lines, ($line_id + 1) + $offset, 0, $new_lines);
+
+													$line_id += count($new_lines);
+													break;
+                                            }
+
+                                            $status = true;
+                                        }
+                                    }
+
+                                    $modification[$key] = implode("\n", $lines);
+                                } else {
+                                    $search = $operation->getElementsByTagName('search')->item(0)->textContent;
+                                    $limit = $operation->getElementsByTagName('search')->item(0)->getAttribute('limit');
+                                    $replace = $operation->getElementsByTagName('add')->item(0)->textContent;
+
+                                    // Limit
+                                    if (!$limit) {
+                                        $limit = -1;
+                                    }
+
+                                    // Log
+                                    $match = array();
+
+                                    preg_match_all($search, $modification[$key], $match, PREG_OFFSET_CAPTURE);
+
+                                    // Remove part of the the result if a limit is set.
+                                    if ($limit > 0) {
+                                        $match[0] = array_slice($match[0], 0, $limit);
+                                    }
+
+                                    if ($match[0]) {
+                                        $status = true;
+                                    }
+
+                                    // Make the modification
+                                    $modification[$key] = preg_replace($search, $replace, $modification[$key], $limit);
+                                }
+
+                                if (!$status) {
+                                    // Skip current operation
+                                    if ($error == 'skip') {
+                                        break;
+                                    }
+
+                                    // Abort applying this modification completely.
+                                    if ($error == 'abort') {
+                                        $modification = $recovery;
+
+                                        break 4;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Write all modification files
+        foreach ($modification as $key => $value) {
+            // Only create a file if there are changes
+            if ($original[$key] != $value) {
+                $path = '';
+
+                $directories = explode('/', dirname($key));
+
+                foreach ($directories as $directory) {
+                    $path = $path . '/' . $directory;
+
+                    if (!is_dir($dir_modification . $path)) {
+                        @mkdir($dir_modification . $path, 0777);
+                    }
+                }
+
+                $handle = fopen($dir_modification . $key, 'w');
+
+                fwrite($handle, $value);
+
+                fclose($handle);
+            }
+        }
     }
 	
 }

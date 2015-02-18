@@ -17,15 +17,14 @@ if (!$base->checkRequirements('module')) {
     return;
 }
 
-$outputs = MiwoShop::get('opencart')->loadModule($params->get('module', 'miwoshopcart'), $params->get('layout_id', '12'));
+$outputs = MiwoShop::get('opencart')->loadModule($params->get('module', 'miwoshopcart'), $params->get('layout_id', '14'));
 
 foreach($outputs as $output) {
     if (is_object($output) || empty($output)) {
         return;
     }
 
-    $output = preg_replace('#(<div class="box-heading">)(.*)(</div>)#e', "", $output);
-    $output = preg_replace('#(<div class="top">)(.*)(</div>)#e', "", $output);
+    $output = preg_replace('#(<h3>)(.*)(</h3>)#e', "", $output);
 
     $output = $base->replaceOutput($output, 'module');
 

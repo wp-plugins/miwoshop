@@ -177,6 +177,30 @@ class MRouter extends MObject {
             }
         }
 
+		$found = false;
+		if (count($segments) && !empty($route)) {
+			if ($page = get_page_by_path($route)) {
+				$segment_lowercase 	= MString::strtolower($segments[0]);
+				//sqlsrv  change
+				if(isset($page->language)){
+					$page->language = trim($page->language);
+				}
+				$length = strlen($page->post_name); //get the length of the route
+				if (($length > 0 && MString::strpos($segment_lowercase.'/', $page->post_name.'/') === 0) && !$found) {
+					$found = $page;
+				}
+			}
+		}
+
+		if ($found) {
+			$route = substr($segments[0], strlen($found->post_name));
+			if ($route) {
+				$route = substr($route, 1);
+			}
+			$vars['page_id'] = $found->ID;
+			$vars['option'] = MRequest::getCmd('option');
+		}
+
         // Set the variables
         $this->setVars($vars);
 
@@ -204,6 +228,20 @@ class MRouter extends MObject {
                 $this->setVars($vars);
             }
         }
+		elseif (count($segments) and !empty($page)) {
+			preg_match_all('/'.get_shortcode_regex().'/s', $page->post_content, $matches, PREG_SET_ORDER);
+			if (!empty($matches)) {
+				foreach ($matches as $shortcode) {
+					if (MRequest::getCmd('option') !== 'com_'.$shortcode[2]) {
+						continue;
+					}
+
+					$vars = shortcode_parse_atts($shortcode[3]);
+					$this->setVars($vars);
+					break;
+				}
+			}
+		}
 
         return $vars;
     }
@@ -312,6 +350,9 @@ class MRouter extends MObject {
 
         if (!empty($page_id)) {
             $post = MFactory::getWPost($page_id);
+	        while (is_object($post) and $post->post_parent) {
+		        $post = MFactory::getWPost($post->post_parent);
+	        }
 
             if (is_object($post)) {
                 $route = $post->post_name . '/' . ltrim($route, '/');

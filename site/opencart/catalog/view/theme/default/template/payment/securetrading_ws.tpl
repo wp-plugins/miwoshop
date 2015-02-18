@@ -1,44 +1,57 @@
 <form class="form-horizontal">
-<h2><?php echo $text_card_details; ?></h2>
-<div class="content" id="payment">
-<table class="form">
-	<tr>
-	  <td><?php echo $entry_type; ?></td>
-	  <td><select name="type" id="input-type" class="form-control">
-	  <?php foreach ($cards as $key => $title) { ?>
-		<option value="<?php echo $key ?>"><?php echo $title; ?></option>
-	  <?php } ?>
-	  </select></td>
-	</tr>
-	<tr>
-	  <td><?php echo $entry_number; ?></td>
-	  <td><input type="text" name="number" value="" placeholder="<?php echo $entry_number; ?>" id="input-number" /></td>
-	</tr>
-	<tr>
-	  <td><?php echo $entry_expire_date; ?></td>
-	  <td><select name="expire_month" id="expire-date" class="form-control">
-      <?php foreach ($months as $month) { ?>
-		<option value="<?php echo $month['value']; ?>"><?php echo $month['text']; ?></option>
-      <?php } ?>
-	  </select> &nbsp;&nbsp;&nbsp;
-	  <select name="expire_year" class="form-control">
-	  <?php foreach ($year_expire as $year) { ?>
-		<option value="<?php echo $year['value']; ?>"><?php echo $year['text']; ?></option>
-	  <?php } ?>
-	  </select></td>
-	</tr>
-	<tr>
-	  <td><?php echo $entry_cvv2; ?></td>
-	  <td><input type="text" name="cvv2" value="" placeholder="<?php echo $entry_cvv2; ?>" id="input-cvv2" /></td>
-	</tr>
-  </table>
-</div>
+  <fieldset id="payment">
+    <legend><?php echo $text_card_details; ?></legend>
+    
+    <div class="form-group required">
+      <label class="col-sm-2 control-label" for="input-type"><?php echo $entry_type; ?></label>
+      <div class="col-sm-10">
+        <select name="type" id="input-type" class="form-control">
+          <?php foreach ($cards as $key => $title) { ?>
+            <option value="<?php echo $key ?>"><?php echo $title; ?></option>
+          <?php } ?>
+        </select>
+      </div>
+    </div>
+    
+    <div class="form-group required">
+      <label class="col-sm-2 control-label" for="input-number"><?php echo $entry_number; ?></label>
+      <div class="col-sm-10">
+        <input type="text" name="number" value="" placeholder="<?php echo $entry_number; ?>" id="input-number" class="form-control" />
+      </div>
+    </div>
+    
+    <div class="form-group required">
+      <label class="col-sm-2 control-label" for="input-expire-date"><?php echo $entry_expire_date; ?></label>
+      <div class="col-sm-3">
+        <select name="expire_month" id="expire-date" class="form-control">
+          <?php foreach ($months as $month) { ?>
+          <option value="<?php echo $month['value']; ?>"><?php echo $month['text']; ?></option>
+          <?php } ?>
+        </select>
+      </div>
+      <div class="col-sm-3">
+        <select name="expire_year" class="form-control">
+          <?php foreach ($year_expire as $year) { ?>
+          <option value="<?php echo $year['value']; ?>"><?php echo $year['text']; ?></option>
+          <?php } ?>
+        </select>
+      </div>
+    </div>
+    
+    <div class="form-group required">
+      <label class="col-sm-2 control-label" for="input-cvv2"><?php echo $entry_cvv2; ?></label>
+      <div class="col-sm-10">
+        <input type="text" name="cvv2" value="" placeholder="<?php echo $entry_cvv2; ?>" id="input-cvv2" class="form-control" />
+      </div>
+    </div>
+
+  </fieldset>
+</form>
 <div class="buttons">
-  <div class="right">
-	<input type="submit" value="<?php echo $button_confirm; ?>" id="button-confirm" class="<?php echo MiwoShop::getButton(); ?>" />
+  <div class="pull-right">
+    <input id="button-confirm" type="submit" value="<?php echo $button_confirm; ?>" class="button button-primary" />
   </div>
 </div>
-</form>
 <script type="text/javascript">
 $('#button-confirm').bind('click', function() {    
     $.ajax({  

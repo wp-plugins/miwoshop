@@ -1,25 +1,22 @@
 <?php
-/*
-* @package		MiwoShop
-* @copyright	2009-2014 Miwisoft LLC, miwisoft.com
-* @license		GNU/GPL http://www.gnu.org/copyleft/gpl.html
-* @license		GNU/GPL based on AceShop www.joomace.net
-*/
-
-// No Permission
-defined('MIWI') or die('Restricted access');
-
 // Heading
 $_['heading_title']    = 'Modules';
 
 // Text
-$_['text_install']     = 'Install';
-$_['text_uninstall']   = 'Uninstall';
+$_['text_success']     = 'Success: You have modified modules!';
+$_['text_layout']      = 'After you have installed and configured a module you can add it to a layout <a href="%s" class="alert-link">here</a>!';
+$_['text_add']         = 'Add Module';
+$_['text_list']        = 'Module List';
 
 // Column
 $_['column_name']      = 'Module Name';
 $_['column_action']    = 'Action';
 
+// Entry
+$_['entry_code']       = 'Module';
+$_['entry_name']       = 'Module Name';
+
 // Error
 $_['error_permission'] = 'Warning: You do not have permission to modify modules!';
-?>
+$_['error_name']       = 'Module Name must be between 3 and 64 characters!';
+$_['error_code']       = 'Extension required!';

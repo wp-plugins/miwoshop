@@ -33,7 +33,7 @@ class plgMiwoshopMiwoshop extends MPlugin {
         $html .=        '<table class="form">';
         $html .=            '<tr>';
         $html .=                '<td><strong>Customer Group</strong></br> </br> 5=8,3=3 </br>(orderstatusid=customergroupid)</td>';
-        $html .=                '<td><textarea name="content[miwoshop][add]" style="width:350px; height:60px">'. $integration['miwoshop_add'] .'</textarea></td>';
+        $html .=                '<td><textarea name="content[miwoshop][add]" style="width:350px; height:60px !important;">'. $integration['miwoshop_add'] .'</textarea></td>';
         $html .=            '</tr>';
         $html .=        '</table>';
         $html .= '</fieldset>';

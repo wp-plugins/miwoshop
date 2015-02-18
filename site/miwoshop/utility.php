@@ -64,7 +64,7 @@ class MiwoShopUtility {
             $option = (string)$component->attributes()->option;
             $compability = (string)$component->attributes()->compability;
 
-            if (($option == 'miwoshop') and ($compability == 'wpall')) {
+            if (($option == 'com_miwoshop') and ($compability == 'all' or $compability == '3.0')) {
                 $version = trim((string)$component->attributes()->version);
                 break;
             }
@@ -162,7 +162,7 @@ class MiwoShopUtility {
         $data = $this->getRemoteData($url);
 		
 		if (strpos($data, 'Error') !== false) {
-		    MError::raiseWarning(100, MText::_('Please, enter your Personal-ID in MiwoVideos => Configuration page or upgrade manually (see the next tab).'));
+		    MError::raiseWarning(100, MText::_('Please, enter your Personal-ID in MiwoShop => Configuration page or upgrade manually (see the next tab).'));
 		    return false;
 	    }
 		
@@ -541,5 +541,16 @@ class MiwoShopUtility {
 
         $mainframe = MFactory::getApplication();
         $mainframe->redirect('index.php?option=com_miwoshop&ctrl=syncdone', MText::_('COM_MIWOSHOP_ALIAS_SYNC_DONE'));
+    }
+
+    public function getLayoutModules($layout_id) {
+        $db = MiwoShop::get('db');
+        return $db->run("SELECT * FROM " . DB_PREFIX . "layout_module WHERE layout_id = '" . (int)$layout_id . "' ORDER BY sort_order", 'loadAssocList');
+    }
+
+    public function getModule($module_id) {
+        $db = MiwoShop::get('db');
+        $result = $db->run("SELECT setting FROM " . DB_PREFIX . "module WHERE module_id = '" . (int)$module_id . "'", 'loadResult');
+        return unserialize($result);
     }
 }

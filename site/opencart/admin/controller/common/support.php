@@ -16,33 +16,31 @@ class ControllerCommonSupport extends Controller {
 
         $this->document->setTitle($this->language->get('heading_title'));
 
-        $this->data['heading_title'] = $this->language->get('heading_title');
+        $data['heading_title'] = $this->language->get('heading_title');
 
         if (!$this->validate('access')) {
             exit();
         }
 
-        $this->data['breadcrumbs'] = array();
+        $data['breadcrumbs'] = array();
 
-        $this->data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = array(
             'text'      => $this->language->get('text_home'),
             'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
             'separator' => false
         );
 
-        $this->data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = array(
             'text'      => $this->language->get('heading_title'),
             'href'      => $this->url->link('common/support', '' , 'SSL'),
             'separator' => ' :: '
         );
 
-        $this->template = 'common/support.tpl';
-        $this->children = array(
-            'common/header',
-            'common/footer'
-        );
+        $data['header'] = $this->load->controller('common/header');
+        $data['column_left'] = $this->load->controller('common/column_left');
+        $data['footer'] = $this->load->controller('common/footer');
 
-        $this->response->setOutput($this->render());
+        $this->response->setOutput($this->load->view('common/support.tpl', $data));
     }
 
     protected function validate($type) {

@@ -1,14 +1,4 @@
 <?php
-/*
-* @package		MiwoShop
-* @copyright	2009-2014 Miwisoft LLC, miwisoft.com
-* @license		GNU/GPL http://www.gnu.org/copyleft/gpl.html
-* @license		GNU/GPL based on AceShop www.joomace.net
-*/
-
-// No Permission
-defined('MIWI') or die('Restricted access');
-
 // Text
 $_['text_approve_subject']      = '%s - Your Account has been activated!';
 $_['text_approve_welcome']      = 'Welcome and thank you for registering at %s!';
@@ -21,4 +11,3 @@ $_['text_transaction_total']    = 'Your total amount of credit is now %s.' . "\n
 $_['text_reward_subject']       = '%s - Reward Points';
 $_['text_reward_received']      = 'You have received %s Reward Points!';
 $_['text_reward_total']         = 'Your total number of reward points is now %s.';
-?>

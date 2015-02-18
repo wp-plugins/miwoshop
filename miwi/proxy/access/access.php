@@ -44,13 +44,13 @@ class MAccess {
             case 'core.create':
             case 'core.edit':
             case 'core.edit.own':
-                $action = 'post_edit';
+                $action = 'edit_posts';
                 break;
             case 'core.edit.state':
-                $action = 'post_publish';
+                $action = 'publish_posts';
                 break;
             case 'core.delete':
-                $action = 'post_delete';
+                $action = 'delete_posts';
                 break;
             default;
                 break;

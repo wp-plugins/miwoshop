@@ -26,6 +26,8 @@ class MiwoShopOpencart {
     public static $response = null;
     public static $cache = null;
     public static $session = null;
+    public static $event = null;
+    public static $openbay = null;
     public static $language = null;
     public static $document = null;
     public static $customer = null;
@@ -59,14 +61,7 @@ class MiwoShopOpencart {
             require_once(MPATH_MIWOSHOP_OC.'/config.php');
         }
 
-        // vQmod
-        global $vqmod;
-        if (empty($vqmod)) {
-            require_once(MPATH_MIWOSHOP_OC.'/vqmod/vqmod.php');
-            $vqmod = new VQMod();
-        }
 
-        self::$vqmod = $vqmod;
 
         $route = MRequest::getString('route');
 
@@ -76,22 +71,22 @@ class MiwoShopOpencart {
         }
 
         // Startup
-        require_once($vqmod->modCheck(DIR_SYSTEM . 'startup.php'));
+        require_once(DIR_SYSTEM . 'startup.php');
 
         // Application Classes
-        require_once($vqmod->modCheck(DIR_SYSTEM . 'library/currency.php'));
-        require_once($vqmod->modCheck(DIR_SYSTEM . 'library/weight.php'));
-        require_once($vqmod->modCheck(DIR_SYSTEM . 'library/length.php'));
+        require_once(modification(DIR_SYSTEM . 'library/currency.php'));
+        require_once(modification(DIR_SYSTEM . 'library/weight.php'));
+        require_once(modification(DIR_SYSTEM . 'library/length.php'));
 
         if (MiwoShop::get('base')->isAdmin('miwoshop') || MiwoShop::get('base')->isAdmin('joomla') || $manual_order) {
-            require_once($vqmod->modCheck(DIR_SYSTEM . 'library/user.php'));
+            require_once(modification(DIR_SYSTEM . 'library/user.php'));
         }
 
         if (!MiwoShop::get('base')->isAdmin('joomla')) {
-            require_once($vqmod->modCheck(DIR_SYSTEM . 'library/tax.php'));
-            require_once($vqmod->modCheck(DIR_SYSTEM . 'library/customer.php'));
-            require_once($vqmod->modCheck(DIR_SYSTEM . 'library/cart.php'));
-            require_once($vqmod->modCheck(DIR_SYSTEM . 'library/affiliate.php'));
+            require_once(modification(DIR_SYSTEM . 'library/tax.php'));
+            require_once(modification(DIR_SYSTEM . 'library/customer.php'));
+            require_once(modification(DIR_SYSTEM . 'library/cart.php'));
+            require_once(modification(DIR_SYSTEM . 'library/affiliate.php'));
         }
 
         // Registry
@@ -122,6 +117,13 @@ class MiwoShopOpencart {
             } else {
                 self::$config->set($setting['key'], unserialize($setting['value']));
             }
+        }
+
+        $error_reporting = MFactory::getConfig()->get('error_reporting');
+        if ($error_reporting == 'maximum' or $error_reporting == 'development') {
+            self::$config->set('config_error_display', 1);
+        } else {
+            self::$config->set('config_error_display', 0);
         }
 
         if (!MiwoShop::get('base')->isAdmin('miwoshop') && !MiwoShop::get('base')->isAdmin('joomla')) {
@@ -162,18 +164,19 @@ class MiwoShopOpencart {
         self::$registry->set('response', self::$response);
 
         // Cache
-        self::$cache = new Cache();
+        self::$cache = new Cache('file');
         self::$registry->set('cache', self::$cache);
 
         // Session
         self::$session = new Session();
         self::$registry->set('session', self::$session);
 		
-		//Openbay
-        if(file_exists(MPATH_MIWOSHOP_OC.'/system/library/openbay.php')){
-            self::$registry->set('ebaylog', new Log('ebaylog.log'));
-            self::$registry->set('ebay', new Ebay(self::$registry));
-        }
+        //OpenBay Pro
+        self::$registry->set('openbay', new Openbay(self::$registry));
+
+        // Event
+        self::$event = new Event(self::$registry);
+        self::$registry->set('event', self::$event);
 
         // Language Detection
         $languages = array();
@@ -369,16 +372,16 @@ class MiwoShopOpencart {
         $controller = new Front(self::$registry);
 
         // Login
-        $controller->addPreAction(new Action('common/home/login'));
+        $controller->addPreAction(new Action('common/login/check'));
 
         // Permission
-        $controller->addPreAction(new Action('common/home/permission'));
+        $controller->addPreAction(new Action('error/permission/check'));
 
         // Router
         if (isset(self::$request->get['route'])) {
         	$action = new Action(self::$request->get['route']);
         } else {
-        	$action = new Action('common/home');
+            $action = new Action('common/dashboard');
         }
 
         // Dispatch
@@ -389,10 +392,13 @@ class MiwoShopOpencart {
    	}
 
     public function loadModule($module_name = '', $layout_id = '') {
-        MiwoShop::get()->addHeader(MPATH_MIWOSHOP_OC.'/catalog/view/javascript/common.js', false);
-
-        if (!MiwoShop::get('base')->isAdmin()){
+        
+        if (!MiwoShop::get('base')->isAdmin() and MRequest::getString('option') != 'com_miwoshop'){
             MiwoShop::get()->addHeader(MPATH_MIWOSHOP_OC.'/catalog/view/theme/'.self::$config->get('config_template').'/stylesheet/stylesheet.css');
+            MiwoShop::get()->addHeader(MPATH_MIWOSHOP_OC.'/catalog/view/theme/'.self::$config->get('config_template').'/stylesheet/override.css');
+            MiwoShop::get()->addHeader(MPATH_ROOT.'/plugins/system/miwoshopjquery/miwoshopjquery/font-awesome/css/font-awesome.min.css');
+            MiwoShop::get()->addHeader(MPATH_ROOT.'/plugins/system/miwoshopjquery/miwoshopjquery/bootstrap/js/bootstrap.min.js', false);
+			MiwoShop::get()->addHeader(MPATH_MIWOSHOP_OC.'/catalog/view/javascript/common.js', false);
         }
 
         $action = new Action('module/'.$module_name);
@@ -402,7 +408,7 @@ class MiwoShopOpencart {
         $method = $action->getMethod();
         $args = $action->getArgs();
 
-        $file = self::$vqmod->modCheck($file);
+        $file = modification($file);
 
         if (!file_exists($file)) {
             return '';
@@ -418,14 +424,36 @@ class MiwoShopOpencart {
             return '';
         }
 
-        $modules = self::$config->get($module_name.'_module');
+        $output = array();
+        $modules = MiwoShop::get('utility')->getLayoutModules($layout_id);
         if (!empty($modules)) {
-            //$args['setting'] = $modules[0];
-
             foreach ($modules as $module) {
-                if ($module['layout_id'] == $layout_id) {
-                    $args['setting'] = $module;
-                    $output[] = call_user_func_array(array($controller, $method), $args);
+                $part = explode('.', $module['code']);
+                if (isset($part[0]) && self::$config->get($part[0] . '_status') and $part[0] == $module_name) {
+                    $_output = '<div class="miwoshop"><div class="container_oc">'.call_user_func_array(array($controller, $method), $args).'</div></div>';
+
+                    if($module['position'] == 'column_left' or $module['position'] == 'column_right') {
+                        $_output = str_replace('col-lg-3', 'col-lg-12', $_output);
+                        $_output = str_replace('col-md-3', 'col-md-12', $_output);
+                        $_output = str_replace('col-sm-6', 'col-sm-12', $_output);
+                    }
+
+                    $output[] = $_output;
+                }
+
+                if (isset($part[1]) and $part[0] == $module_name) {
+                    $setting_info    = MiwoShop::get('utility')->getModule($part[1]);
+                    $args['setting'] = $setting_info;
+
+                    $_output = '<div class="miwoshop"><div class="container_oc">'.call_user_func_array(array($controller, $method), $args).'</div></div>';
+
+                    if($module['position'] == 'column_left' or $module['position'] == 'column_right') {
+                        $_output = str_replace('col-lg-3', 'col-lg-12', $_output);
+                        $_output = str_replace('col-md-3', 'col-md-12', $_output);
+                        $_output = str_replace('col-sm-6', 'col-sm-12', $_output);
+                    }
+
+                    $output[]       = $_output;
                 }
             }
         }
@@ -443,7 +471,7 @@ class MiwoShopOpencart {
         $args = array_merge($action->getArgs(), $extra_args);
         $method = $action->getMethod();
 
-        $file = self::$vqmod->modCheck($file);
+        $file = modification($file);
 
         if (!file_exists($file)) {
             return $ret;
@@ -478,10 +506,10 @@ class MiwoShopOpencart {
         }
 
 		$file  = $path . 'model/'.$vars[0].'/'.$vars[1].'.php';
-		$class = 'Model'.ucfirst($vars[0]).ucfirst($vars[1]);
+		$class = 'Model'.ucfirst($vars[0]).ucfirst(str_replace('_','',$vars[1]));
 		$function = $vars[2];
 
-		$file = self::$vqmod->modCheck($file);
+		$file = modification($file);
 
 		if (!file_exists($file)) {
 			return $ret;
@@ -547,7 +575,13 @@ class MiwoShopOpencart {
 
    	public function setStoreId() {
    		$store_id = MRequest::getInt('miwoshop_store_id', null);
+		$store_id_api = MRequest::getInt('store_id', null);
+		$api = MRequest::getString('api', null);
 
+		if(!empty($store_id_api) and !empty($api)){
+			self::$store_id= $store_id_api;
+		}
+		
    		if (is_null($store_id)) {
    			$store_id = self::$store_id;
 

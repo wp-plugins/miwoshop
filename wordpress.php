@@ -22,7 +22,7 @@ class MWordpress {
 		$this->title      = $title;
 
 		$this->constants();
-		
+
 		$this->initialise();
 
 		if (!defined('MIWI')) {
@@ -53,9 +53,13 @@ class MWordpress {
 			add_action('template_redirect', array($this, 'modulePreDisplay'));
             add_action('wp_enqueue_scripts', array($this,'safelyAddScript'),999);
             add_action('wp_enqueue_scripts', array($this,'safelyAddStylesheet'), 999 );
+			add_action('wp_footer', array($this, 'footerInlineScript'), 999);
 		}
 
-        # ajax hooks
+		# Custom tags
+		add_action('wp_head', array($this, 'addCustomTags'), 999);
+
+		# ajax hooks
         add_action('wp_head', array($this, 'ajaxurl'), 999);
 		add_action('wp_ajax_'.$this->context, array($this, 'ajax'));
 		add_action('wp_ajax_nopriv_'.$this->context, array($this, 'ajax'));
@@ -117,11 +121,11 @@ class MWordpress {
 		$this->app = MFactory::getApplication();
 
 		$this->app->initialise();
-		
+
 		# auto upgrade
         mimport('joomla.application.component.helper');
         $config = MComponentHelper::getParams('com_'.$this->context);
-		
+
 		if(!empty($config) and file_exists(MPATH_WP_CNT.'/miwi/autoupdate.php')) {
 			$pid = $config->get('pid');
 			if(!empty($pid)) {
@@ -174,7 +178,7 @@ class MWordpress {
 			}
 		}
 	}
-	
+
 	public function deactivate() {}
 
 	public function menu() {
@@ -276,7 +280,7 @@ class MWordpress {
 		$this->app->route();
 		$this->app->dispatch();
 	}
-	
+
 	public function preDisplayAdmin($args = null) {
 		$page = MRequest::getCmd('page');
 		if ($page != $this->context) {
@@ -536,7 +540,38 @@ class MWordpress {
         return;
     }
 
-    public function miwiPreUpgrade($source) {       
+	public function footerInlineScript() {
+		$document = MFactory::getDocument();
+		$script   = $document->_footer_script;
+		if (empty($script)) {
+			return;
+		}
+
+		foreach ($script as $key => $_script) {
+			echo "\n<script type=\"text/javascript\">\n";
+			// Sanitize
+			$_script = wp_check_invalid_utf8($_script);
+			$_script = preg_replace('/&#(x)?0*(?(1)27|39);?/i', "'", $_script);
+			$_script = str_replace("\r", '', $_script);
+			echo $_script."\n</script>\n";
+		}
+	}
+
+	public function addCustomTags() {
+		$document = MFactory::getDocument();
+		$customs  = $document->_custom;
+
+		foreach ($customs as $custom) {
+			if (trim($custom) == '') {
+				return;
+			}
+
+			echo stripslashes($custom);
+		}
+
+	}
+
+    public function miwiPreUpgrade($source) {
         if(empty($_GET['action']) or (!empty($_GET['action']) and $_GET['action'] != 'upgrade-plugin' )){
             return $source;
         }
@@ -544,24 +579,20 @@ class MWordpress {
         if(empty($_GET['plugin']) or (!empty($_GET['plugin']) and $_GET['plugin'] != $this->context .'/'.$this->context.'.php')) {
             return $source;
         }
-		
+
 		$script_file = MPATH_WP_PLG.'/'.$this->context.'/script.php';
 		if (!file_exists($script_file)) {
 			return $source;
 		}
 
 	    $installer = $this->getInstaller($script_file);
-		
+
 		if (!method_exists($installer, 'preflight')) {
 			return $source;
 		}
-		
-        $_source = $installer->preflight('upgrade', $source);
-		
-		if(!empty($_source)) {
-            $source = $_source;
-        }
-		
+
+        $installer->preflight('upgrade', $source);
+
 		return $source;
     }
 
@@ -584,11 +615,11 @@ class MWordpress {
 		}
 
 	    $installer = $this->getInstaller($script_file);
-		
+
 		if (!method_exists($installer, 'postflight')) {
 			return;
 		}
-		
+
         $installer->postflight('upgrade', '');
     }
 
@@ -698,7 +729,7 @@ class MWordpress {
 
 		return $scripts[$this->context];
 	}
-	
+
     public function miwiFrontendRewrite( $rules ) {
         $newrules = array();
         $newrules['([a-z0-9-_]+)/'] =  'index.php?pagename=$matches[1]';

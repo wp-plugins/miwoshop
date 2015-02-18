@@ -13,34 +13,31 @@ class ControllerToolJigoshop extends Controller {
 	private $error = array(); 
     
   	public function index() {
-		$this->data['breadcrumbs'] = array();
+		$data['breadcrumbs'] = array();
 
-   		$this->data['breadcrumbs'][] = array(
+   		$data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),     		
       		'separator' => false
    		);
 
-   		$this->data['breadcrumbs'][] = array(
+   		$data['breadcrumbs'][] = array(
        		'text'      => 'MiwoShop Migration Tools',
 			'href'      => '',
       		'separator' => ' :: '
    		);
 
-   		$this->data['breadcrumbs'][] = array(
+   		$data['breadcrumbs'][] = array(
        		'text'      => 'Jigoshop',
 			'href'      => $this->url->link('tool/jigoshop', 'token=' . $this->session->data['token'], 'SSL'),
       		'separator' => ' :: '
    		);
 		
-		//$this->data['virtuemart_link'] = $this->url->link('tool/jigoshop', 'token=' . $this->session->data['token'], 'SSL');
-		
-		$this->template = 'tool/jigoshop.tpl';
-		$this->children = array(
-			'common/header'
-		);
-		
-		$this->response->setOutput($this->render());
+        $data['header'] = $this->load->controller('common/header');
+        $data['column_left'] = $this->load->controller('common/column_left');
+        $data['footer'] = $this->load->controller('common/footer');
+
+        $this->response->setOutput($this->load->view('tool/jigoshop.tpl', $data));
   	} 
   	
   	public function importCategories(){

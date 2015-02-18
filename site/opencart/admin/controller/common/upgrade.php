@@ -15,54 +15,52 @@ class ControllerCommonUpgrade extends Controller {
 
         $this->document->setTitle($this->language->get('heading_title'));
 
-        $this->data['heading_title'] = $this->language->get('heading_title');
-        $this->data['text_auto'] = $this->language->get('text_auto');
-        $this->data['text_manual'] = $this->language->get('text_manual');
-        $this->data['text_upload_upgrade'] = $this->language->get('text_upload_upgrade');
-        $this->data['text_upload_pkg'] = $this->language->get('text_upload_pkg');
-        $this->data['text_error'] = '';
-        $this->data['text_success'] = '';
+        $data['heading_title'] = $this->language->get('heading_title');
+        $data['text_auto'] = $this->language->get('text_auto');
+        $data['text_manual'] = $this->language->get('text_manual');
+        $data['text_upload_upgrade'] = $this->language->get('text_upload_upgrade');
+        $data['text_upload_pkg'] = $this->language->get('text_upload_pkg');
+        $data['text_error'] = '';
+        $data['text_success'] = '';
 
         if (!$this->validate('access')) {
             exit();
         }
 
         if (isset($this->session->data['msg']) and ($this->session->data['msg'] !== $this->language->get('text_success'))) {
-            $this->data['text_error'] = $this->session->data['msg'];
+            $data['text_error'] = $this->session->data['msg'];
             unset($this->session->data['msg']);
         } else if(isset($this->session->data['msg'])) {
-            $this->data['text_success'] = $this->session->data['msg'];;
+            $data['text_success'] = $this->session->data['msg'];;
             unset($this->session->data['msg']);
         }
 
-		$this->data['text_auto_btn'] = $this->language->get('text_auto_btn');
-		$this->data['error_personal_id'] = $this->language->get('error_personal_id');
+		$data['text_auto_btn'] = $this->language->get('text_auto_btn');
+		$data['error_personal_id'] = $this->language->get('error_personal_id');
 
-        $this->data['token'] = $this->session->data['token'];
+        $data['token'] = $this->session->data['token'];
 
-        $this->data['breadcrumbs'] = array();
+        $data['breadcrumbs'] = array();
 
-        $this->data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = array(
             'text'      => $this->language->get('text_home'),
             'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
             'separator' => false
         );
 
-        $this->data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = array(
             'text'      => $this->language->get('heading_title'),
             'href'      => $this->url->link('common/upgrade', 'token=' . $this->session->data['token'] , 'SSL'),
             'separator' => ' :: '
         );
 
-        $this->data['action'] = $this->url->link('common/upgrade/upgrade', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = $this->url->link('common/upgrade/upgrade', 'token=' . $this->session->data['token'], 'SSL');
 
-        $this->template = 'common/upgrade.tpl';
-        $this->children = array(
-            'common/header',
-            'common/footer'
-        );
-
-        $this->response->setOutput($this->render());
+        $data['header'] = $this->load->controller('common/header');
+        $data['column_left'] = $this->load->controller('common/column_left');
+        $data['footer'] = $this->load->controller('common/footer');
+  
+        $this->response->setOutput($this->load->view('common/upgrade.tpl', $data));
     }
 	
     public function upgrade() {
@@ -83,7 +81,7 @@ class ControllerCommonUpgrade extends Controller {
         }
 
         // Return
-        $this->redirect($this->url->link('common/upgrade', 'token=' . $this->session->data['token'] , 'SSL'));
+        $this->response->redirect($this->url->link('common/upgrade', 'token=' . $this->session->data['token'] , 'SSL'));
     }
 
     protected function validate($type) {

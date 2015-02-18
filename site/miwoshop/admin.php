@@ -43,15 +43,9 @@ else if ($view == 'support') {
 }
 
 $redirected = MFactory::getSession()->get('miwoshop.login.redirected');
-if ( !empty($wizard) and empty($ctrl) and !$redirected and ($base->getConfig()->get('account_sync_done', 0) == 0)) {
+if (empty($ctrl) && !$redirected && ($base->getConfig()->get('account_sync_done', 0) == 0)) {
     MError::raiseWarning('100', MText::sprintf('COM_MIWOSHOP_ACCOUNT_SYNC_WARN', '<a href="' . MRoute::_('index.php?option=com_miwoshop&ctrl=sync' ) . '">', '</a>')); #miwo
 }
-
-
-
-
-
-
 
 if ($ctrl == 'sync') {
     MiwoShop::get('user')->synchronizeAccountsManually();

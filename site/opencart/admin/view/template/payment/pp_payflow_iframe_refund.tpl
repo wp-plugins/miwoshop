@@ -1,67 +1,69 @@
-<?php echo $header; ?>
+<?php echo $header; ?><?php echo $column_left; ?>
 <div id="content">
-    <div class="breadcrumb">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right"><a href="<?php echo $cancel; ?>" class="button btn-danger"><i class="fa fa-times"></i> <?php echo $button_cancel; ?></a></div>
+      <h1><?php echo $heading_refund; ?></h1>
+      <ul class="breadcrumb">
         <?php foreach ($breadcrumbs as $breadcrumb) { ?>
-            <?php echo $breadcrumb['separator']; ?><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a>
+        <li><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a></li>
         <?php } ?>
+      </ul>
     </div>
-    <div class="box">
-        <div class="heading">
-            <h1><img src="view/image/payment.png" alt="" /> <?php echo $heading_refund; ?></h1>
-            <div class="buttons"><a onclick="location = '<?php echo $cancel; ?>';" class="button"><?php echo $button_cancel; ?></a></div>
-        </div>
-        <div class="content"> 
-            <table class="form">
-                <tr>
-                    <td><?php echo $entry_transaction_reference ?></td>
-                    <td><?php echo $transaction_reference ?></td>
-                </tr>
-                <tr>
-                    <td><?php echo $entry_transaction_amount ?></td>
-                    <td><?php echo $transaction_amount ?></td>
-                </tr>
-                <tr>
-                    <td><?php echo $entry_refund_amount ?></td>
-                    <td>
-                        <input type="test" value="0.00" name="amount" />
-                        <a class="button" onclick="refund()" id="button-refund"><?php echo $button_refund ?></a>
-                    </td>
-                </tr>
-            </table>
-        </div>
+  </div>
+  <div class="container-fluid">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-list"></i> <?php echo $heading_title; ?></h3>
+      </div>
+      <div class="panel-body">
+        <table class="table table-striped table-bordered">
+          <tr>
+            <td><?php echo $entry_transaction_reference ?></td>
+            <td><?php echo $transaction_reference ?></td>
+          </tr>
+          <tr>
+            <td><?php echo $entry_transaction_amount ?></td>
+            <td><?php echo $transaction_amount ?></td>
+          </tr>
+          <tr>
+            <td><?php echo $entry_refund_amount ?></td>
+            <td><input type="text" value="0.00" name="amount" />
+              <a class="button button-primary" onclick="refund()" id="button-refund"><?php echo $button_refund ?></a></td>
+          </tr>
+        </table>
+      </div>
     </div>
-</div>
-<script type="text/javascript"><!--
-    
-function refund(){
-    var amount = $('input[name="amount"]').val();
-    
-    $.ajax({
-        type:'POST',
-        dataType: 'json',
-        data: {'transaction_reference': '<?php echo $transaction_reference; ?>', 'amount' : amount },
-        url: 'index.php?route=payment/pp_payflow_iframe/do_refund&token=<?php echo $token; ?>',
-        
-        beforeSend: function(){
-            $('#button-refund').after('<img src="view/image/loading.gif" class="loading" />');
-            $('#button-refund').hide();
-        },
-        
-        success: function(data){
-            if(!data.error){
-                alert(data.success);
-                $('input[name="amount"]').val('0.00');
-            }
+  </div>
+  <script type="text/javascript"><!--
+function refund() {
+  var amount = $('input[name="amount"]').val();
 
-            if(data.error){
-                alert(data.error);
-            }
-            
-            $('#button-refund').show();
-            $('.loading').remove();
-        }
-    });
+  $.ajax({
+    type: 'POST',
+    dataType: 'json',
+    data: {'transaction_reference': '<?php echo $transaction_reference; ?>', 'amount': amount },
+    url: 'index.php?route=payment/pp_payflow_iframe/dorefund&token=<?php echo $token; ?>',
+
+    beforeSend: function () {
+      $('#button-refund').after('<span class="button button-primary loading"><i class="fa fa-circle-o-notch fa-spin fa-lg"></i></span>');
+      $('#button-refund').hide();
+    },
+
+    success: function (data) {
+      if (!data.error) {
+        alert(data.success);
+        $('input[name="amount"]').val('0.00');
+      }
+
+      if (data.error) {
+        alert(data.error);
+      }
+
+      $('#button-refund').show();
+      $('.loading').remove();
+    }
+  });
 }
-    
-//--></script>
+//--></script></div>
 <?php echo $footer; ?>

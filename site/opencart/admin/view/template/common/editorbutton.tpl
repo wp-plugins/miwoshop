@@ -3,8 +3,8 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 
-    <script type="text/javascript" src="../plugins/system/miwoshopjquery/miwoshopjquery/jquery-1.7.1.min.js" ></script>
-    <script type="text/javascript" src="../plugins/system/miwoshopjquery/miwoshopjquery/ui/jquery-ui-1.8.16.custom.min.js"></script>
+    <script type="text/javascript" src="../media/jui/js/jquery.min.js" ></script>
+    <script type="text/javascript" src="../media/jui/js/jquery.ui.core.js"></script>
     
     <script type="text/javascript">
         function getOption(){

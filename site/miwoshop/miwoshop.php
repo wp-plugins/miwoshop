@@ -29,7 +29,7 @@ abstract class MiwoShop {
     }
 
     public static function getButton() {
-        $default = self::get('base')->is30() ? 'btn button-primary' : 'button_oc';
+        $default = 'btn ';
 
         return self::get('base')->getConfig()->get('button_class', $default);
     }
@@ -43,5 +43,6 @@ abstract class MiwoShop {
     }
 }
 
-
+#miwoshop
+/*
 

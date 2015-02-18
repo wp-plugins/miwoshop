@@ -1,5 +1,3 @@
-
-
 <?php
 /*
 * @package		MiwoShop
@@ -16,7 +14,6 @@ class ControllerCommonEdit extends Controller {
         $type   = MRequest::getCmd('type');
         $select = MRequest::getVar('selected', array(), 'get', 'array');
         $status = MRequest::getInt('status', null);
-
 
         if ((count($select) == 0) or is_null($status) or !$this->validate($type)) {
             exit();
@@ -142,11 +139,11 @@ class ControllerCommonEdit extends Controller {
 
         if (empty($pid)) {
             MError::raiseWarning('100', MText::sprintf('COM_MIWOSHOP_PID_INSERT_ERROR'));
-            $this->redirect($this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'));
+            $this->response->redirect($this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'));
         }
 
         MiwoShop::get('base')->setConfig('pid',$pid);
-        $this->redirect($this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'));
+        $this->response->redirect($this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'));
     }
 
     /** changeStatus **/
@@ -177,7 +174,7 @@ class ControllerCommonEdit extends Controller {
         $j_file_content = $this->_iniToArray($j_file);
 
         $oc_array = $this->_checkNewStrings($oc_files, $j_file_content);
-        $ini_array = $this->_checkNewStrings($vq_files, $oc_array, true);
+        $ini_array = $this->_checkNewStrings($vq_files, $oc_array);
 
         $ini_str = $this->_arrayToIni($ini_array);
 
@@ -187,7 +184,7 @@ class ControllerCommonEdit extends Controller {
         }
     }
 
-    private function _checkNewStrings($files, $j_file_content, $vq = false){
+    private function _checkNewStrings($files, $j_file_content){
         foreach($files as $_file) {
             if(MFile::exists($_file)) {
                 unset($_);
@@ -195,7 +192,7 @@ class ControllerCommonEdit extends Controller {
 
                 if(isset($_)) {
                     foreach( $_ as $key => $text ){
-                        $j_key = $this->_getJoomlaKey($_file, $key, $vq);
+                        $j_key = $this->_getJoomlaKey($_file, $key);
 						if(!isset($j_file_content[$j_key])){
 							$text = str_replace('"', '"_QQ_"', $text);
 							$text = str_replace("\n", "\\n", $text);
@@ -213,33 +210,21 @@ class ControllerCommonEdit extends Controller {
     private function _getVqFiles($path){
         $str_path = strstr($path, 'opencart');
         $str_path = str_replace('opencart/', '', $str_path);
-        $str_path = str_replace('/', '_', $str_path);
 
-        $files = MFolder::files(MPATH_MIWOSHOP_OC .'/vqmod/vqcache', $str_path.'(.*?).php', true, true);
+        $files = MFolder::files(MPATH_MIWOSHOP_OC .'/system/modification/'.$str_path, '(.*?).php', true, true);
 
         return $files;
     }
 
-    private function _getJoomlaKey($path, $key, $vq = false){
-        if(!$vq) {
-            $str_path = strstr($path, 'language');
-            $str_path = str_replace('.php', '', $str_path);
-            $str_path = str_replace('/', '\\', $str_path);
-            $path_array = explode('\\', $str_path);
-            $count = count($path_array);
-            unset($path_array[0]);
-            unset($path_array[1]);
-            if($count == 3) {
-                unset($path_array[2]);
-            }
-        }
-        else{
-            $str_path = strstr($path, 'vq2-');
-            $str_path = str_replace('.php', '', $str_path);
-            $str_path = str_replace('vq2-', '', $str_path);
-            $path_array =  explode('_', $str_path);
-            unset($path_array[0]);
-            unset($path_array[1]);
+    private function _getJoomlaKey($path, $key){
+        $str_path = strstr($path, 'language');
+        $str_path = str_replace('.php', '', $str_path);
+        $str_path = str_replace('/', '\\', $str_path);
+        $path_array = explode('\\', $str_path);
+        $count = count($path_array);
+        unset($path_array[0]);
+        unset($path_array[1]);
+        if($count == 3) {
             unset($path_array[2]);
         }
 

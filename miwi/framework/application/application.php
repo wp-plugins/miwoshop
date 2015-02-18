@@ -142,7 +142,7 @@ class MApplication extends MObject {
 
         $vars = $this->parse($component);
 
-        MRequest::set($vars, 'get', false);
+        MRequest::set($vars, 'get', MFactory::getApplication()->isSite() ? true : false);
 
         // Trigger the onAfterRoute event.
         MPluginHelper::importPlugin('system');

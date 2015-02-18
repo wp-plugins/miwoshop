@@ -1,17 +1,7 @@
 <?php
-/*
-* @package		MiwoShop
-* @copyright	2009-2014 Miwisoft LLC, miwisoft.com
-* @license		GNU/GPL http://www.gnu.org/copyleft/gpl.html
-* @license		GNU/GPL based on AceShop www.joomace.net
-*/
-
-// No Permission
-defined('MIWI') or die('Restricted access');
-
 class ModelPaymentKlarnaAccount extends Model {
 	public function getMethod($address, $total) {
-		$this->language->load('payment/klarna_account');
+		$this->load->language('payment/klarna_account');
 
 		$status = true;
 
@@ -48,11 +38,11 @@ class ModelPaymentKlarnaAccount extends Model {
 
 			if (!isset($country_to_currency[$address['iso_code_3']]) || !$this->currency->has($country_to_currency[$address['iso_code_3']])) {
 				$status = false;
-			} 
+			}
 
 			if ($address['iso_code_3'] == 'NLD' && $this->currency->has('EUR') && $this->currency->format($total, 'EUR', '', false) > 250.00) {
 				$status = false;
-			}			
+			}
 		}
 
 		$payment_option = array();
@@ -166,13 +156,13 @@ class ModelPaymentKlarnaAccount extends Model {
 			$status = false;
 		}
 
-		$sort_order = array(); 
+		$sort_order = array();
 
 		foreach ($payment_option as $key => $value) {
 			$sort_order[$key] = $value['monthly_cost'];
 		}
 
-		array_multisort($sort_order, SORT_ASC, $payment_option);	
+		array_multisort($sort_order, SORT_ASC, $payment_option);
 
 		if ($address['company']) {
 			$status = false;
@@ -183,8 +173,9 @@ class ModelPaymentKlarnaAccount extends Model {
 		if ($status) {
 			$method = array(
 				'code'       => 'klarna_account',
-				'title'      => sprintf($this->language->get('text_pay_month'), $this->currency->format($this->currency->convert($payment_option[0]['monthly_cost'], $country_to_currency[$address['iso_code_3']], $this->currency->getCode()), 1, 1), $klarna_account[$address['iso_code_3']]['merchant'], strtolower($address['iso_code_2'])),
-				'sort_order' => $klarna_account[$address['iso_code_3']]['sort_order']
+				'title'      => sprintf($this->language->get('text_title'), $this->currency->format($this->currency->convert($payment_option[0]['monthly_cost'], $country_to_currency[$address['iso_code_3']], $this->currency->getCode()), 1, 1)),
+				'terms'      => sprintf($this->language->get('text_terms'), $klarna_account[$address['iso_code_3']]['merchant'], strtolower($address['iso_code_2'])),
+				'sort_order' => $klarna_account[$address['iso_code_3']]['sort_order'],
 			);
 		}
 
@@ -220,4 +211,3 @@ class ModelPaymentKlarnaAccount extends Model {
 		return $amount;
 	}
 }
-?>

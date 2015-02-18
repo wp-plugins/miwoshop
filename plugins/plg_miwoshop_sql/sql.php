@@ -33,7 +33,7 @@ class plgMiwoshopSql extends MPlugin {
         $html .=        '<table class="form">';
         $html .=            '<tr>';
         $html .=                "<td><strong>Run Custom Query</strong></br> </br> 5~INSERT INTO ...|5~INSERT INTO ... </br>(orderstatusid=sqlquery)</td>";
-        $html .=                '<td><textarea name="content[sql][sql]" style="width:350px; height:60px">'. $integration['sql'] .'</textarea></td>';
+        $html .=                '<td><textarea name="content[sql][sql]" style="width:350px; height:60px !important;">'. $integration['sql'] .'</textarea></td>';
         $html .=            '</tr>';
         $html .=        '</table>';
         $html .=    '</fieldset>';

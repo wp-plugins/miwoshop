@@ -1,18 +1,9 @@
 <?php
-/*
-* @package		MiwoShop
-* @copyright	2009-2014 Miwisoft LLC, miwisoft.com
-* @license		GNU/GPL http://www.gnu.org/copyleft/gpl.html
-* @license		GNU/GPL based on AceShop www.joomace.net
-*/
-
-// No Permission
-defined('MIWI') or die('Restricted access');
-
 // Heading
 $_['heading_title']     = 'Shipping Report';
 
 // Text
+$_['text_list']         = 'Shipping List';
 $_['text_year']         = 'Years';
 $_['text_month']        = 'Months';
 $_['text_week']         = 'Weeks';
@@ -27,8 +18,7 @@ $_['column_orders']     = 'No. Orders';
 $_['column_total']      = 'Total';
 
 // Entry
-$_['entry_date_start']  = 'Date Start:';
-$_['entry_date_end']    = 'Date End:';
-$_['entry_group']       = 'Group By:';
-$_['entry_status']      = 'Order Status:';
-?>
+$_['entry_date_start']  = 'Date Start';
+$_['entry_date_end']    = 'Date End';
+$_['entry_group']       = 'Group By';
+$_['entry_status']      = 'Order Status';

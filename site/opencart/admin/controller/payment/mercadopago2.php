@@ -1,14 +1,14 @@
 <?php
 /*
-* @package		MijoShop
-* @copyright	2009-2013 Miwisoft LLC, miwisoft.com
+* @package		MiwoShop
+* @copyright	2009-2014 Miwisoft LLC, miwisoft.com
 * @license		GNU/GPL http://www.gnu.org/copyleft/gpl.html
 * @license		GNU/GPL based on AceShop www.joomace.net
 * @author 		hcasatti
 */
 
 // No Permission
-defined('_JEXEC') or die('Restricted access');
+defined('MIWI') or die('Restricted access');
 
 class ControllerPaymentMercadopago2 extends Controller {
 	private $error = array();

@@ -1,13 +1,22 @@
-<?php echo $header; ?><?php echo $column_left; ?><?php echo $column_right; ?>
-<div id="content"><?php echo $content_top; ?>
-  <div class="box">
-  <div class="box-heading"><h1 class="miwoshop_heading_h1"><?php echo $heading_title; ?></h1></div>
-  <div class="box-content">
-  <div class="content"><?php echo $text_error; ?></div>
-  <div class="buttons">
-    <div class="right"><a href="<?php echo $continue; ?>" class="button"><?php echo $button_continue; ?></a></div>
-  </div>
-  </div>
-  </div>
-  <?php echo $content_bottom; ?></div>
+<?php echo $header; ?>
+<div class="container">
+  <ul class="breadcrumb">
+  </ul>
+  <div class="row"><?php echo $column_left; ?>
+    <?php if ($column_left && $column_right) { ?>
+    <?php $class = 'col-sm-6'; ?>
+    <?php } elseif ($column_left || $column_right) { ?>
+    <?php $class = 'col-sm-9'; ?>
+    <?php } else { ?>
+    <?php $class = 'col-sm-12'; ?>
+    <?php } ?>
+    <div id="content" class="<?php echo $class; ?>"><?php echo $content_top; ?>
+      <h1><?php echo $heading_title; ?></h1>
+      <p><?php echo $text_error; ?></p>
+      <div class="buttons">
+        <div class="pull-right"><a href="<?php echo $continue; ?>" class="button button-primary"><?php echo $button_continue; ?></a></div>
+      </div>
+      <?php echo $content_bottom; ?></div>
+    <?php echo $column_right; ?></div>
+</div>
 <?php echo $footer; ?>

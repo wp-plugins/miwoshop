@@ -1,82 +1,76 @@
-<?php echo $header; ?>
+<?php echo $header; ?><?php echo $column_left; ?>
 <div id="content">
-  <div class="breadcrumb">
-    <?php foreach ($breadcrumbs as $breadcrumb) { ?>
-    <?php echo $breadcrumb['separator']; ?><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a>
-    <?php } ?>
-  </div>
-  <?php if ($success) { ?>
-  <div class="success"><?php echo $success; ?></div>
-  <?php } ?>
-  <?php if ($error) { ?>
-  <div class="warning"><?php echo $error; ?></div>
-  <?php } ?>
-  <div class="box">
-    <div class="heading">
-      <h1><img src="view/image/shipping.png" alt="" /> <?php echo $heading_title; ?></h1>
-        <div class="buttons"><a onclick="changeStatus(1);" class="button"><?php echo $button_enable; ?></a><a onclick="changeStatus(0)" class="button"><?php echo $button_disable; ?></a></div>
+  <div class="page-header">
+    <div class="container-fluid">
+      <h1><?php echo $heading_title; ?></h1>
+      <ul class="breadcrumb">
+        <?php foreach ($breadcrumbs as $breadcrumb) { ?>
+        <li><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a></li>
+        <?php } ?>
+      </ul>
     </div>
-    <div class="content">
-      <form id="form" method="post">
-      <table class="list">
-        <thead>
-          <tr>
-            <td width="1" style="text-align: center;"><input type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);" /></td>
-            <td class="left"><?php echo $column_name; ?></td>
-            <td class="left"><?php echo $column_status; ?></td>
-            <td class="right"><?php echo $column_sort_order; ?></td>
-            <td class="right"><?php echo $column_action; ?></td>
-          </tr>
-        </thead>
-        <tbody>
-          <?php if ($extensions) { ?>
-          <?php foreach ($extensions as $extension) { ?>
-          <tr>
-            <td style="text-align: center;"><input type="checkbox" name="selected[]" value="<?php echo $extension['extension']; ?>" /></td>
-            <td class="left"><?php echo $extension['name']; ?></td>
-            <td class="left"><?php echo $extension['status'] ?></td>
-            <td class="right"><?php echo $extension['sort_order']; ?></td>
-            <td class="right"><?php
-			if($extension['extension'] == 'free' or $extension['extension'] == 'flat' ){
-			  foreach ($extension['action'] as $action) { ?>
-			  [ <a href="<?php echo $action['href']; ?>"><?php echo $action['text']; ?></a> ]
-			  <?php }
-			}
-			else {  ?>
-			  <a class="button action" style="text-decoration: none !important;" href="http://miwisoft.com/wordpress-plugins/miwoshop-wordpress-shopping-cart#pricing">Get Pro version</a>
-			<?php }  ?>
-			</td>
-
-
-          </tr>
-          <?php } ?>
-          <?php } else { ?>
-          <tr>
-            <td class="center" colspan="8"><?php echo $text_no_results; ?></td>
-          </tr>
-          <?php } ?>
-        </tbody>
-      </table>
-      </form>
+  </div>
+  <div class="container-fluid">
+    <?php if ($error_warning) { ?>
+    <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> <?php echo $error_warning; ?>
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    <?php } ?>
+    <?php if ($success) { ?>
+    <div class="alert alert-success"><i class="fa fa-check-circle"></i> <?php echo $success; ?>
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    <?php } ?>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-list"></i> <?php echo $text_list; ?></h3>
+      </div>
+      <div class="panel-body">
+        <div class="table-responsive">
+          <table class="table table-bordered table-hover">
+            <thead>
+              <tr>
+                <td class="text-left"><?php echo $column_name; ?></td>
+                <td class="text-left"><?php echo $column_status; ?></td>
+                <td class="text-right"><?php echo $column_sort_order; ?></td>
+                <td class="text-right"><?php echo $column_action; ?></td>
+              </tr>
+            </thead>
+            <tbody>
+              <?php if ($extensions) { ?>
+              <?php foreach ($extensions as $extension) { ?>
+              <tr>
+                <td class="text-left"><?php echo $extension['name']; ?></td>
+                <td class="text-left"><?php echo $extension['status'] ?></td>
+                <td class="text-right"><?php echo $extension['sort_order']; ?></td>
+				<td class="text-right">
+					<?php if($extension['extension'] == 'free_checkout' or $extension['extension'] == 'pp_standard' or $extension['extension'] == 'cod' ){ ?>
+					  <?php if (!$extension['installed']) { ?>
+					  <a href="<?php echo $extension['install']; ?>" data-toggle="tooltip" title="<?php echo $button_install; ?>" class="button btn-success"><i class="fa fa-plus-circle"></i></a>
+					  <?php } else { ?>
+					  <a onclick="confirm('<?php echo $text_confirm; ?>') ? location.href='<?php echo $extension['uninstall']; ?>' : false;" data-toggle="tooltip" title="<?php echo $button_uninstall; ?>" class="button btn-danger"><i class="fa fa-minus-circle"></i></a>
+					  <?php } ?>
+					  <?php if ($extension['installed']) { ?>
+					  <a href="<?php echo $extension['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="button button-primary"><i class="fa fa-pencil"></i></a>
+					  <?php } else { ?>
+					  <button type="button" class="button button-primary" disabled="disabled"><i class="fa fa-pencil"></i></button>
+					  <?php } ?>
+					<?php } else {  ?>
+					  <a class="button action" style="text-decoration: none !important;" href="http://miwisoft.com/wordpress-plugins/miwoshop-wordpress-shopping-cart#pricing">Get Pro version</a>
+					<?php }  ?>
+			    </td>
+              </tr>
+              <?php } ?>
+              <?php } else { ?>
+              <tr>
+                <td class="text-center" colspan="8"><?php echo $text_no_results; ?></td>
+              </tr>
+              <?php } ?>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 <?php echo $footer; ?>
-
-<script type="text/javascript"><!--
-function changeStatus(status){
-    $.ajax({
-        url: 'index.php?route=common/edit/changestatus&type=shipping&status='+ status +'&token=<?php echo $token; ?>',
-        dataType: 'json',
-        data: $("#form").serialize(),
-        success: function(json) {
-            if(json){
-                $('.box').before('<div class="warning">'+json.warning+'</div>');
-            }
-            else{
-                location.reload();
-            }
-        }
-    });
-}
-//--></script>

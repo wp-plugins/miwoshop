@@ -1,48 +1,38 @@
-<div class="box">
-  <div class="box-heading"><?php echo $heading_title; ?></div>
-  <div class="box-content">
-    <ul class="box-filter">
-      <?php foreach ($filter_groups as $filter_group) { ?>
-      <li><span id="filter-group<?php echo $filter_group['filter_group_id']; ?>"><?php echo $filter_group['name']; ?></span>
-        <ul>
-          <?php foreach ($filter_group['filter'] as $filter) { ?>
-          <?php if (in_array($filter['filter_id'], $filter_category)) { ?>
-          <li>
-            <input type="checkbox" value="<?php echo $filter['filter_id']; ?>" id="filter<?php echo $filter['filter_id']; ?>" checked="checked" />
-            <label for="filter<?php echo $filter['filter_id']; ?>"><?php echo $filter['name']; ?></label>
-          </li>
-          <?php } else { ?>
-          <li>
-            <input type="checkbox" value="<?php echo $filter['filter_id']; ?>" id="filter<?php echo $filter['filter_id']; ?>" />
-            <label for="filter<?php echo $filter['filter_id']; ?>"><?php echo $filter['name']; ?></label>
-          </li>
-          <?php } ?>
-          <?php } ?>
-        </ul>
-      </li>
-      <?php } ?>
-    </ul>
-    <a id="button-filter" class="button"><?php echo $button_filter; ?></a>
+<div class="panel panel-default">
+  <div class="panel-heading"><?php echo $heading_title; ?></div>
+  <div class="list-group">
+    <?php foreach ($filter_groups as $filter_group) { ?>
+    <a class="list-group-item"><?php echo $filter_group['name']; ?></a>
+    <div class="list-group-item">
+      <div id="filter-group<?php echo $filter_group['filter_group_id']; ?>">
+        <?php foreach ($filter_group['filter'] as $filter) { ?>
+        <?php if (in_array($filter['filter_id'], $filter_category)) { ?>
+        <label class="checkbox">
+          <input name="filter[]" type="checkbox" value="<?php echo $filter['filter_id']; ?>" checked="checked" />
+          <?php echo $filter['name']; ?></label>
+        <?php } else { ?>
+        <label class="checkbox">
+          <input name="filter[]" type="checkbox" value="<?php echo $filter['filter_id']; ?>" />
+          <?php echo $filter['name']; ?></label>
+        <?php } ?>
+        <?php } ?>
+      </div>
+    </div>
+    <?php } ?>
+  </div>
+  <div class="panel-footer text-right">
+    <button type="button" id="button-filter" class="button button-primary"><?php echo $button_filter; ?></button>
   </div>
 </div>
+<?php $key = (strpos($action, '?')) ? '&' : '?'; ?>
 <script type="text/javascript"><!--
-$('#button-filter').bind('click', function() {
+$('#button-filter').on('click', function() {
 	filter = [];
 	
-	$('.box-filter input[type=\'checkbox\']:checked').each(function(element) {
+	$('input[name^=\'filter\']:checked').each(function(element) {
 		filter.push(this.value);
 	});
-	
-	<?php 
-        $check = false;
-        if (strpos($action, '?') !== false) { 
-            $check = true;
-        }
-    ?>
-	<?php if (Miwoshop::get('base')->getMConfig()->sef == 0 or $check) { ?>
-		location = '<?php echo $action; ?>&filter=' + filter.join(',');
-	<?php } else { ?>
-		location = '<?php echo $action; ?>?filter=' + filter.join(',');
-	<?php } ?>
+
+	location = "<?php echo $action.$key; ?>filter=" + filter.join(',');
 });
 //--></script> 

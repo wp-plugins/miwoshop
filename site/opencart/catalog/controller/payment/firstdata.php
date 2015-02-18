@@ -3,9 +3,9 @@ class ControllerPaymentFirstdata extends Controller {
 	public function index() {
 		$this->load->language('payment/firstdata');
 
-		$this->data['button_confirm'] = $this->language->get('button_confirm');
-		$this->data['text_new_card'] = $this->language->get('text_new_card');
-		$this->data['text_store_card'] = $this->language->get('text_store_card');
+		$data['button_confirm'] = $this->language->get('button_confirm');
+		$data['text_new_card'] = $this->language->get('text_new_card');
+		$data['text_store_card'] = $this->language->get('text_store_card');
 
 		$this->load->model('checkout/order');
 		$this->load->model('payment/firstdata');
@@ -13,82 +13,80 @@ class ControllerPaymentFirstdata extends Controller {
 		$order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
 
 		if ($this->config->get('firstdata_live_demo') == 1) {
-			$this->data['action'] = $this->config->get('firstdata_live_url');
+			$data['action'] = $this->config->get('firstdata_live_url');
 		} else {
-			$this->data['action'] = $this->config->get('firstdata_demo_url');
+			$data['action'] = $this->config->get('firstdata_demo_url');
 		}
 
-		$this->data['amount'] = $this->currency->format($order_info['total'], $order_info['currency_code'], $order_info['currency_value'], false);
-		$this->data['currency'] = $this->model_payment_firstdata->mapCurrency($order_info['currency_code']);
-		$this->data['merchant_id'] = $this->config->get('firstdata_merchant_id');
-		$this->data['timestamp'] = date('Y:m:d-H:i:s');
-		$this->data['order_id'] = 'CON-' . $this->session->data['order_id'] . 'T' . $this->data['timestamp'] . mt_rand(1, 999);
-		$this->data['url_success'] = $this->url->link('checkout/success', '', 'SSL');
-		$this->data['url_fail'] = $this->url->link('payment/firstdata/fail', '', 'SSL');
-		$this->data['url_notify'] = $this->url->link('payment/firstdata/notify', '', 'SSL');
+		$data['amount'] = $this->currency->format($order_info['total'], $order_info['currency_code'], $order_info['currency_value'], false);
+		$data['currency'] = $this->model_payment_firstdata->mapCurrency($order_info['currency_code']);
+		$data['merchant_id'] = $this->config->get('firstdata_merchant_id');
+		$data['timestamp'] = date('Y:m:d-H:i:s');
+		$data['order_id'] = 'CON-' . $this->session->data['order_id'] . 'T' . $data['timestamp'] . mt_rand(1, 999);
+		$data['url_success'] = $this->url->link('checkout/success', '', 'SSL');
+		$data['url_fail'] = $this->url->link('payment/firstdata/fail', '', 'SSL');
+		$data['url_notify'] = $this->url->link('payment/firstdata/notify', '', 'SSL');
 
 		if (preg_match("/Mobile|Android|BlackBerry|iPhone|Windows Phone/", $this->request->server['HTTP_USER_AGENT'])) {
-			$this->data['mobile'] = true;
+			$data['mobile'] = true;
 		} else {
-			$this->data['mobile'] = false;
+			$data['mobile'] = false;
 		}
 
 		if ($this->config->get('firstdata_auto_settle') == 1) {
-			$this->data['txntype'] = 'sale';
+			$data['txntype'] = 'sale';
 		} else {
-			$this->data['txntype'] = 'preauth';
+			$data['txntype'] = 'preauth';
 		}
 
-		$tmp = $this->data['merchant_id'] . $this->data['timestamp'] . $this->data['amount'] . $this->data['currency'] . $this->config->get('firstdata_secret');
+		$tmp = $data['merchant_id'] . $data['timestamp'] . $data['amount'] . $data['currency'] . $this->config->get('firstdata_secret');
 		$ascii = bin2hex($tmp);
-		$this->data['hash'] = sha1($ascii);
+		$data['hash'] = sha1($ascii);
 
-		$this->data['version'] = 'OPENCART-C-' . VERSION;
+		$data['version'] = 'OPENCART-C-' . VERSION;
 
-		$this->data['bcompany'] = $order_info['payment_company'];
-		$this->data['bname'] = $order_info['payment_firstname'] . ' ' . $order_info['payment_lastname'];
-		$this->data['baddr1'] = substr($order_info['payment_address_1'], 0, 30);
-		$this->data['baddr2'] = substr($order_info['payment_address_2'], 0, 30);
-		$this->data['bcity'] = substr($order_info['payment_city'], 0, 30);
-		$this->data['bstate'] = substr($order_info['payment_zone'], 0, 30);
-		$this->data['bcountry'] = $order_info['payment_iso_code_2'];
-		$this->data['bzip'] = $order_info['payment_postcode'];
+		$data['bcompany'] = $order_info['payment_company'];
+		$data['bname'] = $order_info['payment_firstname'] . ' ' . $order_info['payment_lastname'];
+		$data['baddr1'] = substr($order_info['payment_address_1'], 0, 30);
+		$data['baddr2'] = substr($order_info['payment_address_2'], 0, 30);
+		$data['bcity'] = substr($order_info['payment_city'], 0, 30);
+		$data['bstate'] = substr($order_info['payment_zone'], 0, 30);
+		$data['bcountry'] = $order_info['payment_iso_code_2'];
+		$data['bzip'] = $order_info['payment_postcode'];
 
 		if ($this->cart->hasShipping()) {
-			$this->data['sname'] = $order_info['shipping_firstname'] . ' ' . $order_info['shipping_lastname'];
-			$this->data['saddr1'] = substr($order_info['shipping_address_1'], 0, 30);
-			$this->data['saddr2'] = substr($order_info['shipping_address_2'], 0, 30);
-			$this->data['scity'] = substr($order_info['shipping_city'], 0, 30);
-			$this->data['sstate'] = substr($order_info['shipping_zone'], 0, 30);
-			$this->data['scountry'] = $order_info['shipping_iso_code_2'];
-			$this->data['szip'] = $order_info['shipping_postcode'];
+			$data['sname'] = $order_info['shipping_firstname'] . ' ' . $order_info['shipping_lastname'];
+			$data['saddr1'] = substr($order_info['shipping_address_1'], 0, 30);
+			$data['saddr2'] = substr($order_info['shipping_address_2'], 0, 30);
+			$data['scity'] = substr($order_info['shipping_city'], 0, 30);
+			$data['sstate'] = substr($order_info['shipping_zone'], 0, 30);
+			$data['scountry'] = $order_info['shipping_iso_code_2'];
+			$data['szip'] = $order_info['shipping_postcode'];
 		} else {
-			$this->data['sname'] = $order_info['payment_firstname'] . ' ' . $order_info['payment_lastname'];
-			$this->data['saddr1'] = substr($order_info['payment_address_1'], 0, 30);
-			$this->data['saddr2'] = substr($order_info['payment_address_2'], 0, 30);
-			$this->data['scity'] = substr($order_info['payment_city'], 0, 30);
-			$this->data['sstate'] = substr($order_info['payment_zone'], 0, 30);
-			$this->data['scountry'] = $order_info['payment_iso_code_2'];
-			$this->data['szip'] = $order_info['payment_postcode'];
+			$data['sname'] = $order_info['payment_firstname'] . ' ' . $order_info['payment_lastname'];
+			$data['saddr1'] = substr($order_info['payment_address_1'], 0, 30);
+			$data['saddr2'] = substr($order_info['payment_address_2'], 0, 30);
+			$data['scity'] = substr($order_info['payment_city'], 0, 30);
+			$data['sstate'] = substr($order_info['payment_zone'], 0, 30);
+			$data['scountry'] = $order_info['payment_iso_code_2'];
+			$data['szip'] = $order_info['payment_postcode'];
 		}
 
 		if ($this->config->get('firstdata_card_storage') == 1 && $this->customer->isLogged()) {
-			$this->data['card_storage'] = 1;
-			$this->data['stored_cards'] = $this->model_payment_firstdata->getStoredCards();
-			$this->data['new_hosted_id'] = sha1($this->customer->getId()  . '-' . date("Y-m-d-H-i-s") . rand(10, 500));
+			$data['card_storage'] = 1;
+			$data['stored_cards'] = $this->model_payment_firstdata->getStoredCards();
+			$data['new_hosted_id'] = sha1($this->customer->getId()  . '-' . date("Y-m-d-H-i-s") . rand(10, 500));
 		} else {
-			$this->data['card_storage'] = 0;
-			$this->data['stored_cards'] = array();
+			$data['card_storage'] = 0;
+			$data['stored_cards'] = array();
 		}
 
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/firstdata.tpl')) {
-            $this->template = $this->config->get('config_template') . '/template/payment/firstdata.tpl';
-        } else {
-            $this->template = 'default/template/payment/firstdata.tpl';
-        }
-
-        $this->render();
-    }
+		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/firstdata.tpl')) {
+			return $this->load->view($this->config->get('config_template') . '/template/payment/firstdata.tpl', $data);
+		} else {
+			return $this->load->view('default/template/payment/firstdata.tpl', $data);
+		}
+	}
 
 	public function notify() {
 		$this->load->model('payment/firstdata');

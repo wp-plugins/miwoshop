@@ -25,8 +25,8 @@
   <input type="hidden" name="callback" value="<?php echo $callback; ?>" />
   <input type="hidden" name="options" value="<?php echo $options; ?>" />
   <div class="buttons">
-    <div class="right">
-      <input type="submit" value="<?php echo $button_confirm; ?>" class="<?php echo MiwoShop::getButton(); ?>" />
+    <div class="pull-right">
+      <input type="submit" value="<?php echo $button_confirm; ?>" class="button button-primary" />
     </div>
   </div>
 </form>

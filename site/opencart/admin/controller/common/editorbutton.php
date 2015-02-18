@@ -12,17 +12,15 @@ class ControllerCommonEditorbutton extends Controller {
 	public function index() {
 		$this->load->model('catalog/product');
 
-
         $results = $this->model_catalog_product->getProducts();
 
         $name  = MRequest::getString('name');
 		
-		$this->data['products'] = $results;
-		$this->data['name'] = $name;
-
-		$this->template = 'common/editorbutton.tpl';
+		$data['products'] = $results;
+		$data['name'] = $name;
 	
-        $this->response->setOutput($this->render());
+		$this->response->setOutput($this->load->view('common/editorbutton.tpl', $data));
+		
   	}
 
     public function getProductOptions() {
@@ -30,16 +28,17 @@ class ControllerCommonEditorbutton extends Controller {
 
         $product_id= MRequest::getInt('product_id');
 
-        $this->data['text_select'] = '- Select -';
-
+        $data['text_select'] = '- Select -';
 
         $options = $this->getProductOptionsData($product_id);
 
-        $this->data['options'] = $options;
-        $this->template = 'common/editorproductoptions.tpl';
-        $html = $this->render();
+        $data['options'] = $options;
 
-        $this->response->setOutput($html);
+		if(empty($options)){
+			return;
+		}
+		
+		$this->response->setOutput($this->load->view('common/editorproductoptions.tpl', $data));
   	}
 
     public function getProductOptionsData($product_id){
@@ -50,48 +49,53 @@ class ControllerCommonEditorbutton extends Controller {
         $options = $this->model_common_editorbutton->getProductOptions($product_id);
 
         $this->load->model('tool/image');
+		if(!empty($options)){
+			foreach ($options as $option) {
+				if ($option['type'] == 'select' || $option['type'] == 'radio' || $option['type'] == 'checkbox' || $option['type'] == 'image') {
+					$option_value_data = array();
 
-        foreach ($options as $option) {
-            if ($option['type'] == 'select' || $option['type'] == 'radio' || $option['type'] == 'checkbox' || $option['type'] == 'image') {
-                $option_value_data = array();
+					foreach ($option['option_value'] as $option_value) {
+						if (!$option_value['subtract'] || ($option_value['quantity'] > 0)) {
+							$price = false;
 
-                foreach ($option['option_value'] as $option_value) {
-                    if (!$option_value['subtract'] || ($option_value['quantity'] > 0)) {
-                        $price = false;
+							$option_value_data[] = array(
+								'product_option_value_id' => $option_value['product_option_value_id'],
+								'option_value_id'         => $option_value['option_value_id'],
+								'name'                    => $option_value['name'],
+								'image'                   => $this->model_tool_image->resize($option_value['image'], 50, 50),
+								'price'                   => $price,
+								'price_prefix'            => $option_value['price_prefix']
+							);
+						}
+					}
 
-                        $option_value_data[] = array(
-                            'product_option_value_id' => $option_value['product_option_value_id'],
-                            'option_value_id'         => $option_value['option_value_id'],
-                            'name'                    => $option_value['name'],
-                            'image'                   => $this->model_tool_image->resize($option_value['image'], 50, 50),
-                            'price'                   => $price,
-                            'price_prefix'            => $option_value['price_prefix']
-                        );
-                    }
-                }
+					$product_options[] = array(
+						'product_option_id' => $option['product_option_id'],
+						'option_id'         => $option['option_id'],
+						'name'              => $option['name'],
+						'type'              => $option['type'],
+						'option_value'      => $option_value_data,
+						'required'          => $option['required']
+					);
+				} elseif ($option['type'] == 'text' || $option['type'] == 'textarea' || $option['type'] == 'file' || $option['type'] == 'date' || $option['type'] == 'datetime' || $option['type'] == 'time') {
+					$product_options[] = array(
+						'product_option_id' => $option['product_option_id'],
+						'option_id'         => $option['option_id'],
+						'name'              => $option['name'],
+						'type'              => $option['type'],
+						'option_value'      => $option['option_value'],
+						'required'          => $option['required']
+					);
+				}
+			}
+			ob_clean();
+            ob_start();
+				return $product_options;
 
-                $product_options[] = array(
-                    'product_option_id' => $option['product_option_id'],
-                    'option_id'         => $option['option_id'],
-                    'name'              => $option['name'],
-                    'type'              => $option['type'],
-                    'option_value'      => $option_value_data,
-                    'required'          => $option['required']
-                );
-            } elseif ($option['type'] == 'text' || $option['type'] == 'textarea' || $option['type'] == 'file' || $option['type'] == 'date' || $option['type'] == 'datetime' || $option['type'] == 'time') {
-                $product_options[] = array(
-                    'product_option_id' => $option['product_option_id'],
-                    'option_id'         => $option['option_id'],
-                    'name'              => $option['name'],
-                    'type'              => $option['type'],
-                    'option_value'      => $option['option_value'],
-                    'required'          => $option['required']
-                );
-            }
-        }
-
-        return $product_options;
+		} else {
+			return;
+		
+		}
     }
-
 }
 ?>

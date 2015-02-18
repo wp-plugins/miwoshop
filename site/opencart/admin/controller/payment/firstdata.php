@@ -8,5 +8,5 @@ class ControllerPaymentFirstdata extends Controller {
 
   	private function validate() {
 		return true;
-	}
+  	}
 }
