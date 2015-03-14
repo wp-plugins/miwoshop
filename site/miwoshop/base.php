@@ -66,7 +66,7 @@ class MiwoShopBase {
 	}
 
 	public function getOcVersion() {
-        $version = '1.5.5.1';
+        $version = '2.0.1.1';
 
 		return $version;
 	}

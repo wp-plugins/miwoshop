@@ -398,7 +398,9 @@ class ControllerExtensionInstaller extends Controller {
 		$this->response->addHeader('Content-Type: application/json');
 		$this->response->setOutput(json_encode($json));
 	}
-    public function editFile($path){
+    
+	#miwoshop-start
+	public function editFile($path){
 
         $page         = $path;
       //  $edit_page    = html_entity_decode(file_get_contents($page));
@@ -502,40 +504,40 @@ class ControllerExtensionInstaller extends Controller {
         $replace_output['ajaxurl = "index.php?option=com_miwoshop&format=raw'] 			                        = "ajaxurl = miwiajaxurl + \"?action=miwoshop&option=com_miwoshop&format=raw&tmpl=component";
     }
 
-        $replace_output['JPATH_MIJOSHOP_OC'] 		                                                            = 'MPATH_MIWOSHOP_OC';
-        $replace_output['JPATH_MIJOSHOP_LIB'] 		                                                            = 'MPATH_MIWOSHOP_LIB';
-        $replace_output['JPATH_MIJOSHOP_SITE'] 		                                                            = 'MPATH_MIWOSHOP_SITE';
-        $replace_output['JPATH_MIJOSHOP_ADMIN'] 		                                                        = 'MPATH_MIWOSHOP_ADMIN';
-        $replace_output['JConfig'] 		                                                                        = 'MConfig';
-        $replace_output['JController'] 		                                                                    = 'MController';
-        $replace_output['JRequest'] 		                                                                    = 'MRequest';
-        $replace_output['JDatabase'] 		                                                                    = 'MDatabase';
-        $replace_output['JDate'] 		                                                                    	= 'MDate';
-        $replace_output['JEditor'] 		                                                                        = 'MEditor';
-        $replace_output['JFactory'] 		                                                                    = 'MFactory';
-        $replace_output['JFile'] 		                                                                        = 'MFile';
-        $replace_output['JPath'] 		                                                                        = 'MPath';
-        $replace_output['JRegistry'] 		                                                                    = 'MRegistry';
-        $replace_output['JRoute'] 		                                                                        = 'MRoute';
-        $replace_output['jimport(\'joomla.'] 		                                                            = 'mimport(\'framework.';
-        $replace_output['jimport'] 		                                                                        = 'mimport';
-        $replace_output['jexit'] 		                                                                        = 'mexit';
-        $replace_output['Joomla.checkAll(this)'] 		                                                        = 'Miwi.checkAll(this)';
-        $replace_output['JACTION'] 		                                               					        = 'MACTION';
-        $replace_output['JAdministratorHelper'] 		                                               			= 'MAdministratorHelper';
-        $replace_output['JApplication'] 		                                               					= 'MApplication';
-        $replace_output['JArchive'] 		                                               						= 'MArchive';
-        $replace_output['JArrayHelper'] 		                                               					= 'MArrayHelper';
-        $replace_output['JBrowser'] 		                                               						= 'MBrowser';
-        $replace_output['JCache'] 		                                               							= 'MCache';
-        $replace_output['JDispatcher'] 		                                               						= 'MDispatcher';
-        $replace_output['JDocument'] 		                                               						= 'MDocument';
-        $replace_output['JError'] 		                                               							= 'MError';
-        $replace_output['JFEATURED'] 		                                               						= 'MFEATURED';
-        $replace_output['JTable'] 		                                               							= 'MTable';
+        $replace_output['JPATH_MIJOSHOP_OC'] 		    = 'MPATH_MIWOSHOP_OC';
+        $replace_output['JPATH_MIJOSHOP_LIB'] 		    = 'MPATH_MIWOSHOP_LIB';
+        $replace_output['JPATH_MIJOSHOP_SITE'] 		    = 'MPATH_MIWOSHOP_SITE';
+        $replace_output['JPATH_MIJOSHOP_ADMIN'] 		= 'MPATH_MIWOSHOP_ADMIN';
+        $replace_output['JConfig'] 		                = 'MConfig';
+        $replace_output['JController'] 		            = 'MController';
+        $replace_output['JRequest'] 		            = 'MRequest';
+        $replace_output['JDatabase'] 		            = 'MDatabase';
+        $replace_output['JDate'] 		                = 'MDate';
+        $replace_output['JEditor'] 		                = 'MEditor';
+        $replace_output['JFactory'] 		            = 'MFactory';
+        $replace_output['JFile'] 		                = 'MFile';
+        $replace_output['JPath'] 		                = 'MPath';
+        $replace_output['JRegistry'] 		            = 'MRegistry';
+        $replace_output['JRoute'] 		                = 'MRoute';
+        $replace_output['jimport(\'joomla.'] 		    = 'mimport(\'framework.';
+        $replace_output['jimport'] 		                = 'mimport';
+        $replace_output['jexit'] 		                = 'mexit';
+        $replace_output['Joomla.checkAll(this)'] 		= 'Miwi.checkAll(this)';
+        $replace_output['JACTION'] 		                = 'MACTION';
+        $replace_output['JAdministratorHelper'] 		= 'MAdministratorHelper';
+        $replace_output['JApplication'] 		       	= 'MApplication';
+        $replace_output['JArchive'] 		           	= 'MArchive';
+        $replace_output['JArrayHelper'] 		       	= 'MArrayHelper';
+        $replace_output['JBrowser'] 		           	= 'MBrowser';
+        $replace_output['JCache'] 		               	= 'MCache';
+        $replace_output['JDispatcher'] 		           	= 'MDispatcher';
+        $replace_output['JDocument'] 		           	= 'MDocument';
+        $replace_output['JError'] 		               	= 'MError';
+        $replace_output['JFEATURED'] 		           	= 'MFEATURED';
+        $replace_output['JTable'] 		               	= 'MTable';
 
-        $replace_output['MijoShop'] 											                                = 'MiwoShop';
-        $replace_output['mijoshop'] 											                                = 'miwoshop';
+        $replace_output['MijoShop'] 					= 'MiwoShop';
+        $replace_output['mijoshop'] 					= 'miwoshop';
 
         $replace_output_regex['~JPATH_(ROOT|SITE)\s*.\s*("|\')/components/com_mijo([a-zA-Z0-9_\.\-]+)~'] 		                 = 'MPATH_WP_PLG.$2/miwo$3/site';
         $replace_output_regex['~JPATH_(ROOT|ADMINISTRATOR|SITE)\s*.\s*("|\')/(administrator/|)components/com_mijoshop~'] 		 = 'MPATH_WP_PLG.$2/miwo$4/admin';
@@ -556,7 +558,7 @@ class ControllerExtensionInstaller extends Controller {
 
         return $edit_page;
     }
-	#miwoshop-start
+	
 	public function permission_control($edit_page_url){
         $search_page = array(
             'product' 				=> 'product',

@@ -596,6 +596,7 @@ $('#button-review').on('click', function() {
 });
 
 $(document).ready(function() {
+	$('.bootstrap-datetimepicker-widget').addClass('miwoshop');
 	$('.thumbnails').magnificPopup({
 		type:'image',
 		delegate: 'a',

@@ -83,7 +83,34 @@ class MiwoShopInstall {
         ) DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;");
         $jdb->query();
     }
+	
+	public function createApiUser(){
+		$jdb = MiwoShop::get('db')->getDbo();
+		
+		// create order API user
+		$characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+		$api_username = '';
+		$api_password = '';
 
+		for ($i = 0; $i < 64; $i++) {
+			$api_username .= $characters[rand(0, strlen($characters) - 1)];
+		}
+
+		for ($i = 0; $i < 256; $i++) {
+			$api_password .= $characters[rand(0, strlen($characters) - 1)];
+		}
+
+		$jdb->setQuery("INSERT INTO `#__miwoshop_api` SET username = '" . $jdb->escape($api_username) . "', `password` = '" . $jdb->escape($api_password) . "', status = 1, date_added = NOW(), date_modified = NOW()");
+		$jdb->query();
+		
+		$api_id = $jdb->insertid();
+
+		$jdb->setQuery("DELETE FROM `#__miwoshop_setting` WHERE `key` = 'config_api_id'");
+		$jdb->query();
+		$jdb->setQuery("INSERT INTO `#__miwoshop_setting` SET `code` = 'config', `key` = 'config_api_id', value = '" . (int)$api_id . "'");
+		$jdb->query();
+	}
+	
 	public function createGroupTables() {
         $db = MiwoShop::get('db');
         $jdb = MiwoShop::get('db')->getDbo();

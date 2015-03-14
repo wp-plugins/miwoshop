@@ -35,40 +35,45 @@ class ModelCommonUpgrade extends Model {
             return false;
         }
 
-        $file_name = $package['dir'].'/com_miwoshop.zip';
-
-        if (MFile::exists($file_name)) {
-            $p1 = $utility->unpack($file_name);
-            $installer = new JInstaller();
-            $installer->install($p1['dir']);
-
-            $lib_file_name = $package['dir'].'/pkg_miwoshop_library.zip';
-            if (MFile::exists($lib_file_name)) {
-                $p2 = $utility->unpack($lib_file_name);
-                $installer = new JInstaller();
-                $installer->install($p2['dir']);
-            }
-
-            $plg_file_name = $package['dir'].'/plg_miwoshop_jquery.zip';
-            if (MFile::exists($plg_file_name)) {
-                $p3 = $utility->unpack($plg_file_name);
-                $installer = new JInstaller();
-                $installer->install($p3['dir']);
-            }
-
-            /*$thm_file_name = $package['dir'].'/pkg_miwoshop_themes.zip';
-            if (MFile::exists($thm_file_name)) {
-                $p4 = $utility->unpack($thm_file_name);
-                $installer = new JInstaller();
-                $installer->install($p4['dir']);
-            }*/
+        # Miwi Framework
+	    $src = $package['dir'].'/miwi';
+        $dest = MPATH_WP_CNT.'/miwi';
+        if (!MFolder::exists($dest)) {
+            MFolder::copy($src, $dest);
+            MFolder::delete($src);
         }
-        else {
-            $installer = new JInstaller();
-            $installer->install($package['dir']);
+        elseif (MFolder::exists($src) and MFolder::exists($dest)) {
+            require_once(MPATH_WP_PLG.'/miwoshop/miwoshop.php');
+            $src_version  = MShop::getMiwiVersion($src.'/versions.xml');
+            $dest_version = MShop::getMiwiVersion($dest.'/versions.xml');
+            if (version_compare($src_version, $dest_version, 'gt')) {
+                MFolder::copy($src, $dest, '', true);
+                MFolder::delete($src);
+            }
+            else {
+                MFolder::delete($src);
+            }
         }
-
+		
+		MFolder::copy($package['dir'], MPath::clean(MPATH_WP_PLG.'/miwoshop'), null, true);
         MFolder::delete($package['dir']);
+
+        $script_file = MPATH_WP_PLG.'/miwoshop/script.php';
+        if (MFile::exists($script_file)) {
+            require_once($script_file);
+
+            $installer_class = 'com_MiwoshopInstallerScript';
+
+            $installer = new $installer_class();
+
+            if (method_exists($installer, 'preflight')) {
+                $installer->preflight(null, null);
+            }
+
+            if (method_exists($installer, 'postflight')) {
+                $installer->postflight(null, null);
+            }
+        }
 
         return true;
     }

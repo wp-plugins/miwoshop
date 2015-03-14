@@ -288,8 +288,10 @@ class MiwoShopUser {
         $wp_userdata['user_status'] = $status;
         if(!empty($userdata['password'])) {
             $wp_userdata['user_pass'] = $userdata['password'];
+        } else if ($update == true) {
+            $wp_userdata['user_pass'] = $ex_user->data->user_pass;
         }
-
+		
         if (isset($userdata['customer_group_id'])) {
             $wp_userdata['role'] = $this->getJGroupIdOfCGroup($userdata['customer_group_id']);
         }

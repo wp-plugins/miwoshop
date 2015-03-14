@@ -3,7 +3,7 @@
 <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="currency">
   <div class="nav pull-left top-links">
     <ul class="list-inline">
-      <li class="dropdown"><a href="javascript::void(0);" title="<?php echo $text_currency; ?>" class="dropdown-toggle" data-toggle="dropdown">
+      <li class="dropdown"><a href="javascript::void(0);" title="<?php echo $text_currency; ?>" class="" data-toggle="dropdown">
         <?php foreach ($currencies as $currency) { ?>
         <?php if ($currency['symbol_left'] && $currency['code'] == $code) { ?>
         <strong><?php echo $currency['symbol_left']; ?></strong>

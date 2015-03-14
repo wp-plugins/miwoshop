@@ -19,9 +19,9 @@ class com_MiwoshopInstallerScript {
     private $_is_new_installation = true;
 
     public function preflight($type, $parent) {
-	
+		
 		$this->upgrade30();
-
+	
         if($type == 'upgrade') {
             $old = dirname(__FILE__);
             $upg = MPATH_WP_CNT . '/upgrade';
@@ -129,6 +129,7 @@ class com_MiwoshopInstallerScript {
 
 		MiwoShop::get('install')->createTables();
 		MiwoShop::get('install')->createUserTables();
+		MiwoShop::get('install')->createApiUser();
 		MiwoShop::get('install')->createGroupTables();
         MiwoShop::get('install')->createIntegrationTables();
 		MiwoShop::get('install')->addPage();
@@ -557,5 +558,5 @@ class com_MiwoshopInstallerScript {
 		$files[] = 'opencart/catalog/view/theme/default/template/payment/sagepay.tpl';
 
 		return $files;
-	}	
+	}
 }
