@@ -8,7 +8,7 @@
 
     <file path="catalog/view/theme/*/template/product/product.tpl">
         <operation error="log">
-            <search><![CDATA[<button type="button" data-toggle="tooltip" class="button btn-default" title="<?php echo $button_compare; ?>" onclick="compare.add('<?php echo $product_id; ?>');"><i class="fa fa-exchange"></i></button>]]></search>
+            <search><![CDATA[<button type="button" data-toggle="tooltip" class="btn btn-default" title="<?php echo $button_compare; ?>" onclick="compare.add('<?php echo $product_id; ?>');"><i class="fa fa-exchange"></i></button>]]></search>
             <add position="replace"><![CDATA[]]></add>
         </operation>
     </file>
