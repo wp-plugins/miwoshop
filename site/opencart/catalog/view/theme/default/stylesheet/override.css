@@ -162,7 +162,7 @@
 .miwoshop #module_cart td:nth-child(2) a {
 		max-width: 1em;
 }
-.miwoshop #module_cart td:nth-child(1) {
+.miwoshop #module_cart .table.table-striped td:nth-child(1) {
      display: none !important;
 }
 .miwoshop #module_cart td button {
@@ -181,6 +181,18 @@
 
 .miwoshop .product-thumb .button-group button{
 	padding : 0px !important;
+}
+
+.miwoshop #content_oc .row .col-sm-9 ul li {
+  list-style-type: none!important;
+  text-align: center !important;
+}
+
+.miwoshop #content_oc .row .col-sm-9 li {
+  display: block!important;
+  float: left!important;
+  margin: 0!important;
+  width: 25%!important;
 }
 
 /* Media 767px start */

@@ -378,8 +378,13 @@ class ControllerExtensionModification extends Controller {
             if(file_exists(MPATH_MIWOSHOP_OC . '/vqmod/xml')) {
                 require_once(DIR_SYSTEM . 'library/modification.php');
                 $_modCheck = new MiwiModification();
-
-                $modification =  $_modCheck->checkVqmod($modification);
+				
+				if(empty($original)) { $original = ''; }
+				
+                $_vQmod =  $_modCheck->checkVqmod($modification, $original);
+				
+                $modification = $_vQmod['modification'];
+                $original = $_vQmod['original'];
             }
             #miwoshop finish
 			// Write all modification files
@@ -422,10 +427,18 @@ class ControllerExtensionModification extends Controller {
 				$url .= '&pg=' . $this->request->get['pg'];
 			}
 
+			if(empty($this->request->get['extensionInstaller'])) {
 			$this->response->redirect($this->url->link('extension/modification', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+			} else {
+				$json = array();
+				$this->response->addHeader('Content-Type: application/json');
+				$this->response->setOutput(json_encode($json));
+			}
 		}
 
-		$this->getList();
+		if(empty($this->request->get['extensionInstaller'])) {
+			$this->getList();
+		}
 	}
 
 	public function clear() {

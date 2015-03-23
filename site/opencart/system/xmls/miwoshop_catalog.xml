@@ -677,7 +677,7 @@
         </operation>
         <operation error="skip">
             <search><![CDATA[public function editPassword($email, $password) {]]></search>
-            <add position="after"><![CDATA[   		MiwoShop::get('user')->updateJUserPasswordFromO($email, $password);
+            <add position="after"><![CDATA[   		$password = MiwoShop::get('user')->updateJUserPasswordFromO($email, $password);
    			]]></add>
         </operation>
         <operation error="log">
@@ -686,7 +686,7 @@
         </operation>
         <operation error="log">
             <search><![CDATA[$this->db->query("UPDATE " . DB_PREFIX . "customer SET salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($password)))) . "' WHERE LOWER(email) = '" . $this->db->escape(utf8_strtolower($email)) . "'");]]></search>
-            <add position="replace"><![CDATA[$this->db->query("UPDATE " . DB_PREFIX . "customer SET salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(Miwoshop::get('user')->encryptPassword($data['password'])) . "' WHERE LOWER(email) = '" . $this->db->escape(utf8_strtolower($email)) . "'"); #miwoshop-start]]></add>
+            <add position="replace"><![CDATA[$this->db->query("UPDATE " . DB_PREFIX . "customer SET salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape($password) . "' WHERE LOWER(email) = '" . $this->db->escape(utf8_strtolower($email)) . "'"); #miwoshop-start]]></add>
         </operation>
     </file>
 

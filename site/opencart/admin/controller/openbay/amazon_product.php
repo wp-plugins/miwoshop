@@ -157,7 +157,7 @@ class ControllerOpenbayAmazonProduct extends Controller {
 		$product_info = $this->model_catalog_product->getProduct($product_id);
 		$data['listing_name'] = $product_info['name'] . " : " . $product_info['model'];
 		$data['listing_sku'] = $product_info['sku'];
-		$data['listing_url'] = $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $product_id . $url, 'SSL');
+		$data['listing_url'] = $this->url->link('catalog/product/edit', 'token=' . $this->session->data['token'] . '&product_id=' . $product_id . $url, 'SSL');
 
 		if ($listing_saved) {
 			$data['edit_product_category'] = $saved_listing_data['category'];

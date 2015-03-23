@@ -11,7 +11,7 @@ $_['text_xml']             = 'Applying modifications!';
 $_['text_php']             = 'Running PHP!';
 $_['text_remove']          = 'Removing temporary files!';
 $_['text_clear']           = 'Success: You have cleared all temporary files!';
-
+$_['text_modification']    = 'Mofidication: This process may take long time, The modification is being scripted. Please wait!';
 // Entry
 $_['entry_upload']         = 'Upload File';
 $_['entry_overwrite']      = 'Files that will be overwritten';

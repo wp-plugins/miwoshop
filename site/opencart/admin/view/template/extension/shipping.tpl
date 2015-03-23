@@ -44,7 +44,7 @@
                 <td class="text-left"><?php echo $extension['status'] ?></td>
                 <td class="text-right"><?php echo $extension['sort_order']; ?></td>
 				<td class="text-right">
-					<?php if($extension['extension'] == 'free_checkout' or $extension['extension'] == 'pp_standard' or $extension['extension'] == 'cod' ){ ?>
+					<?php if($extension['extension'] == 'flat' or $extension['extension'] == 'free' ){ ?>
 					  <?php if (!$extension['installed']) { ?>
 					  <a href="<?php echo $extension['install']; ?>" data-toggle="tooltip" title="<?php echo $button_install; ?>" class="button btn-success"><i class="fa fa-plus-circle"></i></a>
 					  <?php } else { ?>

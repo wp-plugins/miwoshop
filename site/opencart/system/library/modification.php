@@ -212,7 +212,8 @@ class MiwiModification {
 										}
 
 										if ($operation_node_error == 'abort') {
-                                            return $modification; // skip this XML file
+											break;
+                                            //return $modification; // skip this XML file
 										}
 									}
 									break;
@@ -239,8 +240,11 @@ class MiwiModification {
 			}
 			
 		}
+        $result = array();
+        $result['modification'] = $modification;
+        $result['original'] = $original;
 		
-        return $modification;
+        return $result;
     }
 
     public function _vqmodGetIndexes($search_node_index) {
@@ -257,7 +261,6 @@ class MiwiModification {
             return false;
         }
     }
-
     public function _vqmodGetFileKey($file) {
 		$dir_modification = MPATH_MIWOSHOP_OC.'/system/modification/';
         $dir_application = MPATH_MIWOSHOP_OC.'/admin/';
@@ -276,5 +279,4 @@ class MiwiModification {
         }
         return $key;
     }
-
 }

@@ -40,7 +40,7 @@ class ControllerDashboardRecenttabs extends Controller {
                 'product_id'   => $product['product_id'],
                 'name'   => $product['name'],
                 'total'   => $product['total'],
-                'edit'   => $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id='.$product['product_id'], 'SSL')
+                'edit'   => $this->url->link('catalog/product/edit', 'token=' . $this->session->data['token'] . '&product_id='.$product['product_id'], 'SSL')
             );
         }
 
@@ -54,7 +54,7 @@ class ControllerDashboardRecenttabs extends Controller {
                 'product_id'   => $product['product_id'],
                 'name'   => $product['name'],
                 'total'   => $product['total'],
-                'edit'   => $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id='.$product['product_id'], 'SSL')
+                'edit'   => $this->url->link('catalog/product/edit', 'token=' . $this->session->data['token'] . '&product_id='.$product['product_id'], 'SSL')
             );
         }
 
@@ -68,7 +68,7 @@ class ControllerDashboardRecenttabs extends Controller {
                 'product_id'   => $product['product_id'],
                 'name'   => $product['name'],
                 'total'   => $product['viewed'],
-                'edit'   => $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id='.$product['product_id'], 'SSL')
+                'edit'   => $this->url->link('catalog/product/edit', 'token=' . $this->session->data['token'] . '&product_id='.$product['product_id'], 'SSL')
             );
         }
 

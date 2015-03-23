@@ -124,14 +124,20 @@ class ControllerExtensionInstaller extends Controller {
 				if (file_exists($file)) {
 					$json['step'][] = array(
 						'text' => $this->language->get('text_xml'),
-						'url'  => str_replace('&amp;', '&', $this->url->link('extension/installer/xml', 'format=raw&tmpl=component&token=' . $this->session->data['token'], 'SSL')),
+						'url'  => str_replace('&amp;', '&', $this->url->link('extension/installer/xml', 'token=' . $this->session->data['token'], 'SSL')),
 						'path' => $path
 					);
 
+                    // Refresh Modification
+                    $json['step'][] = array(
+                        'text' => $this->language->get('text_modification'),
+                        'url'  => str_replace('&amp;', '&', $this->url->link('extension/modification/refresh', 'token=' . $this->session->data['token'] . '&extensionInstaller=1', 'SSL')),
+                        'path' => $path
+                    );
 					// Clear temporary files
 					$json['step'][] = array(
 						'text' => $this->language->get('text_remove'),
-						'url'  => str_replace('&amp;', '&', $this->url->link('extension/installer/remove', 'format=raw&tmpl=component&token=' . $this->session->data['token'], 'SSL')),
+						'url'  => str_replace('&amp;', '&', $this->url->link('extension/installer/remove', 'token=' . $this->session->data['token'], 'SSL')),
 						'path' => $path
 					);
 				} else {
@@ -152,14 +158,14 @@ class ControllerExtensionInstaller extends Controller {
 						// Zip
 						$json['step'][] = array(
 							'text' => $this->language->get('text_unzip'),
-							'url'  => str_replace('&amp;', '&', $this->url->link('extension/installer/unzip', 'format=raw&tmpl=component&token=' . $this->session->data['token'], 'SSL')),
+							'url'  => str_replace('&amp;', '&', $this->url->link('extension/installer/unzip', 'token=' . $this->session->data['token'], 'SSL')),
 							'path' => $path
 						);
 
 						// FTP
 						$json['step'][] = array(
 							'text' => $this->language->get('text_ftp'),
-							'url'  => str_replace('&amp;', '&', $this->url->link('extension/installer/ftp', 'format=raw&tmpl=component&token=' . $this->session->data['token'], 'SSL')),
+							'url'  => str_replace('&amp;', '&', $this->url->link('extension/installer/ftp', 'token=' . $this->session->data['token'], 'SSL')),
 							'path' => $path
 						);
 						
@@ -171,7 +177,7 @@ class ControllerExtensionInstaller extends Controller {
 							if (substr($zip_name, 0, 11) == 'install.sql') {
 								$json['step'][] = array(
 									'text' => $this->language->get('text_sql'),
-									'url'  => str_replace('&amp;', '&', $this->url->link('extension/installer/sql', 'format=raw&tmpl=component&token=' . $this->session->data['token'], 'SSL')),
+									'url'  => str_replace('&amp;', '&', $this->url->link('extension/installer/sql', 'token=' . $this->session->data['token'], 'SSL')),
 									'path' => $path
 								);
 							}
@@ -180,7 +186,7 @@ class ControllerExtensionInstaller extends Controller {
 							if (substr($zip_name, 0, 11) == 'install.xml') {
 								$json['step'][] = array(
 									'text' => $this->language->get('text_xml'),
-									'url'  => str_replace('&amp;', '&', $this->url->link('extension/installer/xml', 'format=raw&tmpl=component&token=' . $this->session->data['token'], 'SSL')),
+									'url'  => str_replace('&amp;', '&', $this->url->link('extension/installer/xml', 'token=' . $this->session->data['token'], 'SSL')),
 									'path' => $path
 								);
 							} else if (substr($zip_name, -4) == '.xml'){ #miwoshop start
@@ -196,7 +202,7 @@ class ControllerExtensionInstaller extends Controller {
                                 $this->session->data['vqmod_file_name'] = $zip_name;
                                 $json['step'][] = array(
                                     'text' => $this->language->get('text_xml'),
-                                    'url'  => str_replace('&amp;', '&', $this->url->link('extension/installer/xml', 'format=raw&tmpl=component&token=' . $this->session->data['token'], 'SSL')),
+                                    'url'  => str_replace('&amp;', '&', $this->url->link('extension/installer/xml', 'token=' . $this->session->data['token'], 'SSL')),
                                     'path' => $path
                                 );
                             }
@@ -206,7 +212,7 @@ class ControllerExtensionInstaller extends Controller {
 							if (substr($zip_name, 0, 11) == 'install.php') {
 								$json['step'][] = array(
 									'text' => $this->language->get('text_php'),
-									'url'  => str_replace('&amp;', '&', $this->url->link('extension/installer/php', 'format=raw&tmpl=component&token=' . $this->session->data['token'], 'SSL')),
+									'url'  => str_replace('&amp;', '&', $this->url->link('extension/installer/php', 'token=' . $this->session->data['token'], 'SSL')),
 									'path' => $path
 								);
 							}
@@ -246,10 +252,16 @@ class ControllerExtensionInstaller extends Controller {
                             #miwoshop finish
 						}
 
+                        // Refresh Modification
+                        $json['step'][] = array(
+                            'text' => $this->language->get('text_modification'),
+                            'url'  => str_replace('&amp;', '&', $this->url->link('extension/modification/refresh', 'token=' . $this->session->data['token'] . '&extensionInstaller=1', 'SSL')),
+                            'path' => $path
+                        );
 						// Clear temporary files
 						$json['step'][] = array(
 							'text' => $this->language->get('text_remove'),
-							'url'  => str_replace('&amp;', '&', $this->url->link('extension/installer/remove', 'format=raw&tmpl=component&token=' . $this->session->data['token'], 'SSL')),
+							'url'  => str_replace('&amp;', '&', $this->url->link('extension/installer/remove', 'token=' . $this->session->data['token'], 'SSL')),
 							'path' => $path
 						);
 
@@ -360,7 +372,9 @@ class ControllerExtensionInstaller extends Controller {
 					$edit_page_url = explode("upload", strtolower($file));
 					$edit_page_url = 'upload'.$edit_page_url[2];
 					$this->permission_control($edit_page_url);
-					$this->editFile($file);
+					if(defined('MPATH_MIWOSHOP_OC')){
+						$this->editFile($file);
+					}
 					#miwoshop-finish
 					
 					$files[] = $file;
@@ -398,7 +412,7 @@ class ControllerExtensionInstaller extends Controller {
 		$this->response->addHeader('Content-Type: application/json');
 		$this->response->setOutput(json_encode($json));
 	}
-    
+	
 	#miwoshop-start
 	public function editFile($path){
 
@@ -480,7 +494,7 @@ class ControllerExtensionInstaller extends Controller {
         $replace_output[':"index.php?route='] 												                    = ":miwiajaxurl + \"?action=miwoshop&option=com_miwoshop&route=";
 		$replace_output[": 'index.php?option=com_mijoshop&route="] 										        = ":miwiajaxurl + \"?action=miwoshop&option=com_miwoshop&route=";
         $replace_output[': "index.php?option=com_mijoshop&route='] 												= ":miwiajaxurl + \"?action=miwoshop&option=com_miwoshop&route=";
-        $replace_output[":'index.php?option=com_miwjshop&route="] 											    = ":miwiajaxurl + \"?action=miwoshop&option=com_miwoshop&route=";
+        $replace_output[":'index.php?option=com_mijoshop&route="] 											    = ":miwiajaxurl + \"?action=miwoshop&option=com_miwoshop&route=";
         $replace_output[':"index.php?option=com_mijoshop&route='] 											    = ":miwiajaxurl + \"?action=miwoshop&option=com_miwoshop&route=";
     }
 
@@ -558,7 +572,7 @@ class ControllerExtensionInstaller extends Controller {
 
         return $edit_page;
     }
-	
+		
 	public function permission_control($edit_page_url){
         $search_page = array(
             'product' 				=> 'product',
@@ -760,7 +774,7 @@ class ControllerExtensionInstaller extends Controller {
                     #miwoshop-start
                     if($isVqmod) {
                         $file  = DIR_UPLOAD . str_replace(array('../', '..\\', '..'), '', $this->request->post['path']) . '/' . $this->session->data['vqmod_file_name'];
-                        $msmod = MPATH_MIWOSHOP_OC.'/vqmod/xml/'. $this->session->data['vqmod_file_name'];
+						$msmod = MPATH_MIWOSHOP_OC.'/vqmod/xml/'. str_replace("upload/vqmod/xml/","",$this->session->data['vqmod_file_name']);
                     } else {
                         $file  = DIR_UPLOAD . str_replace(array('../', '..\\', '..'), '', $this->request->post['path']).'/install.xml';
                         $msmod = DIR_SYSTEM.'xmls/'.$code.'.xml';
