@@ -9,7 +9,7 @@
     <file path="admin/controller/extension/modification.php">
         <operation error="skip">
             <search><![CDATA[$unvisible_xmls = array('miwoshop_admin.xml',]]></search>
-            <add position="replace"><![CDATA[$unvisible_xmls = array('miwoshop_admin.xml','miwoshop_remove_miwoshop25_file.xml']]></add>
+            <add position="replace"><![CDATA[$unvisible_xmls = array('miwoshop_admin.xml','miwoshop_remove_miwoshop25_file.xml',]]></add>
         </operation>
 
 		<operation error="skip">
