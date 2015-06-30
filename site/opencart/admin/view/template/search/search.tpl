@@ -69,4 +69,8 @@
             container.hide();
         }
     });
+	
+	jQuery('#miwoshop-search').submit(function(e) {
+		e.preventDefault();
+	});
 </script>

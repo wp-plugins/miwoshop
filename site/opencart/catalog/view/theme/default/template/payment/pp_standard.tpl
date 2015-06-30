@@ -9,7 +9,7 @@
   <?php foreach ($products as $product) { ?>
   <input type="hidden" name="item_name_<?php echo $i; ?>" value="<?php echo $product['name']; ?>" />
   <input type="hidden" name="item_number_<?php echo $i; ?>" value="<?php echo $product['model']; ?>" />
-  <input type="hidden" name="amount_<?php echo $i; ?>" value="<?php echo $product['price']; ?>" />
+  <input type="hidden" name="amount_<?php echo $i; ?>" value="<?php echo  round($product['price'], 2); ?>" />
   <input type="hidden" name="quantity_<?php echo $i; ?>" value="<?php echo $product['quantity']; ?>" />
   <input type="hidden" name="weight_<?php echo $i; ?>" value="<?php echo $product['weight']; ?>" />
   <?php $j = 0; ?>

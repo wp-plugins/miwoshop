@@ -40,5 +40,7 @@
     </div>
   </div>
 </footer>
-
+<script type="text/javascript"><!--
+    var miwi_display = '<?php echo MiwoShop::get('base')->getConfig()->get('miwoshop_display', 0); ?>';
+//--></script> 
 </div></body></html>

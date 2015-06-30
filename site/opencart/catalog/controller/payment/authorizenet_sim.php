@@ -10,6 +10,11 @@ class ControllerPaymentAuthorizeNetSim extends Controller {
 		$order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
 
 		$data['x_login'] = $this->config->get('authorizenet_sim_merchant');
+        $data['x_duplicate_window'] = '120';
+        $data['x_trans_id'] = $this->config->get('authorizenet_sim_key');
+		$data['x_relay_always'] = 'TRUE';
+        $data['x_version'] = '3.1';
+        $data['x_method'] = 'cc';		
 		$data['x_fp_sequence'] = $this->session->data['order_id'];
 		$data['x_fp_timestamp'] = time();
 		$data['x_amount'] = $this->currency->format($order_info['total'], $order_info['currency_code'], $order_info['currency_value'], false);
@@ -79,10 +84,10 @@ class ControllerPaymentAuthorizeNetSim extends Controller {
 
 				$this->response->redirect($this->url->link('checkout/success'));
 			} else {
-				$this->response->redirect($this->url->link('checkout/failure'));
+				$this->response->redirect($this->url->link('checkout/cart'));
 			}
 		} else {
-			$this->response->redirect($this->url->link('checkout/failure'));
+			$this->response->redirect($this->url->link('checkout/cart'));
 		}
 	}
 }

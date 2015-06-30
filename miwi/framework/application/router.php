@@ -180,14 +180,18 @@ class MRouter extends MObject {
 		$found = false;
 		if (count($segments) && !empty($route)) {
 			if ($page = get_page_by_path($route)) {
-				$segment_lowercase 	= MString::strtolower($segments[0]);
-				//sqlsrv  change
-				if(isset($page->language)){
-					$page->language = trim($page->language);
-				}
-				$length = strlen($page->post_name); //get the length of the route
-				if (($length > 0 && MString::strpos($segment_lowercase.'/', $page->post_name.'/') === 0) && !$found) {
-					$found = $page;
+				$i = 0;
+				while (!$found) {
+					$segment_lowercase 	= MString::strtolower($segments[$i]);
+					//sqlsrv  change
+					if(isset($page->language)){
+						$page->language = trim($page->language);
+					}
+					$length = strlen($page->post_name); //get the length of the route
+					if (($length > 0 && MString::strpos($segment_lowercase.'/', $page->post_name.'/') === 0) && !$found) {
+						$found = $page;
+					}
+					$i++;
 				}
 			}
 		}

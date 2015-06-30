@@ -1,3 +1,6 @@
+<link href="<?php echo MUri::base(true).'/plugins/system/miwoshopjquery/miwoshopjquery/owl-carousel/owl.carousel.css'; ?>" rel="stylesheet">
+<script src="<?php echo MUri::base(true) . '/plugins/system/miwoshopjquery/miwoshopjquery/owl-carousel/owl.carousel.min.js'; ?>" type="text/javascript"></script>
+
 <div id="carousel<?php echo $module; ?>" class="owl-carousel">
   <?php foreach ($banners as $banner) { ?>
   <div class="item text-center">

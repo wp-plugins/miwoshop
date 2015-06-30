@@ -103,10 +103,6 @@
 
     <file path="admin/controller/sale/order.php">
         <operation error="log">
-            <search><![CDATA[curl_setopt($curl, CURLOPT_URL, HTTPS_CATALOG . 'index.php?route=api/]]></search>
-            <add position="replace"><![CDATA[curl_setopt($curl, CURLOPT_URL, HTTPS_CATALOG . 'index.php?option=com_miwoshop&format=raw&route=api/]]></add>
-        </operation>
-        <operation error="log">
             <search><![CDATA[curl_setopt($curl, CURLOPT_COOKIE, session_name() . '=' . $this->session->data['cookie'] . ';');]]></search>
             <add position="replace"><![CDATA[curl_setopt($curl, CURLOPT_COOKIE, $this->session->data['cookie']['name'].'=' . $this->session->data['cookie']['id'] . ';'); #miwoshop-start]]></add>
         </operation>        
@@ -334,7 +330,8 @@
     <file path="admin/controller/dashboard/sale.php">
         <operation error="skip">
             <search><![CDATA[$data['sale'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'], 'SSL');]]></search>
-            <add position="before"><![CDATA[$data['total'] = $this->currency->format($data['total'], $this->config->get('config_currency')); #miwoshop-start]]></add>
+            <add position="before"><![CDATA[		$data['total'] = $this->currency->format($sale_total, $this->config->get('config_currency')); #miwoshop-start
+			]]></add>
         </operation>
     </file>
 	
@@ -720,11 +717,7 @@ $_['success_language_updated']              = ' : Language was updated';
         </operation>
     </file>
 	
-	<file path="admin/controller/sale/order.php">
-        <operation error="skip">
-            <search><![CDATA[$this->session->data['token'] . '&order_id=' . $this->request->get['order_id'] . '&pg={page}']]></search>
-            <add position="replace"><![CDATA[$this->session->data['token'] . '&format=raw&tmpl=component&order_id=' . $this->request->get['order_id'] . '&pg={page}']]></add>
-        </operation>        
+	<file path="admin/controller/sale/order.php">    
 		<operation error="skip">
             <search><![CDATA[$upload_info = $this->model_tool_upload->getUploadByCode($order_info['custom_field'][$custom_field['custom_field_id']]);]]></search>
             <add position="before"><![CDATA[$this->load->model('tool/upload');]]></add>
@@ -1341,21 +1334,7 @@ $('#languagessef a').tabs();
 		]]></add>
         </operation>
     </file>	
-	
-    <file path="admin/view/template/common/filemanager.tpl">
-        <operation error="skip">
-            <search><![CDATA[index.php?route=]]></search>
-            <add position="replace"><![CDATA[index.php?option=com_miwoshop&format=raw&tmpl=component&route=]]></add>
-        </operation>
-    </file>	
-	
-    <file path="admin/view/template/feed/*.tpl">
-        <operation error="skip">
-            <search><![CDATA[<?php echo $data_feed; ?>]]></search>
-            <add position="replace"><![CDATA[<?php echo $data_feed.'&format=raw&tmpl=component'; ?>]]></add>
-        </operation>
-    </file>
-
+		
 	<file path="admin/view/template/localisation/order_status_list.tpl">
         <operation error="skip">
             <search><![CDATA[<td class="text-right"><?php echo $column_action; ?></td>]]></search>
@@ -1372,13 +1351,6 @@ $('#languagessef a').tabs();
             <add position="replace"><![CDATA[<td class="text-center" colspan="4"><?php echo $text_no_results; ?></td>]]></add>
         </operation>
     </file>	
-	
-	<file path="admin/view/template/localisation/geo_zone_form.tpl">
-        <operation error="skip">
-            <search><![CDATA[index.php?route=localisation/geo_zone/zone]]></search>
-            <add  position="replace"><![CDATA[index.php?option=com_miwoshop&route=localisation/geo_zone/zone&format=raw&tmpl=component]]></add>
-        </operation>
-   </file>
 
 	<file path="admin/view/template/marketing/contact.tpl">    
 		<operation error="skip">
@@ -1401,11 +1373,6 @@ $('#languagessef a').tabs();
 		<operation error="skip">
             <search><![CDATA[$('textarea[name=\'message\']').html($('#input-message').code());]]></search>
             <add position="replace"><![CDATA[$('textarea[name=\'message\']').html(jQuery('textarea[name=\'message\']').val());]]></add>
-        </operation>
-        
-		<operation error="skip">
-            <search><![CDATA[url: url,]]></search>
-            <add position="replace"><![CDATA[url: url+'format=raw&tmpl=component',]]></add>
         </operation>
     </file>
 	
@@ -1532,10 +1499,10 @@ $('#languagessef a').tabs();
         <operation error="log">
             <search><![CDATA[$this->event->trigger('pre.admin.product.add', $data);]]></search>
             <add position="after"><![CDATA[        #miwoshop-start
-        $start_count_product = 1;
-        foreach($data['product_description'] as $product){
-            empty($product['meta_title']) ? $data['product_description'][$start_count_product]['meta_title'] = $product['name'] : $data['product_description'][$start_count_product]['meta_title'];
-            $start_count_product ++;
+        foreach($data['product_description'] as $language_id => $value){
+            if(empty($value['meta_title'])) {
+                $data['product_description'][$language_id]['meta_title'] = $value['name'];
+            }
         }
         #miwoshop-finish]]></add>
         </operation>
@@ -1543,10 +1510,10 @@ $('#languagessef a').tabs();
 		<operation error="log">
             <search><![CDATA[$this->event->trigger('pre.admin.product.edit', $data);]]></search>
             <add position="after"><![CDATA[        #miwoshop-start
-        $start_count_product = 1;
-        foreach($data['product_description'] as $product){
-            empty($product['meta_title']) ? $data['product_description'][$start_count_product]['meta_title'] = $product['name'] : $data['product_description'][$start_count_product]['meta_title'];
-            $start_count_product ++;
+        foreach($data['product_description'] as $language_id => $value){
+            if(empty($value['meta_title'])) {
+                $data['product_description'][$language_id]['meta_title'] = $value['name'];
+            }
         }
         #miwoshop-finish]]></add>
         </operation>
@@ -1563,10 +1530,10 @@ $('#languagessef a').tabs();
         <operation error="log">
             <search><![CDATA[$this->event->trigger('pre.admin.category.add', $data);]]></search>
             <add position="after"><![CDATA[        #miwoshop-start
-        $start_count_category = 1;
-        foreach($data['category_description'] as $category){
-            empty($category['meta_title']) ? $data['category_description'][$start_count_category]['meta_title'] = $category['name'] : $data['category_description'][$start_count_category]['meta_title'];
-            $start_count_category ++;
+		foreach($data['category_description'] as $language_id => $value){
+            if(empty($value['meta_title'])) {
+                $data['category_description'][$language_id]['meta_title'] = $value['name'];
+            }
         }
         #miwoshop-finish]]></add>
         </operation>
@@ -1574,10 +1541,10 @@ $('#languagessef a').tabs();
 		<operation error="log">
             <search><![CDATA[$this->event->trigger('pre.admin.category.edit', $data);]]></search>
             <add position="after"><![CDATA[        #miwoshop-start
-        $start_count_category = 1;
-        foreach($data['category_description'] as $category){
-            empty($category['meta_title']) ? $data['category_description'][$start_count_category]['meta_title'] = $category['name'] : $data['category_description'][$start_count_category]['meta_title'];
-            $start_count_category ++;
+		foreach($data['category_description'] as $language_id => $value){
+            if(empty($value['meta_title'])) {
+                $data['category_description'][$language_id]['meta_title'] = $value['name'];
+            }
         }
         #miwoshop-finish]]></add>
         </operation>
@@ -1594,10 +1561,10 @@ $('#languagessef a').tabs();
         <operation error="log">
             <search><![CDATA[$this->event->trigger('pre.admin.information.add', $data);]]></search>
             <add position="after"><![CDATA[        #miwoshop-start
-        $start_count_information = 1;
-        foreach($data['information_description'] as $information){
-            empty($information['meta_title']) ? $data['information_description'][$start_count_information]['meta_title'] = $information['title'] : $data['information_description'][$start_count_information]['meta_title'];
-            $start_count_information ++;
+		foreach($data['information_description'] as $language_id => $value){
+            if(empty($value['meta_title'])) {
+                $data['information_description'][$language_id]['meta_title'] = $value['name'];
+            }
         }
         #miwoshop-finish]]></add>
         </operation>
@@ -1605,10 +1572,10 @@ $('#languagessef a').tabs();
 		<operation error="log">
             <search><![CDATA[$this->event->trigger('pre.admin.information.edit', $data);]]></search>
             <add position="after"><![CDATA[        #miwoshop-start
-        $start_count_information = 1;
-        foreach($data['information_description'] as $information){
-            empty($information['meta_title']) ? $data['information_description'][$start_count_information]['meta_title'] = $information['title'] : $data['information_description'][$start_count_information]['meta_title'];
-            $start_count_information ++;
+		foreach($data['information_description'] as $language_id => $value){
+            if(empty($value['meta_title'])) {
+                $data['information_description'][$language_id]['meta_title'] = $value['name'];
+            }
         }
         #miwoshop-finish]]></add>
         </operation>

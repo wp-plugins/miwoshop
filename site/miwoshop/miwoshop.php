@@ -42,7 +42,3 @@ abstract class MiwoShop {
 		return self::get($class, $options);
     }
 }
-
-#miwoshop
-/*
-

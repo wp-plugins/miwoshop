@@ -683,7 +683,7 @@ class ControllerExtensionModification extends Controller {
         $files_enable = glob(DIR_SYSTEM . 'xmls/*.xml');
         $files_disable = glob(DIR_SYSTEM . 'xmls/*.xml_');
 
-        $unvisible_xmls = array('miwoshop_admin.xml','miwoshop_buttons.xml','miwoshop_catalog.xml','miwoshop_filters.xml','miwoshop_j_integration.xml','miwoshop_system.xml','miwoshop_triggers.xml','x_miwoshop_finish.xml','xx_miwoshop_wordpress');
+        $unvisible_xmls = array('miwoshop_admin.xml','miwoshop_buttons.xml','miwoshop_catalog.xml','miwoshop_filters.xml','miwoshop_j_integration.xml','miwoshop_system.xml','miwoshop_triggers.xml','x_miwoshop_finish.xml','xx_miwoshop_wordpress','miwoshop_module_random_product.xml');
 
         $files = array_merge($files_enable, $files_disable);
 
@@ -773,6 +773,8 @@ class ControllerExtensionModification extends Controller {
         }
         #miwoshop
 
+		$count = count($data['modifications']);
+		
         #miwoshop start
         if(file_exists(MPATH_MIWOSHOP_OC . '/vqmod/xml/')){
 
@@ -799,6 +801,15 @@ class ControllerExtensionModification extends Controller {
 						$modification_vqmod [] = $modification;
 				   }
 				}
+				
+                if($count != $count_vqmod && empty($vqmod_add)){
+                    foreach($data['vqmods'] as $vqmod){
+                        if( substr($vqmod['vqmod_id'], -5) != '.xml_') {
+                            # enable VQMOD
+                            $modification_vqmod [] = $vqmod;
+                        }
+                    }
+                }				
 
 				foreach($data['vqmods'] as $vqmod){
 					if( substr($vqmod['vqmod_id'], -5) == '.xml_') {

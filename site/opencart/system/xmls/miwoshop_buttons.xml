@@ -1207,7 +1207,11 @@ $_['column_status']          = 'Status';
         </operation>
         <operation error="skip">
             <search><![CDATA['name',]]></search>
-            <add position="replace"><![CDATA['status', #miwoshop-start]]></add>
+            <add position="after"><![CDATA['status', #miwoshop-start]]></add>
+        </operation>
+        <operation error="skip">
+            <search><![CDATA[$sql .= " ORDER BY cd1.name";]]></search>
+            <add position="replace"><![CDATA[$sql .= " ORDER BY name";]]></add>
         </operation>
     </file>
     <file path="admin/model/catalog/information.php">

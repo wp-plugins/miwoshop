@@ -97,7 +97,7 @@ $('#button-refresh').on('click', function(e) {
 $('#button-search').on('click', function() {
 	var url = 'index.php?route=common/filemanager&token=<?php echo $token; ?>&directory=<?php echo $directory; ?>';
 		
-	var filter_name = $('input[name=\'search\']').val();
+	var filter_name = $('input[name=\'search_oc\']').val();
 	
 	if (filter_name) {
 		url += '&filter_name=' + encodeURIComponent(filter_name);

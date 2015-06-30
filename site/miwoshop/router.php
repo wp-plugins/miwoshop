@@ -365,10 +365,6 @@ class MiwoShopRouter extends MiwisoftComponentRouterBase
             if (($oc_config->get('config_secure') == 1) and (substr($url, 0, 5) == 'https') and (substr($domain, 0, 5) != 'https')) {
                 $domain = str_replace('http://', 'https://', $domain);
             }
-			
-			if(strpos($url, '/callback')) {
-                return $url;
-            }
 
             $url = str_replace($full_url, '', $url);
             $url = str_replace(str_replace('http', 'https', $full_url), '', $url);
@@ -459,11 +455,17 @@ class MiwoShopRouter extends MiwisoftComponentRouterBase
                 }
             }
 
-            $url = MRoute::_($url);
+			if ((defined('DOING_AJAX') && DOING_AJAX) && get_site_option('permalink_structure')) {
+				$page_id = MFactory::getWOption('miwoshop_page_id');
+				$post = MFactory::getWPost($page_id);
+				$url = str_replace('index.php', $post->post_name, $url);
+			} else {
+				$url = MRoute::_($url);
+			}
 
             $url = str_replace('&amp;', '&', $url);
 
-$_base = MFactory::getUri()->base(true);
+			$_base = MFactory::getUri()->base(true);
             $url = str_replace($_base, '', $url);
             //for external links
             $out = strpos($url, '#outurl');
@@ -490,10 +492,6 @@ $_base = MFactory::getUri()->base(true);
             }
 
             $url = MRoute::_($url);
-
-
-			
-			$url = MRoute::_($url);
         }
 
         return $url;
@@ -748,7 +746,7 @@ $_base = MFactory::getUri()->base(true);
             case 'information/sitemap':
                 $view = 'sitemap';
                 break;
-            case 'account/return/insert':
+            case 'account/return/add':
                 $view = 'returns';
                 break;
             case 'affiliate/account':
@@ -845,7 +843,7 @@ $_base = MFactory::getUri()->base(true);
                 $route = 'information/sitemap';
                 break;
             case 'returns':
-                $route = 'account/return/insert';
+                $route = 'account/return/add';
                 break;
             case 'affiliates':
                 $route = 'affiliate/account';

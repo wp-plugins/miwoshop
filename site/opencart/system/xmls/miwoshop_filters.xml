@@ -126,14 +126,12 @@
     </file>
 
     <file path="admin/controller/catalog/category.php">
-
         <operation error="skip">
             <search><![CDATA['start' => ($page - 1) * $this->config->get('config_limit_admin'),]]></search>
             <add position="after"><![CDATA[
             #miwoshop-start
-            'filter_name' => $filter_name,
+            'filter_name'   => $filter_name,
             'filter_status' => $filter_status,
-            'filter_sortorder' => $filter_sortorder,
             #miwoshop-end
             ]]></add>
         </operation>
@@ -143,7 +141,6 @@
         #miwoshop-start
         $data['filter_name'] = $filter_name;
         $data['filter_status'] = $filter_status;
-        $data['filter_sortorder'] = $filter_sortorder;
         #miwoshop-end
             ]]></add>
         </operation>
@@ -151,7 +148,7 @@
             <search><![CDATA[protected function getList() {]]></search>
             <add position="after"><![CDATA[
         #miwoshop-start
-        if (isset($this->request->get['filter_name'])) {
+		if (isset($this->request->get['filter_name'])) {
             $filter_name = $this->request->get['filter_name'];
         } else {
             $filter_name = null;
@@ -162,12 +159,6 @@
         } else {
             $filter_status = null;
         }
-
-        if (isset($this->request->get['filter_sortorder'])) {
-            $filter_sortorder = $this->request->get['filter_sortorder'];
-        } else {
-            $filter_sortorder = null;
-        }
         #miwoshop-end
             ]]></add>
         </operation>
@@ -175,16 +166,12 @@
             <search><![CDATA[$url = '';]]></search>
             <add position="after"><![CDATA[
         #miwoshop-start
-        if (isset($this->request->get['filter_name'])) {
+		if (isset($this->request->get['filter_name'])) {
             $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_status'])) {
             $url .= '&filter_status=' . $this->request->get['filter_status'];
-        }
-
-        if (isset($this->request->get['filter_sortorder'])) {
-            $url .= '&filter_sortorder=' . $this->request->get['filter_sortorder'];
         }
         #miwoshop-end
             ]]></add>
@@ -192,6 +179,28 @@
         <operation error="skip">
             <search><![CDATA[$data['keyword'] = $category_info['keyword'];]]></search>
             <add position="replace"><![CDATA[$data['keyword'] = MiwoShop::get('db')->getRecordAliases($this->request->get['category_id'], 'category'); #miwoshop-start]]></add>
+        </operation>
+        <operation error="skip">
+            <search index="1"><![CDATA[$results = $this->model_catalog_category->getCategories($filter_data);]]></search>
+            <add position="replace" offset="7"><![CDATA[
+            $results = $this->model_catalog_category->getCategories($filter_data);
+
+            #miwoshop-start
+            foreach ($results as $result) {
+
+                $result['index'] = $result['name'];
+                if(strpos($result['name'], '&nbsp;&nbsp;&gt;&nbsp;&nbsp;')) {
+                    $result['name'] = explode ('&nbsp;&nbsp;&gt;&nbsp;&nbsp;', $result['name']);
+                    $result['name'] = end($result['name']);
+                }
+
+                $json[] = array(
+                    'category_id' => $result['category_id'],
+                    'index'		  => $result['index'],
+                    'name'		  => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8'))
+                );
+            }
+            #miwoshop-end]]></add>
         </operation>
     </file>
 
@@ -236,10 +245,6 @@
         #miwoshop-start
         if (isset($data['filter_status']) and !is_null($data['filter_status'])) {
             $sql .= " AND c1.status = '".$data['filter_status']."'";
-        }
-
-        if (isset($data['filter_sortorder']) and !is_null($data['filter_sortorder'])) {
-            $sql .= " AND c1.sort_order = '".$data['filter_sortorder']."'";
         }
         #miwoshop-end
             ]]></add>
@@ -444,41 +449,35 @@
             <div class="panel-body">
             ]]></search>
             <add position="after"><![CDATA[
-            <div class="well">
-                <div class="row">
-                    <div class="col-sm-4">
-                        <div class="form-group">
-                            <label class="control-label" for="input-name"><?php echo $column_name; ?></label>
-                            <input type="text" name="filter_name" value="<?php echo $filter_name; ?>" placeholder="<?php echo $column_name; ?>" id="input-name" class="form-control" autocomplete="off" />
-                        </div>
-                    </div>
-                    <div class="col-sm-4">
-                        <div class="form-group">
-                            <label class="control-label" for="input-category"><?php echo $column_status; ?></label>
-                            <select name="filter_status" class="form-control">
-                              <option value="*"></option>
-                              <?php if ($filter_status) { ?>
-                              <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
-                              <?php } else { ?>
-                              <option value="1"><?php echo $text_enabled; ?></option>
-                              <?php } ?>
-                              <?php if (!is_null($filter_status) && !$filter_status) { ?>
-                              <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
-                              <?php } else { ?>
-                              <option value="0"><?php echo $text_disabled; ?></option>
-                              <?php } ?>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-sm-4">
-                        <div class="form-group">
-                         <label class="control-label" for="input-category"><?php echo $column_sort_order; ?></label>
-                         <input type="text" name="filter_sortorder" value="<?php echo $filter_sortorder; ?>" class="form-control" />
-                        </div>
-                         <button type="button" id="button-filter" class="button button-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>
-                    </div>
-                </div>
-            </div>
+		<div class="well">
+          <div class="row">
+              <div class="col-sm-8">
+                  <div class="form-group">
+                      <label class="control-label" for="input-name"><?php echo $column_name; ?></label>
+                      <input type="text" name="filter_name" value="<?php echo $filter_name; ?>" placeholder="<?php echo $column_name; ?>" id="input-name" class="form-control" autocomplete="off" />
+                  </div>
+              </div>
+              <div class="col-sm-4">
+                  <div class="form-group">
+                      <label class="control-label" for="input-category"><?php echo $column_status; ?></label>
+                      <select name="filter_status" class="form-control">
+                        <option value="*"></option>
+                        <?php if ($filter_status) { ?>
+                        <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+                        <?php } else { ?>
+                        <option value="1"><?php echo $text_enabled; ?></option>
+                        <?php } ?>
+                        <?php if (!is_null($filter_status) && !$filter_status) { ?>
+                        <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+                        <?php } else { ?>
+                        <option value="0"><?php echo $text_disabled; ?></option>
+                        <?php } ?>
+                      </select>
+                  </div>
+                  <button type="button" id="button-filter" class="button button-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>
+              </div>
+          </div>
+        </div>
             ]]></add>
         </operation>
         <operation error="skip">
@@ -517,15 +516,16 @@ $('input[name=\'filter_name\']').autocomplete({
 			success: function(json) {
 				response($.map(json, function(item) {
 					return {
-						label: item['name'],
-						value: item['product_id']
+						label: item['index'],
+						name: item['name'],
+						value: item['category_id']
 					}
 				}));
 			}
 		});
 	},
 	'select': function(item) {
-		$('input[name=\'filter_name\']').val(item['label']);
+		$('input[name=\'filter_name\']').val(item['name']);
 	}
 });
 //--></script>

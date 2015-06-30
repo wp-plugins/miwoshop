@@ -1047,6 +1047,7 @@ class ControllerCatalogProduct extends Controller {
 					'name' => ($category_info['path']) ? $category_info['path'] . ' &gt; ' . $category_info['name'] : $category_info['name']
 				);
 			}
+			sort($data['product_categories'],SORT_LOCALE_STRING);
 		}
 
 		// Filters

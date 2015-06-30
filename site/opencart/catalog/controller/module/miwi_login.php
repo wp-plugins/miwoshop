@@ -47,6 +47,7 @@ class ControllerModuleMiwiLogin extends Controller {
 		$data['register'] = $this->url->link('account/register', '', 'SSL');
 		$data['logout'] = $this->url->link('account/logout', '', 'SSL');
 		$data['action'] = $this->url->link('account/login');
+		$data['forgotten'] = $this->url->link('account/forgotten', '', 'SSL');
 
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/miwi_login.tpl')) {
 			return $this->load->view($this->config->get('config_template') . '/template/module/miwi_login.tpl', $data);

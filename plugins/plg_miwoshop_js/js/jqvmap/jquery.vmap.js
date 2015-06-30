@@ -463,7 +463,8 @@
       var path = e.target;
       var code = e.target.id.split('_').pop();
 
-   // jQuery(params.container).trigger('regionClick.jqvmap', [code, mapData.pathes[code].name]);	  
+     // jQuery(params.container).trigger('regionClick.jqvmap', [code, mapData.pathes[code].name]);
+	  
 	  regionClickEvent = $.Event('regionClick.jqvmap');
 
 	  jQuery(params.container).trigger(regionClickEvent, [code, mapData.pathes[code].name]);
@@ -591,9 +592,10 @@
 
       var colors = {};
       for (cc in values) {
+	  
 		if(!values.hasOwnProperty(cc)) continue;
-        
-		val = parseFloat(values[cc]);
+	  
+        val = parseFloat(values[cc]);
         if (val) {
           colors[cc] = this.colorScale.getColor(val);
         } else {

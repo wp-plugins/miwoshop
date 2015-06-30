@@ -50,7 +50,7 @@ class ControllerPaymentAmazonCheckout extends Controller {
 
 		$data['merchant_id'] = $this->config->get('amazon_checkout_merchant_id');
 		$data['amazon_payment'] = $this->url->link('payment/amazon_checkout/payment', '', 'SSL');
-		$data['shipping_quotes'] = $this->url->link('payment/amazon_checkout/shippingquotes', '', 'SSL');
+		$data['shipping_quotes'] = $this->url->link('payment/amazon_checkout/shippingquotes', 'format=raw&tmpl=component', 'SSL');
 		$data['payment_method'] = $this->url->link('payment/amazon_checkout/paymentmethod', '', 'SSL');
 
 		$data['cart'] = $this->url->link('checkout/cart');

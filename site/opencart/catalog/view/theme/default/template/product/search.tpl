@@ -158,7 +158,7 @@
 $('#button-search').bind('click', function() {
 	url = 'index.php?route=product/search';
 	
-	var search = $('#content input[name=\'search\']').prop('value');
+	var search = $('#content input[name=\'search_oc\']').prop('value');
 	
 	if (search) {
 		url += '&search=' + encodeURIComponent(search);
@@ -185,7 +185,7 @@ $('#button-search').bind('click', function() {
 	location = url;
 });
 
-$('#content input[name=\'search\']').bind('keydown', function(e) {
+$('#content input[name=\'search_oc\']').bind('keydown', function(e) {
 	if (e.keyCode == 13) {
 		$('#button-search').trigger('click');
 	}

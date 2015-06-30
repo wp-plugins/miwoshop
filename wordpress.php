@@ -236,6 +236,10 @@ class MWordpress {
         foreach($modules as $module){
             foreach($sidebars_widgets as $_sidebars_widgets){
 
+	            if (empty($_sidebars_widgets)) {
+		            continue;
+	            }
+
 	            $is_in = preg_grep("/".$module->id."_widget./", $_sidebars_widgets);
 
                 if(!empty($is_in)) {
@@ -518,7 +522,7 @@ class MWordpress {
         $scripts = $document->_scripts;
 
         foreach($scripts as $script){
-            wp_enqueue_script($script, $script);
+            wp_enqueue_script($script, $script, array('jquery'));
         }
 
         #inline scripts

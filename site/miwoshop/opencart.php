@@ -396,8 +396,8 @@ class MiwoShopOpencart {
         if (!MiwoShop::get('base')->isAdmin() and MRequest::getString('option') != 'com_miwoshop'){
             MiwoShop::get()->addHeader(MPATH_MIWOSHOP_OC.'/catalog/view/theme/'.self::$config->get('config_template').'/stylesheet/stylesheet.css');
             MiwoShop::get()->addHeader(MPATH_MIWOSHOP_OC.'/catalog/view/theme/'.self::$config->get('config_template').'/stylesheet/override.css');
-            MiwoShop::get()->addHeader(MPATH_ROOT.'/miwi/plugins/plg_miwoshop_js/js/font-awesome/css/font-awesome.min.css');
-            MiwoShop::get()->addHeader(MPATH_ROOT.'/miwi/plugins/plg_miwoshop_js/js/bootstrap/js/bootstrap.min.js', false);
+            MiwoShop::get()->addHeader(MPATH_ROOT.'/plugins/plg_miwoshop_js/js/font-awesome/css/font-awesome.min.css');
+            MiwoShop::get()->addHeader(MPATH_ROOT.'/plugins/plg_miwoshop_js/js/bootstrap/js/bootstrap.min.js', false);
 			MiwoShop::get()->addHeader(MPATH_MIWOSHOP_OC.'/catalog/view/javascript/common.js', false);
         }
 

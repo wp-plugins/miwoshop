@@ -1,5 +1,6 @@
 <form action="https://test.authorize.net/gateway/transact.dll" method="post">
   <input type="hidden" name="x_login" value="<?php echo $x_login; ?>" />
+  <input type="hidden" name="x_trans_id" value="<?php echo $x_trans_id; ?>" />
   <input type="hidden" name="x_fp_sequence" value="<?php echo $x_fp_sequence; ?>" />
   <input type="hidden" name="x_fp_timestamp" value="<?php echo $x_fp_timestamp; ?>" />
   <input type="hidden" name="x_amount" value="<?php echo $x_amount; ?>" />
@@ -17,6 +18,7 @@
   <input type="hidden" name="x_company" value="<?php echo $x_company; ?>" />
   <input type="hidden" name="x_address" value="<?php echo $x_address; ?>" />
   <input type="hidden" name="x_city" value="<?php echo $x_city; ?>" />
+  <input type="hidden" name="x_trans_id" value="<?php echo $x_trans_id; ?>" />
   <input type="hidden" name="x_state" value="<?php echo $x_state; ?>" />
   <input type="hidden" name="x_zip" value="<?php echo $x_zip; ?>" />
   <input type="hidden" name="x_country" value="<?php echo $x_country; ?>" />
@@ -30,6 +32,9 @@
   <input type="hidden" name="x_ship_to_zip" value="<?php echo $x_ship_to_zip; ?>" />
   <input type="hidden" name="x_ship_to_country" value="<?php echo $x_ship_to_country; ?>" />
   <input type="hidden" name="x_customer_ip" value="<?php echo $x_customer_ip; ?>" />
+  <input type="hidden" name="x_duplicate_window" value="120" />
+  <input type="hidden" name="x_version" value="3.1" />
+  <input type="hidden" name="x_method" value="cc" />
   <input type="hidden" name="x_email" value="<?php echo $x_email; ?>" />
   <input type="hidden" name="x_relay_response" value="<?php echo $x_relay_response; ?>" />
   <input type="hidden" name="x_solution_id" value="A1000015" />
